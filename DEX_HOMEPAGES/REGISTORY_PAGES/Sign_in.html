@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; Sign In</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(0, 50, 0, 0.6), rgba(0, 0, 0, 0.7)),
+          url("../Images/pexels-ann-h-45017-2646531.jpg") center/cover no-repeat;
+      }
+      .main-header {
+        background: rgba(0, 128, 0, 0.2);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+      }
+      h1#company-name a:hover {
+        text-shadow: 2px 2px 5px #c2c0c0;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      main {
+        flex: 1;
+        margin-top: 120px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      form {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 30px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        max-width: 400px;
+      }
+      form h2 {
+        color: #fff;
+        text-align: center;
+        font-size: 28px;
+        margin-bottom: 12px;
+      }
+      form p {
+        color: #fff;
+        text-align: center;
+        font-size: 15px;
+        margin-bottom: 12px;
+      }
+      .input-group {
+        position: relative;
+        width: 100%;
+      }
+
+      .input-group i.fa-lock,
+      .input-group i.fa-id-badge,
+      .input-group i.fa-envelope {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bbb;
+        font-size: 16px;
+        pointer-events: none;
+      }
+
+      .input-group input {
+        width: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        padding: 12px 40px 12px 40px; /* balanced left and right spacing */
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #fff;
+        box-sizing: border-box;
+      }
+
+      .input-group input::placeholder {
+        color: transparent;
+      }
+
+      .input-group label {
+        position: absolute;
+        left: 40px; /* slightly pushed to clear icon */
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #aaa;
+        transition: 0.3s ease all;
+        pointer-events: none;
+      }
+
+      .input-group input:focus ~ label,
+      .input-group input:not(:placeholder-shown) ~ label {
+        top: -6px;
+        left: 30px;
+        font-size: 12px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 0 4px;
+        border-radius: 4px;
+      }
+
+      .peek {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #bbb;
+        font-size: 18px;
+      }
+
+      .peek:hover {
+        color: #fff;
+      }
+
+      form button {
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: #008000;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      form button:hover {
+        background: #70bb70;
+      }
+      form div.checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #fff;
+      }
+      form div.checkbox input[type="checkbox"] {
+        appearance: none;
+        -webkit-appearance: none;
+        background: transparent;
+        border: 1px solid #ccc;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+      }
+      form div.checkbox input[type="checkbox"]:checked {
+        background: #fff;
+        border-color: #fff;
+      }
+      form div.checkbox input[type="checkbox"]:checked::after {
+        content: "✔";
+        color: #000;
+        font-size: 12px;
+        position: absolute;
+        left: 2px;
+        top: -1px;
+      }
+      form a {
+        color: rgb(7, 172, 7);
+        text-decoration: none;
+        font-size: 16px;
+      }
+      form a:hover {
+        text-decoration: underline;
+      }
+      footer {
+        background: rgba(0, 128, 0, 0.2);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: #fff;
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        .main-header {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+        nav ul {
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        main {
+          padding: 10px;
+        }
+        form {
+          width: 90%;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="main-header">
+      <h1 id="company-name">
+        <a href="../../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+      </h1>
+      <nav>
+        <ul>
+          <li><a href="../../DEX_HOMEPAGES/Dex-home.html">Home</a></li>
+          <li><a href="../../DEX_HOMEPAGES/Dex-home.html">Services</a></li>
+          <li><a href="../../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
+          <li><a href="../../DEX_INFO/Dex-about.html">About</a></li>
+          <li><a href="../../DEX_CONTACT/Dex-contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <form id="customerLoginForm" method="post">
+        <h2>Sign In</h2>
+        <div class="input-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" id="email" placeholder=" " required />
+          <label for="email">Email</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input type="password" id="password" placeholder=" " required />
+          <label for="password">Password</label>
+          <i class="fa fa-eye peek" id="peek"></i>
+        </div>
+
+        <div class="checkbox">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember me.</label>
+        </div>
+
+        <button type="submit">Sign In</button>
+
+        <p>
+          <a href="../REGISTORY_PAGES/forgot_password.html">Forgot Password?</a>
+        </p>
+        <p>
+          Already selling on Dex?
+          <a href="../REGISTORY_PAGES/seller_sign_in.html">Log in here!</a>
+        </p>
+        <p>
+          Don&apos;t have an account?
+          <a href="../REGISTORY_PAGES/Sign_up.html">Sign Up</a>
+        </p>
+      </form>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Dex&trade;. All rights reserved.</p>
+      <p>
+        <a href="../../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+
+    <script>
+      // Auto redirect if already logged in
+      window.addEventListener("DOMContentLoaded", () => {
+        const currentUser =
+          JSON.parse(localStorage.getItem("currentUser")) ||
+          JSON.parse(sessionStorage.getItem("currentUser"));
+        if (currentUser) {
+          window.location.href = "../../DEX_HOMEPAGES/Dex-home.html";
+        }
+      });
+
+      // Toggle password visibility
+      const peekIcon = document.getElementById("peek");
+      const passwordInput = document.getElementById("password");
+      peekIcon.addEventListener("click", () => {
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          peekIcon.classList.replace("fa-eye", "fa-eye-slash");
+        } else {
+          passwordInput.type = "password";
+          peekIcon.classList.replace("fa-eye-slash", "fa-eye");
+        }
+      });
+
+      // Handle buyer login
+      const form = document.getElementById("customerLoginForm");
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value.trim();
+        const users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(
+          (u) => u.email === email && u.password === password
+        );
+
+        if (user) {
+          if (document.getElementById("remember").checked) {
+            localStorage.setItem("currentUser", JSON.stringify(user));
+          } else {
+            sessionStorage.setItem("currentUser", JSON.stringify(user));
+          }
+          alert(`Welcome back, ${user.fullName || "User"}!`);
+          window.location.href = "../../DEX_HOMEPAGES/Dex-home.html";
+        } else {
+          alert("Invalid email or password.");
+          form.reset();
+        }
+      });
+    </script>
+  </body>
+</html>

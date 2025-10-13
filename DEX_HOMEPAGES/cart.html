@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; Cart</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #222;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(0, 128, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("images/cart.jpg") center/cover no-repeat;
+      }
+      .main-header {
+        background: rgba(0, 128, 0, 0.6);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+      }
+      #company-name a:hover {
+        text-shadow: 2px 2px 5px #c2c0c0;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.25s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+      main {
+        flex: 1;
+        margin-top: 120px;
+        padding: 20px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 40px;
+        color: #69d369;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .cart-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 30px;
+      }
+      .cart-items {
+        flex: 2;
+        min-width: 300px;
+      }
+      .cart-item {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 12px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        backdrop-filter: blur(3px);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+        opacity: 1;
+      }
+      .cart-item:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+      }
+      .cart-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+      }
+      .cart-item img:hover {
+        transform: scale(1.1);
+      }
+      .item-details {
+        flex: 1;
+      }
+      .item-details h4 {
+        font-size: 18px;
+        margin-bottom: 8px;
+        color: #fff;
+      }
+      .item-details p {
+        font-size: 14px;
+        color: #e0ffe0;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .quantity-input {
+        width: 50px;
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        text-align: center;
+        transition: 0.2s;
+      }
+      .quantity-input:focus {
+        outline: none;
+        box-shadow: 0 0 5px #70bb70;
+      }
+      .remove-btn {
+        background: #ff4d4d;
+        color: white;
+        border: none;
+        padding: 6px 10px;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .remove-btn:hover {
+        background: #e60000;
+        transform: scale(1.05);
+      }
+      .cart-summary {
+        flex: 1;
+        min-width: 250px;
+        background: rgba(0, 0, 0, 0.4);
+        padding: 20px;
+        border-radius: 10px;
+        color: #fff;
+        height: fit-content;
+        transition: background 0.3s ease;
+      }
+      .cart-summary h3 {
+        font-size: 22px;
+        margin-bottom: 20px;
+        color: #69d369;
+      }
+      .cart-summary p {
+        margin-bottom: 12px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+      .checkout-btn {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 12px 0;
+        margin-top: 20px;
+        background: #70bb70;
+        color: #fff;
+        font-weight: 600;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+      }
+      .checkout-btn:hover {
+        background: #5aa55a;
+        transform: scale(1.05);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+      }
+      footer {
+        background: rgba(0, 128, 0, 0.7);
+        backdrop-filter: blur(6px);
+        width: 100%;
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: white;
+        margin-top: auto;
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+      @media (max-width: 768px) {
+        .main-header {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+        nav ul {
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        .cart-container {
+          flex-direction: column;
+          align-items: center;
+        }
+        .cart-summary {
+          width: 90%;
+        }
+        main {
+          padding: 10px;
+        }
+      }
+      .empty-cart {
+        text-align: center;
+        color: #fff;
+        font-size: 18px;
+        margin-top: 50px;
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.5s ease;
+      }
+      .empty-cart.show {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="main-header">
+        <h1 id="company-name">
+          <a href="../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="../DEX_HOMEPAGES/Dex-home.html">Home</a></li>
+            <li><a href="../DEX_HOMEPAGES/Dex-services.html">Services</a></li>
+            <li><a href="../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
+            <li><a href="../DEX_CONTACT/Dex-contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <h2>Your Shopping Cart</h2>
+      <div class="cart-container">
+        <div class="cart-items"></div>
+        <div class="cart-summary">
+          <h3>Cart Summary</h3>
+          <p>Subtotal: ₵0</p>
+          <p>Shipping: ₵0</p>
+          <p><strong>Total: ₵0</strong></p>
+          <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>
+        </div>
+      </div>
+    </main>
+    <footer>
+      <p>All rights reserved by Dex&trade; © 2025</p>
+      <p>
+        <a href="../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+
+    <script>
+      let cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const container = document.querySelector(".cart-items");
+      const summaryBox = document.querySelector(".cart-summary");
+
+      function animateValue(element, start, end, duration) {
+        let range = end - start;
+        let current = start;
+        let increment = range / (duration / 16);
+        function step() {
+          current += increment;
+          if (
+            (increment > 0 && current >= end) ||
+            (increment < 0 && current <= end)
+          ) {
+            element.textContent = element.dataset.label + end;
+            return;
+          }
+          element.textContent = element.dataset.label + Math.round(current);
+          requestAnimationFrame(step);
+        }
+        step();
+      }
+
+      function renderCart() {
+        container.innerHTML = "";
+        if (cart.length === 0) {
+          const empty = document.createElement("p");
+          empty.className = "empty-cart";
+          empty.innerHTML = `Your cart is currently empty. 
+            <a href="../DEX_HOMEPAGES/Dex-services.html">Browse services</a> or visit the
+            <a href="../DEX_HOMEPAGES/Dex-shop.html">shop</a>.`;
+          container.appendChild(empty);
+          setTimeout(() => empty.classList.add("show"), 50);
+          updateSummary(0);
+          return;
+        }
+
+        let subtotal = 0;
+        cart.forEach((item, index) => {
+          let qty = item.quantity || 1;
+          subtotal += item.price * qty;
+
+          const div = document.createElement("div");
+          div.className = "cart-item";
+          div.innerHTML = `
+            <img src="${item.image}" alt="${item.name}">
+            <div class="item-details">
+              <h4>${item.name}</h4>
+              <p>₵${item.price} x <input type="number" min="1" value="${qty}" class="quantity-input" data-index="${index}"></p>
+            </div>
+            <button class="remove-btn" data-index="${index}">Remove</button>
+          `;
+          container.appendChild(div);
+
+          div.style.opacity = 0;
+          div.style.transform = "translateY(20px)";
+          setTimeout(() => {
+            div.style.transition = "all 0.3s ease";
+            div.style.opacity = 1;
+            div.style.transform = "translateY(0)";
+          }, 50);
+        });
+
+        updateSummary(subtotal);
+      }
+
+      function updateSummary(subtotal) {
+        const shipping = cart.length > 0 ? 10 : 0;
+        const total = subtotal + shipping;
+        summaryBox.innerHTML = `
+          <h3>Cart Summary</h3>
+          <p data-label="Subtotal: ₵">₵${subtotal}</p>
+          <p data-label="Shipping: ₵">₵${shipping}</p>
+          <p><strong data-label="Total: ₵">₵${total}</strong></p>
+          <a href="checkout.html" class="checkout-btn">Proceed to Checkout</a>`;
+
+        // Animate numbers
+        const [subElem, shipElem, totalElem] =
+          summaryBox.querySelectorAll("p, strong");
+        animateValue(subElem, 0, subtotal, 400);
+        animateValue(shipElem, 0, shipping, 400);
+        animateValue(totalElem, 0, total, 400);
+      }
+
+      container.addEventListener("click", (e) => {
+        if (e.target.classList.contains("remove-btn")) {
+          const index = e.target.dataset.index;
+          const itemDiv = e.target.closest(".cart-item");
+          itemDiv.style.transition = "all 0.3s ease";
+          itemDiv.style.opacity = 0;
+          itemDiv.style.transform = "translateX(100%)";
+          setTimeout(() => {
+            cart.splice(index, 1);
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+          }, 300);
+        }
+      });
+
+      container.addEventListener("input", (e) => {
+        if (e.target.classList.contains("quantity-input")) {
+          const index = e.target.dataset.index;
+          const value = parseInt(e.target.value);
+          if (value > 0) {
+            cart[index].quantity = value;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            renderCart();
+          }
+        }
+      });
+
+      renderCart();
+    </script>
+  </body>
+</html>

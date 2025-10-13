@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; About Us</title>
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        background-image: url("images/About-us.jpg"), url("images/About-us.jpg"),
+          url("images/About-us.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        margin: 0;
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #222;
+      }
+
+      .main-header {
+        background: rgba(0, 128, 0, 0.6);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      #company-name a:hover {
+        text-shadow: 2px 2px 5px #c2c0c0;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.25s ease;
+      }
+
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      main {
+        margin-top: 120px;
+        padding: 20px;
+      }
+
+      .section-box {
+        border-radius: 20px;
+        padding: 25px;
+        font-size: 16px;
+        margin: 40px auto;
+        width: 90%;
+        max-width: 900px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+        transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.6s ease,
+          transform 0.6s ease;
+        opacity: 0;
+        transform: scale(0.9) translateY(20px);
+      }
+
+      .section-box.visible {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+      }
+
+      .section-box:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+      }
+
+      .position-right {
+        background: rgba(91, 153, 91, 0.9);
+        margin-left: auto;
+        margin-right: 0;
+      }
+
+      .position-left {
+        background: rgba(168, 230, 163, 0.9);
+        margin-right: auto;
+        margin-left: 0;
+      }
+
+      h2 {
+        margin-bottom: 15px;
+        font-size: 24px;
+        color: #1f4d1f;
+        transition: transform 0.3s ease;
+      }
+
+      h2:hover {
+        transform: scale(1.05);
+      }
+
+      ul {
+        margin: 10px 0 0 20px;
+      }
+
+      footer {
+        background: rgba(0, 128, 0, 0.7);
+        backdrop-filter: blur(6px);
+        width: 100%;
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        margin-top: 40px;
+        color: white;
+      }
+
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 1024px) {
+        .section-box {
+          width: 95%;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .main-header {
+          flex-direction: row;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 20px;
+          gap: 8px;
+        }
+
+        nav ul {
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: center;
+          gap: 8px;
+          padding: 0;
+        }
+
+        nav a {
+          font-size: 12px;
+          padding: 6px 8px;
+          transition: all 0.25s ease;
+        }
+
+        nav a:hover,
+        nav a.active {
+          background-color: #70bb70;
+          color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-2px);
+        }
+
+        h1#company-name a {
+          font-size: 22px;
+        }
+
+        .section-box {
+          padding: 20px;
+          font-size: 15px;
+          width: 100%;
+          max-width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        footer p {
+          font-size: 0.85rem;
+        }
+
+        footer a {
+          display: block;
+          margin: 4px 0;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header with Navbar -->
+    <header>
+      <div class="main-header">
+        <h1 id="company-name">
+          <a href="../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="../DEX_HOMEPAGES/Dex-home.html">Home.</a></li>
+            <li>
+              <a href="../DEX_INFO/Dex-about.html" class="active">About.</a>
+            </li>
+            <li><a href="../DEX_CONTACT/Dex-contact.html">Contact.</a></li>
+            <li><a href="../DEX_CONTACT/Dex-faq.html">FAQ.</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <article>
+        <section>
+          <div id="identity" class="section-box position-left">
+            <h2>What is Dex&trade;?</h2>
+            <p>
+              Dex&trade;, formed by three friends of different backgrounds, is a
+              company that focuses solely on providing quality goods and
+              services to both buyers and sellers alike in various universities.
+              We offer opportunities for upcoming entrepreneurs by providing a
+              platform for advertising to the wider student community. We also
+              sell our own goods, creating a win-win situation for both sellers
+              and us.
+            </p>
+            <p>Our services include:</p>
+            <ul>
+              <li>Advertising goods and services</li>
+              <li>An easier way to purchase goods</li>
+              <li>A ready market for beginner sellers</li>
+              <li>Greater accessibility to customers</li>
+              <li>Simple navigation of the student market</li>
+              <li>Delivery services</li>
+            </ul>
+          </div>
+        </section>
+
+        <section>
+          <div id="origins" class="section-box position-right">
+            <h2>Origin of Dex&trade;</h2>
+            <p>
+              Dex&trade; originated as an idea to help student sellers reach
+              customers. It began as an idea shared by the founders, after
+              observing common struggles within universities:
+            </p>
+            <ul>
+              <li>High costs for students seeking hostels</li>
+              <li>The need to travel far just to buy goods</li>
+              <li>Sellers struggling to gain buyers</li>
+              <li>Constant WhatsApp ads cluttering student chats</li>
+            </ul>
+            <p>
+              As computer science students, we sought to solve these problems by
+              creating an online platform where buyers and sellers connect
+              easily. No more wasted time, no more endless ads. That&apos;s how
+              Dex&trade; was born.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div id="founders" class="section-box position-left">
+            <h2>Founders of Dex&trade;</h2>
+            <p>
+              Dex&trade; was established by three friends:
+              <strong>Blamo David</strong>, <strong>Atosomah Abel</strong>, and
+              <strong>Owusu Daniel</strong>. Each brings unique skills and
+              contributions:
+            </p>
+            <p>
+              <strong>David</strong> &dash; A computer science student
+              responsible for development, maintenance, and technical management
+              of the platform. His motto:
+              <em>“Success without failure is like a tree without leaves.”</em>
+            </p>
+            <p>
+              <strong>Abel</strong> &dash; A natural-born leader who organizes
+              and communicates with sellers, spreading awareness of Dex&trade;’s
+              opportunities.
+            </p>
+            <p>
+              <strong>Daniel</strong> &dash; The strategist, focusing on
+              marketing and business direction. Often considered the “brains of
+              the operation.”
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div id="motives" class="section-box position-right">
+            <h2>Motives and Qualities of Dex&trade;</h2>
+            <p>
+              At Dex&trade;, we aim to establish healthy relationships between
+              buyers and sellers. Our mission is to:
+            </p>
+            <ul>
+              <li>Provide goods and services right at your doorstep</li>
+              <li>Improve university marketing systems</li>
+              <li>Make student life easier and more efficient</li>
+            </ul>
+            <p>
+              From clothing, electronics, and accessories to hostels and
+              delivery, Dex&trade; is here to make student life smoother.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div id="impact" class="section-box position-left">
+            <h2>Expected Impact on Student Life</h2>
+            <p>
+              While no single solution can solve every challenge, Dex&trade; is
+              designed to ease at least 80% of the struggles students
+              face—whether it&apos;s finding hostels, buying products, or
+              connecting with services. By reducing stress and saving time,
+              Dex&trade; aims to create a positive and lasting impact on student
+              life.
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <div id="vision" class="section-box position-right">
+            <h2>Future Vision of Dex&trade;</h2>
+            <p>
+              Our vision extends beyond our own campus. Starting locally, we aim
+              to establish Dex&trade; as the go-to student marketplace, and then
+              expand nationwide to other universities. Ultimately, our goal is
+              to build a reliable platform that benefits students, sellers, and
+              communities everywhere.
+            </p>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer>
+      <p>All legal rights reserved for Dex&trade; © 2025</p>
+      <p>
+        <a href="../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+
+    <script>
+      // Animate sections on scroll
+      const sections = document.querySelectorAll(".section-box");
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("visible");
+            }
+          });
+        },
+        { threshold: 0.2 }
+      );
+
+      sections.forEach((section) => observer.observe(section));
+    </script>
+  </body>
+</html>

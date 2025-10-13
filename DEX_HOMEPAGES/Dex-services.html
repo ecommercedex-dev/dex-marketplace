@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; Services</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Reset & Base */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(2, 65, 2, 0.6), rgba(0, 0, 0, 0.6)),
+          url("images/service.jpg") center/cover no-repeat;
+      }
+
+      /* Header */
+      .main-header {
+        background: rgba(0, 128, 0, 0.6);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+      }
+      h1#company-name a:hover {
+        text-shadow: 2px 2px 5px #c2c0c0;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.2s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      /* Main */
+      main {
+        flex: 1;
+        margin-top: 120px;
+        padding: 20px;
+      }
+      h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #69d369;
+        font-size: 28px;
+        font-weight: 700;
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.8s ease;
+      }
+      h2.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .instruction {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 16px;
+        color: #e0ffe0;
+      }
+
+      /* Service Cards */
+      .service-section {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 24px;
+        justify-content: center;
+      }
+      .service-card {
+        width: 260px;
+        padding: 20px;
+        border-radius: 10px;
+        text-align: center;
+        position: relative;
+        background-size: cover;
+        background-position: center;
+        cursor: pointer;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.6s ease, box-shadow 0.3s ease;
+      }
+      .service-card.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Glow effect animation */
+      @keyframes glow {
+        0%,
+        100% {
+          box-shadow: 0 0 10px rgba(112, 187, 112, 0.6);
+        }
+        50% {
+          box-shadow: 0 0 25px rgba(112, 187, 112, 0.9);
+        }
+      }
+      .service-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.5);
+        animation: glow 1.5s infinite alternate;
+      }
+
+      .service-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+        transition: background 0.3s ease;
+      }
+      .service-card:hover::before {
+        background: rgba(0, 0, 0, 0.2);
+      }
+
+      .service-card h3,
+      .service-card ul {
+        position: relative;
+        z-index: 1;
+      }
+      .service-card h3 {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        font-size: 20px;
+      }
+      .service-card h3 a {
+        display: inline-block;
+        padding: 6px 12px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 25px;
+        color: #fff;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s ease;
+      }
+      .service-card h3 a:hover {
+        background: #70bb70;
+        transform: scale(1.05);
+        box-shadow: 0 0 10px #70bb70, 0 0 20px #70bb70, 0 0 30px #70bb70;
+      }
+
+      /* Floating icon animation */
+      @keyframes floatIcon {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-5px);
+        }
+      }
+      .service-card h3 i {
+        display: inline-block;
+        animation: floatIcon 2s ease-in-out infinite;
+      }
+
+      .service-card ul {
+        list-style: none;
+        text-align: left;
+        padding-left: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease;
+      }
+      .service-card.active ul {
+        max-height: 500px;
+      }
+
+      /* Footer */
+      footer {
+        background: rgba(0, 128, 0, 0.7);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: #fff;
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .main-header {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+        nav ul {
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+        main {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+
+  <!-- For the days I chose to rise again. -->
+  <body>
+    <header>
+      <div class="main-header">
+        <h1 id="company-name">
+          <a href="../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="../DEX_HOMEPAGES/Dex-home.html">Home</a></li>
+            <li>
+              <a href="../DEX_HOMEPAGES/Dex-services.html" class="active"
+                >Services</a
+              >
+            </li>
+            <li><a href="../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
+            <li><a href="../DEX_CONTACT/Dex-contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <h2>Dex&trade; offers the following range of services:</h2>
+      <p class="instruction">
+        Click on a service card image to view a brief description of the
+        services we provide.
+      </p>
+      <section class="service-section">
+        <div
+          class="service-card"
+          style="background-image: url('images/accademic.jpg')"
+        >
+          <h3>
+            <a href="academics.html"
+              ><i class="fas fa-book"></i> Academic & Study Services</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Textbooks & Lecture Notes:</strong> New, used, or digital
+              versions.
+            </li>
+            <li>
+              <strong>Stationery & Supplies:</strong> Notebooks, pens,
+              calculators.
+            </li>
+            <li>
+              <strong>Printing & Photocopying:</strong> Deliver or pick up
+              on-campus.
+            </li>
+            <li>
+              <strong>Online Tutoring:</strong> Peer-to-peer tutoring services.
+            </li>
+          </ul>
+        </div>
+        <div
+          class="service-card"
+          style="background-image: url('images/food.jpg')"
+        >
+          <h3>
+            <a href="food.html"
+              ><i class="fas fa-utensils"></i> Food & Beverages</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Meal Pre-orders:</strong> Order from campus cafeterias.
+            </li>
+            <li>
+              <strong>Snack & Drink Delivery:</strong> Fast delivery to dorms.
+            </li>
+            <li>
+              <strong>Healthy Options:</strong> Student-friendly snacks &
+              beverages.
+            </li>
+          </ul>
+        </div>
+        <div
+          class="service-card"
+          style="background-image: url('images/electrical.jpg')"
+        >
+          <h3>
+            <a href="electronics-services.html"
+              ><i class="fas fa-laptop"></i> Electronics & Tech Services</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Accessory Sales:</strong> Chargers, USB drives,
+              headphones.
+            </li>
+            <li><strong>Device Repairs:</strong> Laptops, phones, tablets.</li>
+          </ul>
+        </div>
+        <div
+          class="service-card"
+          style="background-image: url('images/lifestyle.jpg')"
+        >
+          <h3>
+            <a href="fashion.html"
+              ><i class="fas fa-tshirt"></i> Personal & Lifestyle Services</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Laundry & Dry Cleaning:</strong> Pickup and drop-off.
+            </li>
+            <li>
+              <strong>Delivery Services:</strong> Small packages and gifts.
+            </li>
+          </ul>
+        </div>
+        <div
+          class="service-card"
+          style="background-image: url('images/community.jpg')"
+        >
+          <h3>
+            <a href="community.html"
+              ><i class="fas fa-users"></i> Student Marketplace & Community</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Buy/Sell/Swap:</strong> Second-hand goods, textbooks.
+            </li>
+            <li>
+              <strong>Event Ticketing:</strong> Tickets for events & workshops.
+            </li>
+          </ul>
+        </div>
+        <div
+          class="service-card"
+          style="background-image: url('images/transport.jpg')"
+        >
+          <h3>
+            <a href="transportation.html"
+              ><i class="fas fa-bus"></i> Transportation Services</a
+            >
+          </h3>
+          <ul>
+            <li>
+              <strong>Ticket Booking:</strong> Travel from campus to nearby
+              towns.
+            </li>
+          </ul>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p>All rights reserved by Dex&trade; © 2025</p>
+      <p>
+        <a href="../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+
+    <script>
+      // Animate heading
+      window.addEventListener("load", () => {
+        document.querySelector("h2").classList.add("visible");
+        const cards = document.querySelectorAll(".service-card");
+        cards.forEach((card, i) => {
+          setTimeout(() => card.classList.add("visible"), i * 150);
+        });
+      });
+
+      // Quick toggle service info
+      document.querySelectorAll(".service-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          card.classList.toggle("active");
+        });
+      });
+    </script>
+  </body>
+</html>

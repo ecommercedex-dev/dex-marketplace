@@ -372,11 +372,11 @@
     <header>
       <div class="main-header">
         <h1 id="company-name">
-          <a href="../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+          <a href="../../Dex-home.html">Dex&trade;</a>
         </h1>
         <nav>
           <ul>
-            <li><a href="../DEX_HOMEPAGES/Dex-home.html">Home.</a></li>
+            <li><a href="../../Dex-home.html">Home.</a></li>
             <li><a href="../DEX_INFO/Dex-about.html">About.</a></li>
             <li>
               <a href="../DEX_CONTACT/Dex-contact.html" class="active"
@@ -489,7 +489,9 @@
         sessionStorage.removeItem("currentUser");
         showToast("Logged out successfully");
         setTimeout(
-          () => (window.location.href = "REGISTORY_PAGES/Sign_in.html"),
+          () =>
+            (window.location.href =
+              "DEX_HOMEPAGES/REGISTORY_PAGES/Sign_in.html"),
           500
         );
       }

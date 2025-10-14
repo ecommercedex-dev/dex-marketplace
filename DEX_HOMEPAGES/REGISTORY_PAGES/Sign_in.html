@@ -257,11 +257,11 @@
   <body>
     <header class="main-header">
       <h1 id="company-name">
-        <a href="../../DEX_HOMEPAGES/Dex-home.html">Dex&trade;</a>
+        <a href="../../Dex-home.html">Dex&trade;</a>
       </h1>
       <nav>
         <ul>
-          <li><a href="../../DEX_HOMEPAGES/Dex-home.html">Home</a></li>
+          <li><a href="../../Dex-home.html">Home</a></li>
           <li><a href="../../DEX_HOMEPAGES/Dex-home.html">Services</a></li>
           <li><a href="../../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
           <li><a href="../../DEX_INFO/Dex-about.html">About</a></li>
@@ -322,7 +322,7 @@
           JSON.parse(localStorage.getItem("currentUser")) ||
           JSON.parse(sessionStorage.getItem("currentUser"));
         if (currentUser) {
-          window.location.href = "../../DEX_HOMEPAGES/Dex-home.html";
+          window.location.href = "../../Dex-home.html";
         }
       });
 
@@ -359,7 +359,7 @@
             sessionStorage.setItem("currentUser", JSON.stringify(user));
           }
           alert(`Welcome back, ${user.fullName || "User"}!`);
-          window.location.href = "../../DEX_HOMEPAGES/Dex-home.html";
+          window.location.href = "../../Dex-home.html";
         } else {
           alert("Invalid email or password.");
           form.reset();

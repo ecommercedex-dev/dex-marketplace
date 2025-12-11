@@ -71,7 +71,12 @@ app.use("/uploads", (req, res, next) => {
 }, express.static(path.resolve(__dirname, "uploads")));
 
 // Serve frontend
-app.use(express.static(path.resolve(__dirname, "../")));
+app.use(express.static(path.resolve(__dirname, "../DEX_FRONTEND")));
+
+// Serve main page
+app.get("/", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../DEX_FRONTEND/Dex-home.html"));
+});
 
 // Routes
 app.use("/api/buyers", buyerAuthRoutes);
@@ -115,8 +120,7 @@ app.get("/health", async (req, res) => {
   }
 });
 
-// Root
-app.get("/", (req, res) => res.send("🚀 Dex Backend is running"));
+
 
 // -------------------- SERVER & WEBSOCKET --------------------
 const server = http.createServer(app); // wrap express server

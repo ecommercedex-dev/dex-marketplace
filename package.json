@@ -1,0 +1,11 @@
+{
+  "name": "dex-marketplace",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "cd DEX_BACKEND && npm install && npm start",
+    "build": "cd DEX_BACKEND && npm install"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

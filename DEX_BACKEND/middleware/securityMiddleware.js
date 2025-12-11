@@ -24,7 +24,10 @@ export const securityHeaders = helmet({
 });
 
 export const corsOptions = {
-  origin: isProduction ? ['https://ecommercedex-dev.github.io'] : true,
+  origin: isProduction ? [
+    'https://ecommercedex-dev.github.io',
+    'https://ecommercedex-dev.github.io/dex-marketplace'
+  ] : true,
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   credentials: true,

@@ -798,7 +798,7 @@
           try {
             const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
               ? 'http://localhost:5000' 
-              : 'https://dex-marketplace.onrender.com';
+              : 'https://dex-backend.onrender.com';
             
             const res = await fetch(
               `${API_BASE}/api/buyers/register`,

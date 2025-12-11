@@ -30,3 +30,12 @@ build/
 # Temporary files
 *.tmp
 *.temp
+
+# Large upload files
+DEX_BACKEND/uploads/
+uploads/
+*.webp
+*.jpg
+*.jpeg
+*.png
+*.gif

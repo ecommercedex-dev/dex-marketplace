@@ -1,0 +1,1820 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DEX V1 Admin - Trust & Safety</title>
+    <link rel="icon" type="image/x-icon" href="../DEX_FAVICON/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        background: #f8f9fa;
+        color: #333;
+      }
+
+      .header {
+        background: white;
+        padding: 1rem 2rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header h1 {
+        color: #2c3e50;
+        font-size: 1.5rem;
+      }
+      .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .btn-danger {
+        background: #dc3545;
+        color: white;
+      }
+      .btn-success {
+        background: #28a745;
+        color: white;
+      }
+      .btn-warning {
+        background: #ffc107;
+        color: #212529;
+      }
+      .btn-primary {
+        background: #007bff;
+        color: white;
+      }
+
+      .main {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      .search-filters {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+
+      .search-input {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        min-width: 200px;
+      }
+
+      .filter-select {
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+
+      .bulk-actions {
+        display: none;
+        gap: 0.5rem;
+        align-items: center;
+        padding: 1rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+      }
+
+      .verification-checkbox {
+        margin-right: 0.5rem;
+      }
+
+      .stat-card {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #007bff;
+      }
+      .stat-label {
+        color: #6c757d;
+        margin-top: 0.5rem;
+      }
+
+      .section {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 2rem;
+      }
+
+      .section-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #dee2e6;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .section-content {
+        padding: 1.5rem;
+      }
+
+      .verification-item {
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .verification-item.pending {
+        border-left: 4px solid #ffc107;
+      }
+      .verification-item.approved {
+        border-left: 4px solid #28a745;
+      }
+      .verification-item.rejected {
+        border-left: 4px solid #dc3545;
+      }
+
+      .user-info h4 {
+        margin-bottom: 0.25rem;
+      }
+      .user-info small {
+        color: #6c757d;
+      }
+
+      .actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .document-preview {
+        max-width: 100px;
+        max-height: 100px;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+      }
+
+      .modal-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        max-width: 90%;
+        max-height: 90%;
+        overflow: auto;
+      }
+
+      .tabs {
+        display: flex;
+        border-bottom: 1px solid #dee2e6;
+        margin-bottom: 1rem;
+      }
+
+      .tab {
+        padding: 1rem 1.5rem;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.2s;
+      }
+
+      .tab.active {
+        border-bottom-color: #007bff;
+        color: #007bff;
+        font-weight: 500;
+      }
+
+      .tab-content {
+        display: none;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      @media (max-width: 768px) {
+        .stats {
+          grid-template-columns: 1fr;
+        }
+        .verification-item {
+          flex-direction: column;
+          gap: 1rem;
+          text-align: center;
+        }
+        .actions {
+          justify-content: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div style="display: flex; align-items: center; gap: 2rem">
+        <h1>🛡️ DEX V1 - Trust & Safety Admin</h1>
+        <nav style="display: flex; gap: 1rem; align-items: center">
+          <a
+            href="../Dex-home.html"
+            class="btn btn-primary"
+            style="text-decoration: none; font-size: 0.9rem"
+            >🏠 Homepage</a
+          >
+          <a
+            href="../DEX_HOMEPAGES/Dex-shop.html"
+            class="btn btn-success"
+            style="text-decoration: none; font-size: 0.9rem"
+            >🛒 Shop</a
+          >
+        </nav>
+      </div>
+      <button onclick="logout()" class="btn btn-danger">Logout</button>
+    </div>
+
+    <div class="main">
+      <div class="stats">
+        <div class="stat-card">
+          <div class="stat-number" id="pendingVerifications">0</div>
+          <div class="stat-label">Pending Verifications</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalUsers">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="totalSellers">0</div>
+          <div class="stat-label">Active Sellers</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number" id="openReports">0</div>
+          <div class="stat-label">Safety Reports</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('verifications')">
+            📋 Campus Verifications
+          </div>
+          <div class="tab" onclick="showTab('reports')">🚨 Safety Reports</div>
+          <div class="tab" onclick="showTab('users')">👥 User Management</div>
+          <div class="tab" onclick="showTab('insights')">📊 Sales Insights</div>
+        </div>
+
+        <div id="verifications" class="tab-content active">
+          <div class="section-header">
+            <h3>Campus Verification Requests</h3>
+            <button class="btn btn-primary" onclick="loadVerifications()">
+              <i class="fas fa-sync"></i> Refresh
+            </button>
+          </div>
+          <div class="section-content">
+            <div class="search-filters">
+              <input
+                type="text"
+                id="searchInput"
+                class="search-input"
+                placeholder="Search by name or email..."
+                oninput="filterVerifications()"
+              />
+              <select
+                id="statusFilter"
+                class="filter-select"
+                onchange="filterVerifications()"
+              >
+                <option value="">All Status</option>
+                <option value="pending">Pending Only</option>
+                <option value="approved">Approved</option>
+                <option value="rejected">Rejected</option>
+              </select>
+              <select
+                id="typeFilter"
+                class="filter-select"
+                onchange="filterVerifications()"
+              >
+                <option value="">All Types</option>
+                <option value="student">Student</option>
+                <option value="alumni">Alumni</option>
+                <option value="staff">Staff</option>
+              </select>
+            </div>
+            <div id="bulkActions" class="bulk-actions">
+              <span>Selected: <span id="selectedCount">0</span></span>
+              <button class="btn btn-success" onclick="bulkApprove()">
+                Bulk Approve
+              </button>
+              <button class="btn btn-danger" onclick="bulkReject()">
+                Bulk Reject
+              </button>
+              <button class="btn btn-secondary" onclick="clearSelection()">
+                Clear
+              </button>
+            </div>
+            <div id="verificationsList"></div>
+          </div>
+        </div>
+
+        <div id="reports" class="tab-content">
+          <div class="section-header">
+            <h3>Safety & Trust Reports</h3>
+            <button class="btn btn-primary" onclick="loadReports()">
+              Refresh
+            </button>
+          </div>
+          <div class="section-content" id="reportsList"></div>
+        </div>
+
+        <div id="users" class="tab-content">
+          <div class="section-header">
+            <h3>User & Seller Management</h3>
+            <input
+              type="text"
+              placeholder="Search users..."
+              id="userSearch"
+              style="
+                padding: 0.5rem;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+              "
+            />
+          </div>
+          <div class="section-content" id="usersList"></div>
+        </div>
+
+        <div id="insights" class="tab-content">
+          <div class="section-header">
+            <h3>📊 Sales & Engagement Insights</h3>
+            <button class="btn btn-primary" onclick="loadInsights()">
+              🔄 Refresh
+            </button>
+          </div>
+          <div class="section-content" id="insightsList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="documentModal" class="modal">
+      <div class="modal-content">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+          "
+        >
+          <h3>Document Viewer</h3>
+          <button onclick="closeModal()" class="btn btn-danger">×</button>
+        </div>
+        <div id="modalContent"></div>
+      </div>
+    </div>
+
+    <script>
+      const API = "http://localhost:5000/api";
+      let adminToken = localStorage.getItem("adminToken");
+
+      if (!adminToken) {
+        window.location.href = "login.html";
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        loadStats();
+        loadVerifications();
+
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+          if (
+            document
+              .getElementById("verifications")
+              .classList.contains("active")
+          ) {
+            loadVerifications();
+            loadStats();
+          }
+        }, 30000);
+      });
+
+      async function apiCall(endpoint, options = {}) {
+        try {
+          const response = await fetch(API + endpoint, {
+            ...options,
+            headers: {
+              ...options.headers,
+              Authorization: "Bearer " + adminToken,
+              "Content-Type": "application/json",
+            },
+          });
+          if (!response.ok) {
+            if (response.status === 401) {
+              localStorage.removeItem("adminToken");
+              window.location.href = "login.html";
+              return null;
+            }
+            throw new Error("API request failed: " + response.status);
+          }
+          return await response.json();
+        } catch (error) {
+          console.error("API Error:", error);
+          showError("Network error: " + error.message);
+          return null;
+        }
+      }
+
+      function showError(message) {
+        const errorDiv = document.createElement("div");
+        errorDiv.style.cssText =
+          "position: fixed; top: 20px; right: 20px; background: #dc3545; color: white; padding: 1rem; border-radius: 6px; z-index: 1001; max-width: 300px;";
+        errorDiv.textContent = message;
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 5000);
+      }
+
+      function showSuccess(message) {
+        const successDiv = document.createElement("div");
+        successDiv.style.cssText =
+          "position: fixed; top: 20px; right: 20px; background: #28a745; color: white; padding: 1rem; border-radius: 6px; z-index: 1001; max-width: 300px;";
+        successDiv.textContent = message;
+        document.body.appendChild(successDiv);
+        setTimeout(() => successDiv.remove(), 3000);
+      }
+
+      async function loadStats() {
+        const [users, sellers, verifications] = await Promise.all([
+          apiCall("/admin/users"),
+          apiCall("/admin/sellers"),
+          apiCall("/admin/campus-verifications"),
+        ]);
+
+        if (verifications) {
+          const pending = verifications.filter(
+            (v) => v.status === "pending"
+          ).length;
+          const approved = verifications.filter(
+            (v) => v.status === "approved"
+          ).length;
+          const total = verifications.length;
+          const approvalRate =
+            total > 0 ? Math.round((approved / total) * 100) : 0;
+
+          document.getElementById("pendingVerifications").textContent = pending;
+          document
+            .getElementById("pendingVerifications")
+            .parentElement.querySelector(".stat-label").innerHTML =
+            'Pending Verifications<br><small style="color: #28a745;">' +
+            approvalRate +
+            "% approval rate</small>";
+        }
+
+        document.getElementById("totalUsers").textContent = users
+          ? users.length
+          : 0;
+        document.getElementById("totalSellers").textContent = sellers
+          ? sellers.length
+          : 0;
+
+        // Calculate verified sellers percentage
+        if (sellers) {
+          const verified = sellers.filter((s) => s.campusVerified).length;
+          const verifiedRate =
+            sellers.length > 0
+              ? Math.round((verified / sellers.length) * 100)
+              : 0;
+          document
+            .getElementById("totalSellers")
+            .parentElement.querySelector(".stat-label").innerHTML =
+            'Active Sellers<br><small style="color: #007bff;">' +
+            verifiedRate +
+            "% campus verified</small>";
+        }
+
+        document.getElementById("openReports").textContent = 0;
+      }
+
+      async function loadVerifications() {
+        const container = document.getElementById("verificationsList");
+        container.innerHTML =
+          '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading...</div>';
+
+        const verifications = await apiCall("/admin/campus-verifications");
+
+        if (verifications && verifications.length > 0) {
+          container.innerHTML = verifications
+            .map((v) => {
+              const hasDocuments = v.documentsUploaded || false;
+              const docStatus = hasDocuments
+                ? "📄 Documents Ready"
+                : "⚠️ No Documents";
+              const docColor = hasDocuments ? "#28a745" : "#ffc107";
+
+              return (
+                '<div class="verification-item ' +
+                v.status +
+                '" data-status="' +
+                v.status +
+                '">' +
+                '<div style="display: flex; gap: 1rem; align-items: center; flex: 1;">' +
+                (v.status === "pending"
+                  ? '<input type="checkbox" class="verification-checkbox" onchange="toggleSelection(' +
+                    v.id +
+                    ', this)">'
+                  : "") +
+                '<div class="user-info">' +
+                "<h4>" +
+                (v.name || "Unknown") +
+                "</h4>" +
+                "<small>📧 " +
+                (v.email || "No email") +
+                "</small><br>" +
+                "<small>🎓 " +
+                (v.verificationType?.replace("_", " ") || "Campus Connection") +
+                "</small><br>" +
+                "<small>📅 " +
+                new Date(v.createdAt).toLocaleDateString() +
+                " • ID: " +
+                v.id +
+                "</small><br>" +
+                '<small style="color: ' +
+                docColor +
+                ';">' +
+                docStatus +
+                "</small>" +
+                "</div>" +
+                "</div>" +
+                '<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">' +
+                '<div style="display: flex; gap: 0.5rem;">' +
+                '<button class="btn btn-secondary" onclick="viewVerificationDetails(' +
+                v.id +
+                ')" style="padding: 4px 8px; font-size: 0.8rem;">📋 Details</button>' +
+                (hasDocuments
+                  ? '<button class="btn btn-primary" onclick="viewDocuments(' +
+                    v.id +
+                    ')" style="padding: 4px 8px; font-size: 0.8rem;">📄 Docs</button>'
+                  : '<button class="btn btn-warning" onclick="viewDocuments(' +
+                    v.id +
+                    ')" style="padding: 4px 8px; font-size: 0.8rem;">⚠️ No Docs</button>') +
+                "</div>" +
+                '<div class="actions">' +
+                (v.status === "pending"
+                  ? '<select id="reason_' +
+                    v.id +
+                    '" style="margin-right: 0.5rem; padding: 4px; display: none; font-size: 0.8rem;">' +
+                    '<option value="">Select reason...</option>' +
+                    '<option value="invalid_documents">Invalid Documents</option>' +
+                    '<option value="unclear_photos">Unclear Photos</option>' +
+                    '<option value="not_campus_affiliated">Not Campus Affiliated</option>' +
+                    '<option value="missing_documents">Missing Required Documents</option>' +
+                    '<option value="other">Other</option>' +
+                    "</select>" +
+                    '<button class="btn btn-success" onclick="reviewVerification(' +
+                    v.id +
+                    ', \'approved\')" style="font-size: 0.8rem;">✅ Approve</button>' +
+                    '<button class="btn btn-danger" onclick="showRejectOptions(' +
+                    v.id +
+                    ')" style="font-size: 0.8rem;">❌ Reject</button>'
+                  : '<span class="btn ' +
+                    (v.status === "approved" ? "btn-success" : "btn-danger") +
+                    '" style="font-size: 0.8rem;">' +
+                    v.status.toUpperCase() +
+                    "</span>") +
+                "</div>" +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("");
+        } else {
+          container.innerHTML =
+            '<div style="text-align: center; color: #6c757d; padding: 2rem;"><i class="fas fa-clipboard-check" style="font-size: 3rem; opacity: 0.3; margin-bottom: 1rem;"></i><h4>No Verification Requests</h4><p>Campus verification requests will appear here.</p></div>';
+        }
+      }
+
+      function showRejectOptions(id) {
+        const reasonSelect = document.getElementById("reason_" + id);
+        reasonSelect.style.display = "inline-block";
+        reasonSelect.onchange = function () {
+          if (this.value) {
+            reviewVerification(id, "rejected", this.value);
+          }
+        };
+      }
+
+      async function reviewVerification(id, status, reason = null) {
+        // Validation for V1 requirements
+        if (status === "approved") {
+          const confirmed = confirm(
+            "✅ Approve Campus Verification?\n\n" +
+              "This will:\n" +
+              "• Grant Tier 2 verification status\n" +
+              "• Enable campus seller features\n" +
+              "• Send approval email to seller\n\n" +
+              "Confirm approval?"
+          );
+          if (!confirmed) return;
+        }
+
+        const payload = {
+          status,
+          adminId: "admin_" + Date.now(), // Temporary admin ID
+          reviewedAt: new Date().toISOString(),
+        };
+        if (reason) payload.reason = reason;
+
+        const result = await apiCall(
+          "/admin/campus-verifications/" + id + "/review",
+          {
+            method: "POST",
+            body: JSON.stringify(payload),
+          }
+        );
+
+        if (result) {
+          const message =
+            status === "approved"
+              ? "✅ Campus verification approved! Seller has been notified."
+              : "❌ Campus verification rejected. Seller will receive feedback.";
+          showSuccess(message);
+
+          // Log admin action
+          console.log("Admin Action:", {
+            action: "campus_verification_" + status,
+            sellerId: id,
+            reason: reason,
+            timestamp: new Date().toISOString(),
+          });
+
+          loadVerifications();
+          loadStats();
+        }
+      }
+
+      function viewVerificationDetails(id) {
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          "<h3>🔍 Verification Details - ID: " +
+          id +
+          "</h3>" +
+          '<div style="background: #f8f9fa; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+          "<h4>📋 Required Documents Checklist:</h4>" +
+          '<div style="margin: 0.5rem 0;">📄 Primary ID (Student ID/National ID): <span style="color: #ffc107;">⏳ Pending Upload</span></div>' +
+          '<div style="margin: 0.5rem 0;">📄 Secondary Document (Transcript/Letter): <span style="color: #ffc107;">⏳ Pending Upload</span></div>' +
+          '<div style="margin: 0.5rem 0;">🤳 Verification Selfie: <span style="color: #ffc107;">⏳ Pending Upload</span></div>' +
+          "</div>" +
+          '<div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+          "<h4>🎓 Campus Verification Guidelines:</h4>" +
+          '<ul style="margin: 0.5rem 0; padding-left: 1.5rem;">' +
+          "<li>Student ID must be current and clearly visible</li>" +
+          "<li>Secondary document must show current enrollment</li>" +
+          "<li>Selfie must clearly show face matching ID photo</li>" +
+          "<li>All documents must be from recognized institutions</li>" +
+          "</ul>" +
+          "</div>" +
+          '<div style="text-align: center; margin-top: 1.5rem;">' +
+          '<button class="btn btn-primary" onclick="contactSeller(' +
+          id +
+          ')" style="margin-right: 0.5rem;">📧 Contact Seller</button>' +
+          '<button class="btn btn-secondary" onclick="closeModal()">Close</button>' +
+          "</div>";
+        modal.style.display = "flex";
+      }
+
+      function viewDocuments(id) {
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          "<h3>📄 Document Viewer - Seller ID: " +
+          id +
+          "</h3>" +
+          '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 1rem 0;">' +
+          '<div style="border: 1px solid #ddd; border-radius: 6px; padding: 1rem; text-align: center;">' +
+          "<h4>🆔 Primary ID</h4>" +
+          '<div style="background: #f8f9fa; height: 150px; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: 0.5rem 0;">' +
+          '<i class="fas fa-id-card" style="font-size: 2rem; color: #6c757d;"></i>' +
+          "</div>" +
+          "<small>Student ID / National ID</small><br>" +
+          '<button class="btn btn-primary" style="margin-top: 0.5rem; font-size: 0.8rem;" onclick="showFullDocument(\'primary\', ' +
+          id +
+          ')">View Full Size</button>' +
+          "</div>" +
+          '<div style="border: 1px solid #ddd; border-radius: 6px; padding: 1rem; text-align: center;">' +
+          "<h4>📄 Secondary Document</h4>" +
+          '<div style="background: #f8f9fa; height: 150px; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: 0.5rem 0;">' +
+          '<i class="fas fa-file-alt" style="font-size: 2rem; color: #6c757d;"></i>' +
+          "</div>" +
+          "<small>Transcript / Enrollment Letter</small><br>" +
+          '<button class="btn btn-primary" style="margin-top: 0.5rem; font-size: 0.8rem;" onclick="showFullDocument(\'secondary\', ' +
+          id +
+          ')">View Full Size</button>' +
+          "</div>" +
+          '<div style="border: 1px solid #ddd; border-radius: 6px; padding: 1rem; text-align: center;">' +
+          "<h4>🤳 Verification Selfie</h4>" +
+          '<div style="background: #f8f9fa; height: 150px; border-radius: 4px; display: flex; align-items: center; justify-content: center; margin: 0.5rem 0;">' +
+          '<i class="fas fa-user-circle" style="font-size: 2rem; color: #6c757d;"></i>' +
+          "</div>" +
+          "<small>Selfie with ID</small><br>" +
+          '<button class="btn btn-primary" style="margin-top: 0.5rem; font-size: 0.8rem;" onclick="showFullDocument(\'selfie\', ' +
+          id +
+          ')">View Full Size</button>' +
+          "</div>" +
+          "</div>" +
+          '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 1rem; margin: 1rem 0;">' +
+          '<h4 style="color: #856404; margin-bottom: 0.5rem;">⚠️ Verification Checklist:</h4>' +
+          '<ul style="color: #856404; margin: 0; padding-left: 1.5rem;">' +
+          "<li>ID photo matches selfie</li>" +
+          "<li>Documents are current and valid</li>" +
+          "<li>Institution is recognized</li>" +
+          "<li>All text is clearly readable</li>" +
+          "</ul>" +
+          "</div>" +
+          '<div style="text-align: center; margin-top: 1.5rem;">' +
+          '<button class="btn btn-success" onclick="reviewVerification(' +
+          id +
+          ', \'approved\')" style="margin-right: 0.5rem;">✅ Approve All</button>' +
+          '<button class="btn btn-danger" onclick="showRejectOptions(' +
+          id +
+          ')" style="margin-right: 0.5rem;">❌ Reject</button>' +
+          '<button class="btn btn-secondary" onclick="closeModal()">Close</button>' +
+          "</div>";
+        modal.style.display = "flex";
+      }
+
+      function showFullDocument(type, id) {
+        const titles = {
+          primary: "🆔 Primary ID Document",
+          secondary: "📄 Secondary Document",
+          selfie: "🤳 Verification Selfie",
+        };
+
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          "<h3>" +
+          titles[type] +
+          " - Seller ID: " +
+          id +
+          "</h3>" +
+          '<div style="text-align: center; padding: 2rem;">' +
+          '<div style="background: #f8f9fa; border: 2px dashed #ddd; border-radius: 8px; padding: 3rem; margin: 1rem 0;">' +
+          '<i class="fas fa-image" style="font-size: 4rem; color: #6c757d; margin-bottom: 1rem;"></i>' +
+          "<h4>Document Preview</h4>" +
+          "<p>Full-size document would display here</p>" +
+          '<small style="color: #6c757d;">File upload system integration required</small>' +
+          "</div>" +
+          "</div>" +
+          '<div style="text-align: center; margin-top: 1.5rem;">' +
+          '<button class="btn btn-primary" onclick="viewDocuments(' +
+          id +
+          ')" style="margin-right: 0.5rem;">← Back to All Documents</button>' +
+          '<button class="btn btn-secondary" onclick="closeModal()">Close</button>' +
+          "</div>";
+      }
+
+      function contactSeller(id) {
+        const message = prompt("Enter message to send to seller (optional):");
+        if (message !== null) {
+          showSuccess("Message sent to seller (feature simulated)");
+          closeModal();
+        }
+      }
+
+      function closeModal() {
+        document.getElementById("documentModal").style.display = "none";
+      }
+
+      function showTab(tabName) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        event.target.classList.add("active");
+
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((content) => content.classList.remove("active"));
+        document.getElementById(tabName).classList.add("active");
+
+        switch (tabName) {
+          case "verifications":
+            loadVerifications();
+            break;
+          case "reports":
+            loadReports();
+            break;
+          case "users":
+            loadUsers();
+            break;
+          case "insights":
+            loadInsights();
+            break;
+        }
+      }
+
+      async function loadReports() {
+        const container = document.getElementById("reportsList");
+        container.innerHTML =
+          '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading reports...</div>';
+
+        const reports = await apiCall("/admin/reports");
+
+        let html =
+          '<div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">' +
+          '<div style="display: flex; gap: 1rem; align-items: center;">' +
+          '<select id="reportStatusFilter" onchange="filterReports()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">' +
+          '<option value="">All Status</option>' +
+          '<option value="pending">Pending</option>' +
+          '<option value="investigating">Under Investigation</option>' +
+          '<option value="resolved">Resolved</option>' +
+          '<option value="dismissed">Dismissed</option>' +
+          "</select>" +
+          '<select id="reportTypeFilter" onchange="filterReports()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">' +
+          '<option value="">All Types</option>' +
+          '<option value="scam">🚨 Scam/Fraud</option>' +
+          '<option value="harassment">😠 Harassment</option>' +
+          '<option value="fake_product">📦 Fake Product</option>' +
+          '<option value="inappropriate">🚫 Inappropriate Content</option>' +
+          '<option value="safety">⚠️ Safety Concern</option>' +
+          '<option value="other">❓ Other</option>' +
+          "</select>" +
+          "</div>" +
+          '<button class="btn btn-primary" onclick="loadReports()" style="font-size: 0.9rem;">🔄 Refresh</button>' +
+          "</div>" +
+          "</div>";
+
+        if (reports && reports.length > 0) {
+          reports.forEach((report) => {
+            const priorityColor =
+              report.priority === "high"
+                ? "#dc3545"
+                : report.priority === "medium"
+                ? "#ffc107"
+                : "#28a745";
+            const statusColor =
+              report.status === "resolved"
+                ? "#28a745"
+                : report.status === "investigating"
+                ? "#007bff"
+                : "#ffc107";
+
+            html +=
+              '<div class="verification-item report-item" data-status="' +
+              report.status +
+              '" data-type="' +
+              report.type +
+              '">' +
+              '<div style="display: flex; gap: 1rem; align-items: center; flex: 1;">' +
+              '<div class="user-info">' +
+              "<h4>Report #" +
+              report.id +
+              ' <span style="color: ' +
+              priorityColor +
+              '; font-size: 0.8rem;">● ' +
+              (report.priority || "medium").toUpperCase() +
+              "</span></h4>" +
+              "<small>📧 Reporter: " +
+              (report.reporterEmail || "Anonymous") +
+              "</small><br>" +
+              "<small>🎯 Target: " +
+              (report.reportedUserEmail || "Unknown") +
+              "</small><br>" +
+              "<small>📝 " +
+              (report.reason || "No reason provided") +
+              "</small><br>" +
+              "<small>📅 " +
+              new Date(report.createdAt).toLocaleDateString() +
+              "</small>" +
+              "</div>" +
+              "</div>" +
+              '<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">' +
+              '<span class="btn" style="background: ' +
+              statusColor +
+              '; color: white; font-size: 0.8rem; padding: 4px 8px;">' +
+              report.status.toUpperCase() +
+              "</span>" +
+              '<div class="actions" style="display: flex; gap: 0.5rem;">' +
+              '<button class="btn btn-primary" onclick="viewReportDetails(' +
+              report.id +
+              ')" style="font-size: 0.8rem; padding: 4px 8px;">👁️ View</button>' +
+              (report.status === "pending"
+                ? '<button class="btn btn-warning" onclick="investigateReport(' +
+                  report.id +
+                  ')" style="font-size: 0.8rem; padding: 4px 8px;">🔍 Investigate</button>'
+                : "") +
+              (report.status !== "resolved"
+                ? '<button class="btn btn-success" onclick="resolveReport(' +
+                  report.id +
+                  ')" style="font-size: 0.8rem; padding: 4px 8px;">✅ Resolve</button>'
+                : "") +
+              "</div>" +
+              "</div>" +
+              "</div>";
+          });
+        } else {
+          html +=
+            '<div style="text-align: center; color: #6c757d; padding: 2rem;">' +
+            '<i class="fas fa-shield-alt" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>' +
+            "<h4>No Safety Reports</h4>" +
+            "<p>Safety reports and user complaints will appear here.</p>" +
+            '<div style="background: #e8f5e8; padding: 1rem; border-radius: 6px; margin-top: 1rem; text-align: left;">' +
+            '<h5 style="color: #2e7d32; margin-bottom: 0.5rem;">📋 Report Types Handled:</h5>' +
+            '<ul style="color: #2e7d32; margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">' +
+            "<li>🚨 Scam/Fraud attempts</li>" +
+            "<li>😠 Harassment or abuse</li>" +
+            "<li>📦 Fake or misrepresented products</li>" +
+            "<li>🚫 Inappropriate content</li>" +
+            "<li>⚠️ Safety concerns</li>" +
+            "</ul>" +
+            "</div>" +
+            "</div>";
+        }
+
+        container.innerHTML = html;
+      }
+
+      async function loadUsers() {
+        const container = document.getElementById("usersList");
+        container.innerHTML =
+          '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading users...</div>';
+
+        const [users, sellers] = await Promise.all([
+          apiCall("/admin/users"),
+          apiCall("/admin/sellers"),
+        ]);
+
+        let html = "";
+
+        // User Management Controls
+        html +=
+          '<div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 2rem;">' +
+          '<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">' +
+          '<div style="display: flex; gap: 1rem; align-items: center;">' +
+          '<select id="userTypeFilter" onchange="filterUsers()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">' +
+          '<option value="">All Users</option>' +
+          '<option value="buyers">Buyers Only</option>' +
+          '<option value="sellers">Sellers Only</option>' +
+          "</select>" +
+          '<select id="statusFilter" onchange="filterUsers()" style="padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px;">' +
+          '<option value="">All Status</option>' +
+          '<option value="verified">Verified</option>' +
+          '<option value="unverified">Unverified</option>' +
+          '<option value="suspended">Suspended</option>' +
+          "</select>" +
+          "</div>" +
+          '<div style="display: flex; gap: 0.5rem;">' +
+          '<button class="btn btn-success" onclick="messageAllUsers()" style="font-size: 0.9rem;">📢 Message All</button>' +
+          '<button class="btn btn-primary" onclick="exportUsers()" style="font-size: 0.9rem;">📊 Export</button>' +
+          '<button class="btn btn-secondary" onclick="loadUsers()" style="font-size: 0.9rem;">🔄 Refresh</button>' +
+          "</div>" +
+          "</div>" +
+          "</div>";
+
+        if (users && users.length > 0) {
+          html +=
+            '<div class="user-section" data-type="buyers">' +
+            '<h4 style="margin-bottom: 1rem; color: #007bff; display: flex; align-items: center; gap: 0.5rem;">' +
+            '<i class="fas fa-users"></i> Buyers (' +
+            users.length +
+            ")" +
+            "</h4>";
+          users.forEach((user) => {
+            const verificationBadges = [];
+            if (user.isVerified) verificationBadges.push("📧 Email");
+            if (user.phoneVerified) verificationBadges.push("📱 Phone");
+            if (user.studentVerified) verificationBadges.push("🎓 Student");
+
+            html +=
+              '<div class="verification-item user-item" data-type="buyer" data-status="' +
+              (user.isVerified ? "verified" : "unverified") +
+              '">' +
+              '<div style="display: flex; gap: 1rem; align-items: center; flex: 1;">' +
+              '<div class="user-info">' +
+              "<h4>" +
+              user.name +
+              ' <small style="color: #6c757d;">#' +
+              user.id +
+              "</small></h4>" +
+              "<small>📧 " +
+              user.email +
+              "</small><br>" +
+              "<small>📞 " +
+              (user.number || "No phone") +
+              "</small><br>" +
+              "<small>📅 Joined: " +
+              new Date(user.createdAt).toLocaleDateString() +
+              "</small><br>" +
+              '<small style="color: #28a745;">🏆 ' +
+              (verificationBadges.length > 0
+                ? verificationBadges.join(", ")
+                : "No verifications") +
+              "</small>" +
+              "</div>" +
+              "</div>" +
+              '<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">' +
+              '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
+              '<span class="btn ' +
+              (user.isVerified ? "btn-success" : "btn-warning") +
+              '" style="font-size: 0.8rem; padding: 4px 8px;">' +
+              (user.isVerified ? "✅ Verified" : "⏳ Unverified") +
+              "</span>" +
+              "</div>" +
+              '<div class="actions" style="display: flex; gap: 0.5rem;">' +
+              '<button class="btn btn-primary" onclick="viewUserDetails(' +
+              user.id +
+              ', \'buyer\')" style="font-size: 0.8rem; padding: 4px 8px;">👁️ View</button>' +
+              '<button class="btn btn-warning" onclick="suspendUser(' +
+              user.id +
+              ', \'buyer\')" style="font-size: 0.8rem; padding: 4px 8px;">⏸️ Suspend</button>' +
+              '<button class="btn btn-danger" onclick="deleteUser(' +
+              user.id +
+              ', \'buyer\')" style="font-size: 0.8rem; padding: 4px 8px;">🗑️ Delete</button>' +
+              "</div>" +
+              "</div>" +
+              "</div>";
+          });
+          html += "</div>";
+        }
+
+        if (sellers && sellers.length > 0) {
+          html +=
+            '<div class="user-section" data-type="sellers">' +
+            '<h4 style="margin: 2rem 0 1rem 0; color: #28a745; display: flex; align-items: center; gap: 0.5rem;">' +
+            '<i class="fas fa-store"></i> Sellers (' +
+            sellers.length +
+            ")" +
+            "</h4>";
+          sellers.forEach((seller) => {
+            const verificationBadges = [];
+            if (seller.isVerified) verificationBadges.push("📧 Email");
+            if (seller.phoneVerified) verificationBadges.push("📱 Phone");
+            if (seller.campusVerified) verificationBadges.push("🎓 Campus");
+            if (seller.businessVerified) verificationBadges.push("🏢 Business");
+
+            html +=
+              '<div class="verification-item user-item" data-type="seller" data-status="' +
+              (seller.isVerified ? "verified" : "unverified") +
+              '">' +
+              '<div style="display: flex; gap: 1rem; align-items: center; flex: 1;">' +
+              '<div class="user-info">' +
+              "<h4>" +
+              seller.name +
+              ' <small style="color: #6c757d;">#' +
+              seller.id +
+              "</small></h4>" +
+              "<small>📧 " +
+              seller.email +
+              "</small><br>" +
+              "<small>🏪 " +
+              (seller.storeName || "No store name") +
+              "</small><br>" +
+              "<small>📦 " +
+              (seller.productCategory || "No category") +
+              " • " +
+              (seller._count?.products || 0) +
+              " products</small><br>" +
+              "<small>📅 Joined: " +
+              new Date(seller.createdAt).toLocaleDateString() +
+              "</small><br>" +
+              '<small style="color: #28a745;">🏆 ' +
+              (verificationBadges.length > 0
+                ? verificationBadges.join(", ")
+                : "No verifications") +
+              "</small>" +
+              "</div>" +
+              "</div>" +
+              '<div style="display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">' +
+              '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
+              '<span class="btn ' +
+              (seller.isVerified ? "btn-success" : "btn-warning") +
+              '" style="font-size: 0.8rem; padding: 4px 8px;">' +
+              (seller.isVerified ? "✅ Verified" : "⏳ Unverified") +
+              "</span>" +
+              '<span class="btn ' +
+              (seller.campusVerified ? "btn-success" : "btn-secondary") +
+              '" style="font-size: 0.8rem; padding: 4px 8px;">' +
+              "Tier " +
+              (seller.verificationTier || 1) +
+              "</span>" +
+              "</div>" +
+              '<div class="actions" style="display: flex; gap: 0.5rem;">' +
+              '<button class="btn btn-primary" onclick="viewUserDetails(' +
+              seller.id +
+              ', \'seller\')" style="font-size: 0.8rem; padding: 4px 8px;">👁️ View</button>' +
+              '<button class="btn btn-warning" onclick="suspendUser(' +
+              seller.id +
+              ', \'seller\')" style="font-size: 0.8rem; padding: 4px 8px;">⏸️ Suspend</button>' +
+              '<button class="btn btn-danger" onclick="deleteUser(' +
+              seller.id +
+              ', \'seller\')" style="font-size: 0.8rem; padding: 4px 8px;">🗑️ Delete</button>' +
+              "</div>" +
+              "</div>" +
+              "</div>";
+          });
+          html += "</div>";
+        }
+
+        if (!html || (!users?.length && !sellers?.length)) {
+          html +=
+            '<div style="text-align: center; color: #6c757d; padding: 2rem;">' +
+            '<i class="fas fa-users" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>' +
+            "<h4>No Users Found</h4>" +
+            "<p>Users and sellers will appear here once they register.</p>" +
+            "</div>";
+        }
+
+        container.innerHTML = html;
+      }
+
+      function filterUsers() {
+        const typeFilter = document.getElementById("userTypeFilter").value;
+        const statusFilter = document.getElementById("statusFilter").value;
+        const userItems = document.querySelectorAll(".user-item");
+        const userSections = document.querySelectorAll(".user-section");
+
+        userSections.forEach((section) => {
+          const sectionType = section.dataset.type;
+          let showSection = false;
+
+          if (
+            !typeFilter ||
+            (typeFilter === "buyers" && sectionType === "buyers") ||
+            (typeFilter === "sellers" && sectionType === "sellers")
+          ) {
+            showSection = true;
+          }
+
+          section.style.display = showSection ? "block" : "none";
+        });
+
+        userItems.forEach((item) => {
+          const itemType = item.dataset.type;
+          const itemStatus = item.dataset.status;
+
+          const typeMatch =
+            !typeFilter ||
+            (typeFilter === "buyers" && itemType === "buyer") ||
+            (typeFilter === "sellers" && itemType === "seller");
+
+          const statusMatch = !statusFilter || itemStatus === statusFilter;
+
+          item.style.display = typeMatch && statusMatch ? "flex" : "none";
+        });
+      }
+
+      async function viewUserDetails(id, type) {
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading user details...</div>';
+        modal.style.display = "flex";
+
+        const userDetails = await apiCall(
+          "/admin/" +
+            (type === "buyer" ? "users" : "sellers") +
+            "/" +
+            id +
+            "?type=" +
+            type
+        );
+
+        if (userDetails) {
+          content.innerHTML =
+            "<h3>👤 User Details - " +
+            type.toUpperCase() +
+            " #" +
+            id +
+            "</h3>" +
+            '<div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">' +
+            '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">' +
+            "<div><strong>Name:</strong><br>" +
+            userDetails.name +
+            "</div>" +
+            "<div><strong>Email:</strong><br>" +
+            userDetails.email +
+            "</div>" +
+            "<div><strong>Phone:</strong><br>" +
+            (userDetails.number || userDetails.phone || "Not provided") +
+            "</div>" +
+            "<div><strong>Joined:</strong><br>" +
+            new Date(userDetails.createdAt).toLocaleDateString() +
+            "</div>" +
+            "</div>" +
+            "</div>" +
+            '<div style="background: #e8f5e8; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+            '<h4 style="color: #2e7d32; margin-bottom: 0.5rem;">📊 Activity Stats:</h4>' +
+            '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">' +
+            "<div><strong>Orders:</strong><br>" +
+            (userDetails._count?.orders || 0) +
+            "</div>" +
+            "<div><strong>Reviews:</strong><br>" +
+            (userDetails._count?.reviews || 0) +
+            "</div>" +
+            (type === "seller"
+              ? "<div><strong>Products:</strong><br>" +
+                (userDetails._count?.products || 0) +
+                "</div>"
+              : "") +
+            (type === "buyer"
+              ? "<div><strong>Wishlist:</strong><br>" +
+                (userDetails._count?.wishlist || 0) +
+                "</div>"
+              : "") +
+            "</div>" +
+            "</div>" +
+            '<div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+            '<h4 style="color: #1976d2; margin-bottom: 0.5rem;">🛡️ Admin Actions:</h4>' +
+            '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
+            '<button class="btn btn-warning" onclick="resetPassword(' +
+            id +
+            ", '" +
+            type +
+            '\')" style="font-size: 0.9rem;">🔑 Reset Password</button>' +
+            '<button class="btn btn-primary" onclick="sendMessage(' +
+            id +
+            ", '" +
+            type +
+            '\')" style="font-size: 0.9rem;">💬 Send Message</button>' +
+            '<button class="btn btn-secondary" onclick="closeModal()" style="font-size: 0.9rem;">Close</button>' +
+            "</div>" +
+            "</div>";
+        } else {
+          content.innerHTML =
+            '<div style="text-align: center; color: #dc3545; padding: 2rem;">Failed to load user details</div>';
+        }
+      }
+
+      async function suspendUser(id, type) {
+        const reason = prompt("Reason for suspension:");
+        if (reason) {
+          if (confirm("Suspend " + type + " #" + id + "?\nReason: " + reason)) {
+            const endpoint =
+              "/admin/" +
+              (type === "buyer" ? "users" : "sellers") +
+              "/" +
+              id +
+              "/suspend";
+            const result = await apiCall(endpoint, {
+              method: "PATCH",
+              body: JSON.stringify({ reason }),
+            });
+            if (result) {
+              showSuccess("User suspended successfully");
+              loadUsers();
+            }
+          }
+        }
+      }
+
+      function deleteUser(id, type) {
+        if (
+          confirm(
+            "⚠️ PERMANENTLY DELETE " +
+              type +
+              " #" +
+              id +
+              "?\n\nThis action cannot be undone!"
+          )
+        ) {
+          const endpoint =
+            type === "buyer" ? "/admin/users/" + id : "/admin/sellers/" + id;
+          apiCall(endpoint, { method: "DELETE" }).then((result) => {
+            if (result) {
+              showSuccess("User deleted successfully");
+              loadUsers();
+            }
+          });
+        }
+      }
+
+      async function exportUsers() {
+        const exportData = await apiCall("/admin/users/export");
+        if (exportData) {
+          const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+            type: "application/json",
+          });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download =
+            "dex_users_export_" +
+            new Date().toISOString().split("T")[0] +
+            ".json";
+          a.click();
+          URL.revokeObjectURL(url);
+          showSuccess("User data exported successfully");
+        }
+      }
+
+      async function resetPassword(id, type) {
+        if (confirm("Send password reset email to " + type + " #" + id + "?")) {
+          const result = await apiCall(
+            "/admin/users/" + id + "/reset-password",
+            {
+              method: "POST",
+              body: JSON.stringify({ type }),
+            }
+          );
+          if (result) {
+            showSuccess("Password reset email sent");
+          }
+        }
+      }
+
+      async function sendMessage(id, type) {
+        const title = prompt("Message title:");
+        if (!title) return;
+
+        const message = prompt("Message content:");
+        if (message) {
+          const result = await apiCall("/admin/users/" + id + "/message", {
+            method: "POST",
+            body: JSON.stringify({ type, message, title }),
+          });
+          if (result) {
+            showSuccess("Message sent successfully");
+            closeModal();
+          }
+        }
+      }
+
+      async function messageAllUsers() {
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          "<h3>📢 Broadcast Message to All Users</h3>" +
+          '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 1rem; margin: 1rem 0; color: #856404;">' +
+          '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">' +
+          '<i class="fas fa-exclamation-triangle"></i>' +
+          "<strong>Important:</strong>" +
+          "</div>" +
+          '<p style="margin: 0; font-size: 0.9rem;">This will send a notification to ALL users (buyers and sellers). Use responsibly for important announcements only.</p>' +
+          "</div>" +
+          '<div style="margin: 1rem 0;">' +
+          '<label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Message Type:</label>' +
+          '<select id="messageType" style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 1rem;">' +
+          '<option value="announcement">📢 Announcement</option>' +
+          '<option value="maintenance">🔧 Maintenance Notice</option>' +
+          '<option value="update">🎆 Platform Update</option>' +
+          '<option value="safety">🛡️ Safety Alert</option>' +
+          '<option value="promotion">🎉 Promotion</option>' +
+          "</select>" +
+          '<label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Title:</label>' +
+          '<input type="text" id="broadcastTitle" placeholder="Enter message title..." style="width: 100%; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; margin-bottom: 1rem;">' +
+          '<label style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Message:</label>' +
+          '<textarea id="broadcastMessage" placeholder="Enter your message..." style="width: 100%; min-height: 100px; padding: 0.5rem; border: 1px solid #ddd; border-radius: 4px; resize: vertical;"></textarea>' +
+          "</div>" +
+          '<div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+          '<h4 style="color: #1976d2; margin-bottom: 0.5rem;">📊 Delivery Method:</h4>' +
+          '<p style="margin: 0; font-size: 0.9rem; color: #1976d2;">Messages will be delivered as in-app notifications that users see when they log in to DEX.</p>' +
+          "</div>" +
+          '<div style="text-align: center; margin-top: 1.5rem;">' +
+          '<button class="btn btn-success" onclick="sendBroadcastMessage()" style="margin-right: 0.5rem;">🚀 Send to All Users</button>' +
+          '<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>' +
+          "</div>";
+        modal.style.display = "flex";
+      }
+
+      async function sendBroadcastMessage() {
+        const type = document.getElementById("messageType").value;
+        const title = document.getElementById("broadcastTitle").value.trim();
+        const message = document
+          .getElementById("broadcastMessage")
+          .value.trim();
+
+        if (!title || !message) {
+          showError("Please fill in both title and message");
+          return;
+        }
+
+        if (message.length < 10) {
+          showError("Message must be at least 10 characters long");
+          return;
+        }
+
+        const confirmText = `Send broadcast message to ALL users?\n\nType: ${type}\nTitle: ${title}\nMessage: ${message.substring(
+          0,
+          100
+        )}${message.length > 100 ? "..." : ""}`;
+
+        if (confirm(confirmText)) {
+          const result = await apiCall("/admin/broadcast-message", {
+            method: "POST",
+            body: JSON.stringify({ type, title, message }),
+          });
+
+          if (result) {
+            showSuccess(
+              `Broadcast message sent to ${result.totalUsers} users successfully!`
+            );
+            closeModal();
+          }
+        }
+      }
+
+      function filterVerifications() {
+        const statusFilter = document.getElementById("statusFilter").value;
+        const typeFilter = document.getElementById("typeFilter").value;
+        const searchTerm = document
+          .getElementById("searchInput")
+          .value.toLowerCase();
+        const items = document.querySelectorAll(".verification-item");
+
+        items.forEach((item) => {
+          const status = item.dataset.status;
+          const text = item.textContent.toLowerCase();
+          const type = item.textContent.includes("student")
+            ? "student"
+            : item.textContent.includes("alumni")
+            ? "alumni"
+            : item.textContent.includes("staff")
+            ? "staff"
+            : "";
+
+          const statusMatch = !statusFilter || status === statusFilter;
+          const typeMatch = !typeFilter || type === typeFilter;
+          const searchMatch = !searchTerm || text.includes(searchTerm);
+
+          item.style.display =
+            statusMatch && typeMatch && searchMatch ? "flex" : "none";
+        });
+      }
+
+      let selectedVerifications = new Set();
+
+      function toggleSelection(id, checkbox) {
+        if (checkbox.checked) {
+          selectedVerifications.add(id);
+        } else {
+          selectedVerifications.delete(id);
+        }
+        updateBulkActions();
+      }
+
+      function updateBulkActions() {
+        const count = selectedVerifications.size;
+        document.getElementById("selectedCount").textContent = count;
+        document.getElementById("bulkActions").style.display =
+          count > 0 ? "flex" : "none";
+      }
+
+      function clearSelection() {
+        selectedVerifications.clear();
+        document
+          .querySelectorAll(".verification-checkbox")
+          .forEach((cb) => (cb.checked = false));
+        updateBulkActions();
+      }
+
+      async function bulkApprove() {
+        if (selectedVerifications.size === 0) return;
+        if (
+          !confirm("Approve " + selectedVerifications.size + " verifications?")
+        )
+          return;
+
+        for (const id of selectedVerifications) {
+          await reviewVerification(id, "approved");
+        }
+        clearSelection();
+      }
+
+      async function bulkReject() {
+        if (selectedVerifications.size === 0) return;
+        const reason = prompt("Rejection reason (optional):");
+        if (
+          !confirm("Reject " + selectedVerifications.size + " verifications?")
+        )
+          return;
+
+        for (const id of selectedVerifications) {
+          await reviewVerification(id, "rejected", reason);
+        }
+        clearSelection();
+      }
+
+      function logout() {
+        localStorage.removeItem("adminToken");
+        window.location.href = "login.html";
+      }
+
+      function filterReports() {
+        const statusFilter =
+          document.getElementById("reportStatusFilter").value;
+        const typeFilter = document.getElementById("reportTypeFilter").value;
+        const items = document.querySelectorAll(".report-item");
+
+        items.forEach((item) => {
+          const status = item.dataset.status;
+          const type = item.dataset.type;
+
+          const statusMatch = !statusFilter || status === statusFilter;
+          const typeMatch = !typeFilter || type === typeFilter;
+
+          item.style.display = statusMatch && typeMatch ? "flex" : "none";
+        });
+      }
+
+      async function viewReportDetails(id) {
+        const modal = document.getElementById("documentModal");
+        const content = document.getElementById("modalContent");
+
+        content.innerHTML =
+          "<h3>🚨 Safety Report Details - #" +
+          id +
+          "</h3>" +
+          '<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 6px; padding: 1rem; margin: 1rem 0; color: #856404;">' +
+          '<h4 style="margin-bottom: 0.5rem;">📋 Report Information:</h4>' +
+          '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; font-size: 0.9rem;">' +
+          "<div><strong>Report ID:</strong><br>#" +
+          id +
+          "</div>" +
+          "<div><strong>Status:</strong><br>Pending Investigation</div>" +
+          "<div><strong>Priority:</strong><br>Medium</div>" +
+          "<div><strong>Date:</strong><br>" +
+          new Date().toLocaleDateString() +
+          "</div>" +
+          "</div>" +
+          "</div>" +
+          '<div style="background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 6px; padding: 1rem; margin: 1rem 0; color: #721c24;">' +
+          '<h4 style="margin-bottom: 0.5rem;">👤 Involved Users:</h4>' +
+          '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.9rem;">' +
+          "<div><strong>Reporter:</strong><br>User #123 (john@example.com)</div>" +
+          "<div><strong>Reported User:</strong><br>Seller #456 (seller@example.com)</div>" +
+          "</div>" +
+          "</div>" +
+          '<div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+          '<h4 style="color: #1976d2; margin-bottom: 0.5rem;">📝 Report Details:</h4>' +
+          '<p style="margin: 0; font-size: 0.9rem; color: #1976d2;">This seller is posting fake products and not delivering items after payment. Multiple users have complained.</p>' +
+          "</div>" +
+          '<div style="background: #e8f5e8; padding: 1rem; border-radius: 6px; margin: 1rem 0;">' +
+          '<h4 style="color: #2e7d32; margin-bottom: 0.5rem;">🔍 Admin Actions:</h4>' +
+          '<div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">' +
+          '<button class="btn btn-warning" onclick="investigateReport(' +
+          id +
+          ')" style="font-size: 0.9rem;">🔍 Start Investigation</button>' +
+          '<button class="btn btn-danger" onclick="suspendReportedUser(' +
+          id +
+          ')" style="font-size: 0.9rem;">⏸️ Suspend User</button>' +
+          '<button class="btn btn-success" onclick="resolveReport(' +
+          id +
+          ')" style="font-size: 0.9rem;">✅ Resolve</button>' +
+          '<button class="btn btn-secondary" onclick="closeModal()" style="font-size: 0.9rem;">Close</button>' +
+          "</div>" +
+          "</div>";
+        modal.style.display = "flex";
+      }
+
+      async function investigateReport(id) {
+        const notes = prompt("Investigation notes (optional):");
+        if (confirm("Mark report #" + id + " as under investigation?")) {
+          // Simulate API call
+          showSuccess("Report #" + id + " marked as under investigation");
+          closeModal();
+          loadReports();
+        }
+      }
+
+      async function resolveReport(id) {
+        const resolution = prompt("Resolution notes:");
+        if (
+          resolution &&
+          confirm(
+            "Mark report #" + id + " as resolved?\nResolution: " + resolution
+          )
+        ) {
+          // Simulate API call
+          showSuccess("Report #" + id + " marked as resolved");
+          closeModal();
+          loadReports();
+        }
+      }
+
+      async function suspendReportedUser(id) {
+        const reason = prompt("Suspension reason:");
+        if (
+          reason &&
+          confirm("Suspend the reported user?\nReason: " + reason)
+        ) {
+          // Simulate API call
+          showSuccess("Reported user suspended");
+          closeModal();
+          loadReports();
+        }
+      }
+
+      async function loadInsights() {
+        const container = document.getElementById("insightsList");
+        container.innerHTML =
+          '<div style="text-align: center; padding: 2rem;"><i class="fas fa-spinner fa-spin"></i> Loading insights...</div>';
+
+        const [products, orders] = await Promise.all([
+          apiCall("/admin/products"),
+          apiCall("/admin/orders"),
+        ]);
+
+        let html =
+          '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 2rem;">';
+
+        // Key metrics cards
+        const totalProducts = products ? products.length : 0;
+        const activeProducts = products
+          ? products.filter((p) => p.isActive).length
+          : 0;
+        const totalOrders = orders ? orders.length : 0;
+        const pendingOrders = orders
+          ? orders.filter((o) => o.status === "pending").length
+          : 0;
+
+        html +=
+          '<div class="stat-card">' +
+          '<div class="stat-number">' +
+          totalProducts +
+          "</div>" +
+          '<div class="stat-label">Total Products</div>' +
+          '<small style="color: #28a745;">' +
+          activeProducts +
+          " active</small>" +
+          "</div>";
+
+        html +=
+          '<div class="stat-card">' +
+          '<div class="stat-number">' +
+          totalOrders +
+          "</div>" +
+          '<div class="stat-label">Interest Requests</div>' +
+          '<small style="color: #ffc107;">' +
+          pendingOrders +
+          " pending</small>" +
+          "</div>";
+
+        // Category breakdown
+        if (products && products.length > 0) {
+          const categories = {};
+          products.forEach((p) => {
+            categories[p.category] = (categories[p.category] || 0) + 1;
+          });
+          const topCategory = Object.keys(categories).reduce((a, b) =>
+            categories[a] > categories[b] ? a : b
+          );
+
+          html +=
+            '<div class="stat-card">' +
+            '<div class="stat-number">' +
+            Object.keys(categories).length +
+            "</div>" +
+            '<div class="stat-label">Categories</div>' +
+            '<small style="color: #007bff;">Top: ' +
+            topCategory +
+            "</small>" +
+            "</div>";
+        }
+
+        html += "</div>";
+
+        // Recent activity
+        html +=
+          '<div style="background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem;">' +
+          '<h4 style="margin-bottom: 1rem; color: #2c3e50;">📈 Recent Activity</h4>';
+
+        if (products && products.length > 0) {
+          html +=
+            '<div style="margin-bottom: 1.5rem;">' +
+            '<h5 style="color: #28a745; margin-bottom: 0.5rem;">🛍️ Latest Products</h5>';
+          products.slice(0, 5).forEach((product) => {
+            html +=
+              '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">' +
+              "<div>" +
+              "<strong>" +
+              product.name +
+              "</strong><br>" +
+              '<small style="color: #6c757d;">₵' +
+              product.price +
+              " • " +
+              product.seller?.name +
+              "</small>" +
+              "</div>" +
+              '<span class="btn ' +
+              (product.isActive ? "btn-success" : "btn-secondary") +
+              '" style="font-size: 0.8rem; padding: 4px 8px;">' +
+              (product.isActive ? "Active" : "Inactive") +
+              "</span>" +
+              "</div>";
+          });
+          html += "</div>";
+        }
+
+        if (orders && orders.length > 0) {
+          html +=
+            "<div>" +
+            '<h5 style="color: #007bff; margin-bottom: 0.5rem;">💬 Recent Interest</h5>';
+          orders.slice(0, 5).forEach((order) => {
+            html +=
+              '<div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid #f0f0f0;">' +
+              "<div>" +
+              "<strong>" +
+              (order.buyer?.name || "Unknown Buyer") +
+              "</strong><br>" +
+              '<small style="color: #6c757d;">Interested in product • ' +
+              new Date(order.createdAt).toLocaleDateString() +
+              "</small>" +
+              "</div>" +
+              '<span class="btn btn-warning" style="font-size: 0.8rem; padding: 4px 8px;">' +
+              order.status.toUpperCase() +
+              "</span>" +
+              "</div>";
+          });
+          html += "</div>";
+        }
+
+        html += "</div>";
+
+        // Platform health
+        html +=
+          '<div style="background: #e8f5e8; border-radius: 8px; padding: 1.5rem;">' +
+          '<h4 style="color: #2e7d32; margin-bottom: 1rem;">🎯 V1 Platform Health</h4>' +
+          '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">' +
+          '<div style="text-align: center;">' +
+          '<div style="font-size: 1.5rem; font-weight: bold; color: #2e7d32;">' +
+          Math.round((activeProducts / Math.max(totalProducts, 1)) * 100) +
+          "%</div>" +
+          "<small>Product Activation Rate</small>" +
+          "</div>" +
+          '<div style="text-align: center;">' +
+          '<div style="font-size: 1.5rem; font-weight: bold; color: #2e7d32;">' +
+          Math.round((totalOrders / Math.max(totalProducts, 1)) * 100) +
+          "%</div>" +
+          "<small>Interest per Product</small>" +
+          "</div>" +
+          "</div>" +
+          '<div style="margin-top: 1rem; padding: 1rem; background: rgba(255,255,255,0.7); border-radius: 6px;">' +
+          '<p style="margin: 0; font-size: 0.9rem; color: #2e7d32;">💡 <strong>V1 Focus:</strong> Building safe campus connections through product discovery and direct seller contact.</p>' +
+          "</div>" +
+          "</div>";
+
+        if (!products?.length && !orders?.length) {
+          html =
+            '<div style="text-align: center; color: #6c757d; padding: 3rem;">' +
+            '<i class="fas fa-chart-line" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.3;"></i>' +
+            "<h4>No Activity Yet</h4>" +
+            "<p>Sales insights and engagement metrics will appear here as users interact with the platform.</p>" +
+            '<div style="background: #e3f2fd; padding: 1rem; border-radius: 6px; margin-top: 1rem; text-align: left;">' +
+            '<h5 style="color: #1976d2; margin-bottom: 0.5rem;">📊 Metrics Tracked:</h5>' +
+            '<ul style="color: #1976d2; margin: 0; padding-left: 1.5rem; font-size: 0.9rem;">' +
+            "<li>Product listings and activation rates</li>" +
+            "<li>Buyer interest and contact requests</li>" +
+            "<li>Category popularity and trends</li>" +
+            "<li>Seller engagement and activity</li>" +
+            "</ul>" +
+            "</div>" +
+            "</div>";
+        }
+
+        container.innerHTML = html;
+      }
+
+      document
+        .getElementById("documentModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) {
+            closeModal();
+          }
+        });
+    </script>
+  </body>
+</html>

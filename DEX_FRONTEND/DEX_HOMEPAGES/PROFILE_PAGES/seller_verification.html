@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seller Verification - DEX</title>
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            animation: gradientShift 10s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+            50% { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        }
+        
+        .container { max-width: 800px; margin: 20px auto; padding: 20px; }
+        .card { 
+            background: rgba(255, 255, 255, 0.95); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 25px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        }
+        
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: #333; margin-bottom: 10px; }
+        .tier-badge { display: inline-block; padding: 8px 16px; border-radius: 20px; font-weight: bold; }
+        .tier-1 { background: #e3f2fd; color: #1976d2; }
+        .tier-2 { background: #f3e5f5; color: #7b1fa2; }
+        .tier-3 { background: #e8f5e8; color: #388e3c; }
+        
+        .verification-item { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 20px; 
+            border: 2px solid rgba(224, 224, 224, 0.3); 
+            border-radius: 15px; 
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .verification-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+        .verification-item:hover::before {
+            left: 100%;
+        }
+        .verification-item.verified { 
+            border-color: #4caf50; 
+            background: linear-gradient(135deg, rgba(76,175,80,0.1), rgba(139,195,74,0.1));
+            box-shadow: 0 8px 25px rgba(76,175,80,0.2);
+        }
+        .verification-item.pending { 
+            border-color: #ff9800; 
+            background: linear-gradient(135deg, rgba(255,152,0,0.1), rgba(255,193,7,0.1));
+            box-shadow: 0 8px 25px rgba(255,152,0,0.2);
+        }
+        
+        .verification-info { display: flex; align-items: center; gap: 12px; }
+        .verification-icon { 
+            font-size: 28px; 
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+        }
+        .verified .verification-icon { 
+            color: #4caf50; 
+            animation: verifiedPulse 2s ease-in-out infinite;
+        }
+        .pending .verification-icon { 
+            color: #ff9800;
+            animation: pendingRotate 2s linear infinite;
+        }
+        .unverified .verification-icon { 
+            color: #ccc;
+            opacity: 0.6;
+        }
+        
+        @keyframes verifiedPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        @keyframes pendingRotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .verification-details h3 { margin-bottom: 4px; }
+        .verification-details p { color: #666; font-size: 14px; }
+        
+        .verification-action button { 
+            padding: 12px 20px; 
+            border: none; 
+            border-radius: 25px; 
+            cursor: pointer; 
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .verification-action button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            transform: translate(-50%, -50%);
+        }
+        .verification-action button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, #2196f3, #21cbf3); 
+            color: white;
+            box-shadow: 0 6px 20px rgba(33,150,243,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(33,150,243,0.4);
+        }
+        .btn-success { 
+            background: linear-gradient(135deg, #4caf50, #8bc34a); 
+            color: white;
+            box-shadow: 0 6px 20px rgba(76,175,80,0.3);
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(76,175,80,0.4);
+        }
+        .btn-warning { 
+            background: linear-gradient(135deg, #ff9800, #ffc107); 
+            color: white;
+            box-shadow: 0 6px 20px rgba(255,152,0,0.3);
+        }
+        .btn-warning:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255,152,0,0.4);
+        }
+        .btn-warning:disabled { 
+            background: linear-gradient(135deg, #ffcc80, #ffe0b2); 
+            color: #666; 
+            cursor: not-allowed; 
+            opacity: 0.7;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .verification-form { 
+            display: none; 
+            margin-top: 20px; 
+            padding: 25px; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(248,250,252,0.95)); 
+            border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            animation: formSlideIn 0.5s ease-out;
+        }
+        
+        @keyframes formSlideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .form-group { 
+            margin-bottom: 20px; 
+            position: relative;
+        }
+        
+        .form-group label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: #2d3748;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea { 
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 2px solid #e2e8f0; 
+            border-radius: 12px; 
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(5px);
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1), 0 8px 25px rgba(102,126,234,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: #64748b;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .file-upload-area {
+            position: relative;
+            border: 2px dashed #cbd5e0;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(247,250,252,0.8), rgba(237,242,247,0.8));
+            cursor: pointer;
+        }
+        
+        .file-upload-area:hover {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102,126,234,0.05), rgba(102,126,234,0.1));
+            transform: translateY(-2px);
+        }
+        
+        .file-upload-area.dragover {
+            border-color: #4299e1;
+            background: linear-gradient(135deg, rgba(66,153,225,0.1), rgba(66,153,225,0.15));
+            transform: scale(1.02);
+        }
+        
+        .file-upload-icon {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 10px;
+            animation: uploadPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes uploadPulse {
+            0%, 100% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+        
+        .file-upload-text {
+            color: #4a5568;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        
+        .file-upload-hint {
+            color: #718096;
+            font-size: 0.85rem;
+        }
+        
+        .file-preview {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background: rgba(72,187,120,0.1);
+            border: 1px solid rgba(72,187,120,0.3);
+            border-radius: 8px;
+            color: #2f855a;
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar { 
+            background: rgba(224, 224, 224, 0.3); 
+            height: 12px; 
+            border-radius: 20px; 
+            margin: 25px 0; 
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress-fill { 
+            background: linear-gradient(90deg, #4caf50, #8bc34a, #66bb6a); 
+            height: 100%; 
+            border-radius: 20px; 
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .benefits { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; margin-top: 20px; }
+        .benefit-card { padding: 16px; border-radius: 8px; text-align: center; }
+        .benefit-tier-1 { background: #e3f2fd; }
+        .benefit-tier-2 { background: #f3e5f5; }
+        .benefit-tier-3 { background: #e8f5e8; }
+        
+        @keyframes celebrationPulse {
+            0%, 100% { box-shadow: 0 15px 35px rgba(76,175,80,0.3); }
+            50% { box-shadow: 0 20px 45px rgba(76,175,80,0.5); }
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container { margin: 10px; padding: 10px; }
+            .card { padding: 20px; margin-bottom: 15px; }
+            .header h1 { font-size: 1.5rem; }
+            
+            .verification-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 15px;
+            }
+            .verification-info { flex-direction: column; gap: 8px; }
+            .verification-icon { font-size: 2rem; }
+            
+            .verification-action button {
+                width: 100%;
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+            
+            #dashboardAccess div[style*="display: flex"] {
+                flex-direction: column;
+                gap: 10px;
+            }
+            #dashboardAccess button {
+                width: 100%;
+                margin: 5px 0;
+            }
+            
+            .benefits { grid-template-columns: 1fr; }
+            .tier-badge { font-size: 0.9rem; padding: 6px 12px; }
+        }
+        
+        @media (max-width: 480px) {
+            .card { padding: 15px; }
+            .header h1 { font-size: 1.3rem; }
+            .verification-icon { font-size: 1.5rem; }
+            .verification-details h3 { font-size: 1rem; }
+            .verification-details p { font-size: 0.85rem; }
+            
+            #dashboardAccess {
+                padding: 20px 15px;
+            }
+            #dashboardAccess h3 {
+                font-size: 1.2rem;
+            }
+            #dashboardAccess p {
+                font-size: 1rem;
+            }
+            #dashboardAccess button {
+                padding: 12px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="card header">
+            <h1>🛡️ Seller Verification Center</h1>
+            <div class="tier-badge tier-1" id="currentTier">Tier 1: Basic Seller</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 25%"></div>
+            </div>
+            <p id="progressText">1 of 2 verifications available (Phone & Emergency coming soon)</p>
+        </div>
+
+        <!-- Verification Items -->
+        <div class="card">
+            <h2>📋 Verification Checklist</h2>
+            
+            <!-- Dashboard Access Button -->
+            <div id="dashboardAccess" style="display: none; background: linear-gradient(135deg, #4CAF50, #45a049, #66bb6a); padding: 25px; border-radius: 20px; margin-bottom: 25px; text-align: center; color: white; box-shadow: 0 15px 35px rgba(76,175,80,0.3); animation: celebrationPulse 2s ease-in-out infinite;">
+                <div style="font-size: 3rem; margin-bottom: 10px; animation: bounce 1s ease-in-out infinite;">🎉</div>
+                <h3 style="font-size: 1.5rem; margin-bottom: 10px;">Ready to Start Selling!</h3>
+                <p style="margin: 15px 0; opacity: 0.9; font-size: 1.1rem;">Your email is verified - you can now access your seller dashboard!</p>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; margin-top: 20px;">
+                    <button onclick="goToDashboard()" style="background: white; color: #4CAF50; border: none; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; box-shadow: 0 8px 20px rgba(0,0,0,0.1); transition: all 0.3s ease; transform: scale(1);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">🚀 Go to Dashboard</button>
+                    <button onclick="continueVerification()" style="background: transparent; color: white; border: 2px solid white; padding: 15px 30px; border-radius: 50px; font-weight: bold; cursor: pointer; font-size: 1.1rem; transition: all 0.3s ease; transform: scale(1);" onmouseover="this.style.transform='scale(1.05)'; this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.transform='scale(1)'; this.style.background='transparent'">📋 Complete More Verification</button>
+                </div>
+            </div>
+            
+            <!-- Email Verification -->
+            <div class="verification-item verified" id="emailVerification">
+                <div class="verification-info">
+                    <i class="fas fa-envelope verification-icon"></i>
+                    <div class="verification-details">
+                        <h3>Email Verification</h3>
+                        <p>Confirm your email address</p>
+                    </div>
+                </div>
+                <div class="verification-action">
+                    <button class="btn-success">✅ Verified</button>
+                </div>
+            </div>
+
+            <!-- Phone Verification -->
+            <div class="verification-item unverified" id="phoneVerification">
+                <div class="verification-info">
+                    <i class="fas fa-phone verification-icon"></i>
+                    <div class="verification-details">
+                        <h3>Phone Verification</h3>
+                        <p>🚧 Coming Soon - Budget-friendly verification method in development</p>
+                    </div>
+                </div>
+                <div class="verification-action">
+                    <button class="btn-warning" disabled>🔜 Coming Soon</button>
+                </div>
+            </div>
+
+            <!-- Emergency Contact Verification -->
+            <div class="verification-item unverified" id="emergencyVerification">
+                <div class="verification-info">
+                    <i class="fas fa-phone-alt verification-icon"></i>
+                    <div class="verification-details">
+                        <h3>Emergency Contact</h3>
+                        <p>🚧 Coming Soon - Enhanced safety verification in development</p>
+                    </div>
+                </div>
+                <div class="verification-action">
+                    <button class="btn-warning" disabled>🔜 Coming Soon</button>
+                </div>
+            </div>
+
+            <!-- Campus Verification -->
+            <div class="verification-item unverified" id="campusVerification">
+                <div class="verification-info">
+                    <i class="fas fa-graduation-cap verification-icon"></i>
+                    <div class="verification-details">
+                        <h3>Campus Connection</h3>
+                        <p>Verify your connection to campus (Optional)</p>
+                    </div>
+                </div>
+                <div class="verification-action">
+                    <button class="btn-warning" onclick="startCampusVerification()">Manual Review Required</button>
+                </div>
+                <div class="verification-form" id="campusForm">
+                    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); padding: 20px; border-radius: 15px; margin-bottom: 20px; color: #92400e; border: 1px solid rgba(251,191,36,0.3); box-shadow: 0 8px 25px rgba(251,191,36,0.1);">
+                        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                            <div style="font-size: 1.5rem;">🔒</div>
+                            <h4 style="margin: 0; font-size: 1.1rem;">Secure Verification Required</h4>
+                        </div>
+                        <p style="font-size: 0.9rem; margin: 0; opacity: 0.9;">For security, we require multiple documents to verify your campus connection.</p>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🎯 Connection Type:</label>
+                        <select id="campusType" onchange="updateRequiredDocs()" style="background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 4 5"><path fill="%23667eea" d="M2 0L0 2h4zm0 5L0 3h4z"/></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 12px; appearance: none;">
+                            <option value="">✨ Select your connection type</option>
+                            <option value="current_student">🎓 Current Student</option>
+                            <option value="staff_faculty">👨🏫 Staff/Faculty</option>
+                            <option value="alumni">🎖️ Alumni</option>
+                        </select>
+                    </div>
+                    
+                    <div id="requiredDocs" style="display: none; background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); padding: 20px; border-radius: 15px; margin: 20px 0; border: 1px solid rgba(99,102,241,0.2); box-shadow: 0 8px 25px rgba(99,102,241,0.1);">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+                            <div style="font-size: 1.3rem;">📋</div>
+                            <h4 style="color: #4c1d95; margin: 0; font-size: 1.05rem;">Required Documents:</h4>
+                        </div>
+                        <div id="docsList" style="background: rgba(255,255,255,0.6); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🆔 1. Primary Document (Student/Staff ID):</label>
+                        <div class="file-upload-area" onclick="document.getElementById('primaryDoc').click()">
+                            <div class="file-upload-icon">📄</div>
+                            <div class="file-upload-text">Click to upload or drag & drop</div>
+                            <div class="file-upload-hint">JPG, PNG, PDF up to 5MB</div>
+                            <input type="file" id="primaryDoc" accept=".jpg,.jpeg,.png,.pdf" required style="display: none;" onchange="showFilePreview(this, 'primaryPreview')">
+                            <div id="primaryPreview" class="file-preview"></div>
+                        </div>
+                        <small>📸 Clear photo of front and back of your ID</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>📋 2. Secondary Document:</label>
+                        <div class="file-upload-area" onclick="document.getElementById('secondaryDoc').click()">
+                            <div class="file-upload-icon">📑</div>
+                            <div class="file-upload-text">Click to upload or drag & drop</div>
+                            <div class="file-upload-hint">JPG, PNG, PDF up to 5MB</div>
+                            <input type="file" id="secondaryDoc" accept=".jpg,.jpeg,.png,.pdf" required style="display: none;" onchange="showFilePreview(this, 'secondaryPreview')">
+                            <div id="secondaryPreview" class="file-preview"></div>
+                        </div>
+                        <small>📝 Admission letter, fee receipt, or timetable</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>🤳 3. Verification Selfie:</label>
+                        <div class="file-upload-area" onclick="document.getElementById('selfieDoc').click()">
+                            <div class="file-upload-icon">📷</div>
+                            <div class="file-upload-text">Click to upload or drag & drop</div>
+                            <div class="file-upload-hint">JPG, PNG up to 5MB</div>
+                            <input type="file" id="selfieDoc" accept=".jpg,.jpeg,.png" required style="display: none;" onchange="showFilePreview(this, 'selfiePreview')">
+                            <div id="selfiePreview" class="file-preview"></div>
+                        </div>
+                        <small>📸 Selfie holding your student/staff ID next to your face</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>💬 Additional Notes (Optional):</label>
+                        <textarea id="verificationNotes" placeholder="✨ Any additional information to help verify your campus connection..." style="min-height: 80px; resize: vertical;"></textarea>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, rgba(56,178,172,0.1), rgba(14,165,233,0.1)); padding: 18px; border-radius: 12px; margin: 20px 0; color: #0f4c75; font-size: 0.9rem; border: 1px solid rgba(56,178,172,0.2); box-shadow: 0 8px 25px rgba(56,178,172,0.1);">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <span style="font-size: 1.2rem;">⏱️</span>
+                            <strong>Review Time:</strong> 24-48 hours
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                            <span style="font-size: 1.2rem;">🔔</span>
+                            <strong>Notification:</strong> Admin will notify you immediately once approved
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">🔒</span>
+                            <strong>Privacy:</strong> Documents are securely stored and only used for verification
+                        </div>
+                    </div>
+                    
+                    <button type="button" onclick="submitCampusVerification()" class="btn-success" style="width: 100%; padding: 15px; font-size: 1.05rem; position: relative; overflow: hidden;" id="submitBtn">
+                        <span id="submitText">🚀 Submit for Review</span>
+                        <div id="submitLoader" style="display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                            <div style="width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Benefits -->
+        <div class="card">
+            <h2>🎯 Verification Benefits</h2>
+            <div class="benefits">
+                <div class="benefit-card benefit-tier-1">
+                    <h3>🏪 Tier 1: Basic</h3>
+                    <p>Email + Phone verified</p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                        <li>✅ Can list products</li>
+                        <li>✅ Basic seller profile</li>
+                        <li>⚠️ Limited visibility</li>
+                    </ul>
+                </div>
+                <div class="benefit-card benefit-tier-2">
+                    <h3>🎓 Tier 2: Campus</h3>
+                    <p>+ Campus connection verified</p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                        <li>✅ Higher search ranking</li>
+                        <li>✅ Campus verified badge</li>
+                        <li>✅ Featured in campus section</li>
+                    </ul>
+                </div>
+                <div class="benefit-card benefit-tier-3">
+                    <h3>🏢 Tier 3: Business</h3>
+                    <p>+ Business documents verified</p>
+                    <ul style="text-align: left; margin-top: 10px;">
+                        <li>✅ Premium seller features</li>
+                        <li>✅ Business verified badge</li>
+                        <li>✅ Priority customer support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load verification status on page load
+        window.addEventListener('DOMContentLoaded', loadVerificationStatus);
+
+        async function loadVerificationStatus() {
+            try {
+                // Don't clear new seller flag here - let seller sign in handle it
+                
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser'));
+                
+                if (!user || user.role !== 'seller') {
+                    window.location.href = '../REGISTRY_PAGES/seller_sign_in.html';
+                    return;
+                }
+                
+                // Use user data from login response for immediate display
+                updateVerificationUI(user);
+                
+                // Show dashboard access since email is verified (they're logged in)
+                document.getElementById('dashboardAccess').style.display = 'block';
+                
+                // Also fetch fresh status from server
+                const response = await fetch('http://localhost:5000/api/sellers/profile', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    updateVerificationUI(data);
+                }
+            } catch (error) {
+                console.error('Failed to load verification status:', error);
+                // Use cached user data as fallback
+                const user = JSON.parse(localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser'));
+                if (user) {
+                    updateVerificationUI(user);
+                    document.getElementById('dashboardAccess').style.display = 'block';
+                }
+            }
+        }
+
+        function updateVerificationUI(status) {
+            // Update progress and tier (only email + campus available for now)
+            let progress = 50; // Email always verified at this point
+            if (status.campusVerified) progress += 50;
+            
+            document.getElementById('progressFill').style.width = progress + '%';
+            const available = status.campusVerified ? 2 : 1;
+            document.getElementById('progressText').textContent = `${available} of 2 verifications complete (Phone & Emergency coming soon)`;
+            
+            // Update tier badge
+            const tierBadge = document.getElementById('currentTier');
+            if (status.verificationTier === 3) {
+                tierBadge.textContent = 'Tier 3: Business Seller';
+                tierBadge.className = 'tier-badge tier-3';
+            } else if (status.verificationTier === 2) {
+                tierBadge.textContent = 'Tier 2: Campus Seller';
+                tierBadge.className = 'tier-badge tier-2';
+            }
+            
+            // Update verification items
+            updateVerificationItem('phoneVerification', status.phoneVerified);
+            updateVerificationItem('emergencyVerification', status.emergencyContactVerified);
+            updateVerificationItem('campusVerification', status.campusVerified);
+        }
+
+        function updateVerificationItem(itemId, isVerified) {
+            const item = document.getElementById(itemId);
+            if (isVerified) {
+                item.className = 'verification-item verified';
+                item.querySelector('.verification-action button').textContent = '✅ Verified';
+                item.querySelector('.verification-action button').className = 'btn-success';
+            }
+        }
+
+        // Phone verification functions
+        function startPhoneVerification() {
+            document.getElementById('phoneForm').style.display = 'block';
+        }
+
+        async function sendPhoneCode() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/verification/phone/send-email', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                alert(data.message + ' Check your email for the verification code.');
+            } catch (error) {
+                alert('Failed to send verification email');
+            }
+        }
+
+        async function verifyPhoneCode() {
+            try {
+                const code = document.getElementById('phoneCode').value;
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/verification/phone/verify', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code })
+                });
+                const data = await response.json();
+                alert(data.message);
+                if (response.ok) location.reload();
+            } catch (error) {
+                alert('Verification failed');
+            }
+        }
+
+        // Emergency contact verification functions
+        function startEmergencyVerification() {
+            document.getElementById('emergencyForm').style.display = 'block';
+        }
+
+        async function sendEmergencyVerification() {
+            try {
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/verification/emergency/send-email', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                alert(data.message + ' Check your email for instructions.');
+            } catch (error) {
+                alert('Failed to send verification email');
+            }
+        }
+
+        async function verifyEmergencyCode() {
+            try {
+                const code = document.getElementById('emergencyCode').value;
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/verification/emergency/verify', {
+                    method: 'POST',
+                    headers: { 
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ code })
+                });
+                const data = await response.json();
+                alert(data.message);
+                if (response.ok) location.reload();
+            } catch (error) {
+                alert('Verification failed');
+            }
+        }
+
+        // Campus verification functions - Secure approach
+        
+        function updateRequiredDocs() {
+            const type = document.getElementById('campusType').value;
+            const docsDiv = document.getElementById('requiredDocs');
+            const docsList = document.getElementById('docsList');
+            
+            if (!type) {
+                docsDiv.style.display = 'none';
+                return;
+            }
+            
+            docsDiv.style.display = 'block';
+            
+            const requirements = {
+                'current_student': [
+                    '🎓 Student ID card (front & back)',
+                    '📝 Admission letter or current semester registration',
+                    '💳 Recent fee receipt or timetable',
+                    '🤳 Selfie with student ID'
+                ],
+                'staff_faculty': [
+                    '👨‍🏫 Staff/Faculty ID card (front & back)',
+                    '📝 Employment letter or appointment letter',
+                    '💳 Recent payslip or work schedule',
+                    '🤳 Selfie with staff ID'
+                ],
+                'alumni': [
+                    '🎓 Alumni card or graduation certificate',
+                    '📝 Transcript or degree certificate',
+                    '📱 Alumni association membership proof',
+                    '🤳 Selfie with alumni documentation'
+                ]
+            };
+            
+            docsList.innerHTML = requirements[type].map((req, index) => 
+                `<div style="margin: 8px 0; padding: 10px; border-radius: 8px; background: rgba(255,255,255,0.7); display: flex; align-items: center; gap: 10px; animation: slideInLeft 0.3s ease-out ${index * 0.1}s both;">
+                    <span style="font-size: 1.2rem;">${req.split(' ')[0]}</span>
+                    <span style="color: #4c1d95; font-weight: 500;">${req.substring(req.indexOf(' ') + 1)}</span>
+                </div>`
+            ).join('');
+        }
+        
+        function startCampusVerification() {
+            const form = document.getElementById('campusForm');
+            form.style.display = 'block';
+            form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            setTimeout(() => {
+                form.style.animation = 'formSlideIn 0.5s ease-out';
+            }, 100);
+        }
+
+        async function submitCampusVerification() {
+            try {
+                const campusType = document.getElementById('campusType').value;
+                const primaryDoc = document.getElementById('primaryDoc').files[0];
+                const secondaryDoc = document.getElementById('secondaryDoc').files[0];
+                const selfieDoc = document.getElementById('selfieDoc').files[0];
+                const notes = document.getElementById('verificationNotes').value;
+                
+                // Enhanced validation with better UX
+                if (!campusType) {
+                    showNotification('Please select your connection type', 'error');
+                    document.getElementById('campusType').focus();
+                    return;
+                }
+                if (!primaryDoc || !secondaryDoc || !selfieDoc) {
+                    showNotification('Please upload all required documents', 'error');
+                    return;
+                }
+                
+                // File size validation (5MB max per file)
+                const maxSize = 5 * 1024 * 1024;
+                if (primaryDoc.size > maxSize || secondaryDoc.size > maxSize || selfieDoc.size > maxSize) {
+                    showNotification('Each file must be less than 5MB', 'error');
+                    return;
+                }
+                
+                // Show loading state
+                const submitBtn = document.getElementById('submitBtn');
+                const submitText = document.getElementById('submitText');
+                const submitLoader = document.getElementById('submitLoader');
+                
+                submitBtn.disabled = true;
+                submitText.style.display = 'none';
+                submitLoader.style.display = 'block';
+                
+                const formData = new FormData();
+                formData.append('verificationType', campusType);
+                formData.append('primaryDocument', primaryDoc);
+                formData.append('secondaryDocument', secondaryDoc);
+                formData.append('selfieDocument', selfieDoc);
+                formData.append('notes', notes);
+                
+                const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+                const response = await fetch('http://localhost:5000/api/verification/campus/submit', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showNotification('✅ Documents submitted successfully! Our admin will review and notify you immediately once approved.', 'success');
+                    
+                    // Show additional notification after 2 seconds
+                    setTimeout(() => {
+                        showNotification('🔔 You will receive an immediate notification from admin when your verification is approved!', 'success');
+                    }, 2000);
+                    
+                    const campusForm = document.getElementById('campusForm');
+                    campusForm.style.animation = 'formSlideOut 0.5s ease-out';
+                    setTimeout(() => {
+                        campusForm.style.display = 'none';
+                    }, 500);
+                    
+                    const campusItem = document.getElementById('campusVerification');
+                    campusItem.className = 'verification-item pending';
+                    const actionBtn = campusItem.querySelector('.verification-action button');
+                    actionBtn.textContent = '⏳ Under Review';
+                    actionBtn.disabled = true;
+                    actionBtn.style.animation = 'pendingPulse 2s ease-in-out infinite';
+                } else {
+                    showNotification(data.message || 'Submission failed. Please try again.', 'error');
+                }
+            } catch (error) {
+                console.error('Campus verification error:', error);
+                showNotification('Upload failed. Please check your connection and try again.', 'error');
+            } finally {
+                // Reset button state
+                const submitBtn = document.getElementById('submitBtn');
+                const submitText = document.getElementById('submitText');
+                const submitLoader = document.getElementById('submitLoader');
+                
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitText.style.display = 'block';
+                    submitLoader.style.display = 'none';
+                }
+            }
+        }
+        
+        // Enhanced file upload functions
+        function showFilePreview(input, previewId) {
+            const preview = document.getElementById(previewId);
+            const file = input.files[0];
+            
+            if (file) {
+                const fileSize = (file.size / 1024 / 1024).toFixed(2);
+                preview.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span style="font-size: 1.2rem;">✅</span>
+                        <div>
+                            <div style="font-weight: 500;">${file.name}</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">${fileSize} MB</div>
+                        </div>
+                    </div>
+                `;
+                preview.style.display = 'block';
+                preview.style.animation = 'slideInLeft 0.3s ease-out';
+                
+                const uploadArea = input.closest('.file-upload-area');
+                uploadArea.style.borderColor = '#48bb78';
+                uploadArea.style.background = 'linear-gradient(135deg, rgba(72,187,120,0.1), rgba(72,187,120,0.15))';
+            }
+        }
+        
+        // Enhanced notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div style="font-size: 1.2rem;">${type === 'success' ? '✅' : '⚠️'}</div>
+                <div>${message}</div>
+            `;
+            
+            const container = document.querySelector('.notification-container') || createNotificationContainer();
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'notifOut 0.6s ease forwards';
+                    setTimeout(() => notification.remove(), 600);
+                }
+            }, 5000);
+        }
+        
+        function createNotificationContainer() {
+            const container = document.createElement('div');
+            container.className = 'notification-container';
+            document.body.appendChild(container);
+            return container;
+        }
+        
+        // Dashboard navigation functions
+        function goToDashboard() {
+            window.location.href = 'Sellers_page.html';
+        }
+        
+        function continueVerification() {
+            document.getElementById('dashboardAccess').style.display = 'none';
+            alert('Complete the optional campus verification below to unlock higher seller tier benefits!');
+        }
+        
+        // Add drag and drop functionality and animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadAreas = document.querySelectorAll('.file-upload-area');
+            
+            uploadAreas.forEach(area => {
+                area.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.classList.add('dragover');
+                });
+                
+                area.addEventListener('dragleave', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                });
+                
+                area.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0) {
+                        const input = this.querySelector('input[type="file"]');
+                        input.files = files;
+                        input.dispatchEvent(new Event('change'));
+                    }
+                });
+            });
+            
+            // Add slide-in animation keyframes
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInLeft {
+                    from { opacity: 0; transform: translateX(-20px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes formSlideOut {
+                    from { opacity: 1; transform: translateY(0); }
+                    to { opacity: 0; transform: translateY(-20px); }
+                }
+                @keyframes pendingPulse {
+                    0%, 100% { transform: scale(1); box-shadow: 0 6px 20px rgba(255,152,0,0.3); }
+                    50% { transform: scale(1.05); box-shadow: 0 8px 25px rgba(255,152,0,0.5); }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+</body>
+</html>

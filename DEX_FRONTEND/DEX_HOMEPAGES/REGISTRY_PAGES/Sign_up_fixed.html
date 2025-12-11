@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <title>Dex™ Sign Up</title>
+
+    <style>
+      /* 🌍 GLOBAL */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: 100vh;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(0, 40, 0, 0.8), rgba(0, 0, 0, 0.9)),
+          url("../Images/pexels-ann-h-45017-2646531.webp") center/cover
+            no-repeat;
+        animation: fadeInBody 1s ease forwards;
+      }
+
+      @keyframes fadeInBody {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* 🌿 HEADER */
+      .main-header {
+        background: rgba(0, 128, 0, 0.25);
+        backdrop-filter: blur(8px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 32px;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(112, 187, 112, 0.3);
+        transition: background 0.3s ease, padding 0.3s ease;
+      }
+
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      h1#company-name a:hover {
+        text-shadow: 0 0 12px #70bb70;
+        letter-spacing: 1px;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 22px;
+      }
+
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 0 10px rgba(112, 187, 112, 0.4);
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #fff;
+        transition: transform 0.3s ease;
+      }
+
+      .menu-toggle:hover {
+        transform: rotate(90deg);
+        color: #70bb70;
+      }
+
+      /* 📱 MOBILE MENU */
+      @media (max-width: 480px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        nav {
+          position: fixed;
+          top: 70px;
+          right: -100%;
+          background: rgba(0, 0, 0, 0.95);
+          width: 50%;
+          height: calc(100% - 70px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: right 0.5s ease;
+          backdrop-filter: blur(8px);
+          border-left: 1px solid rgba(112, 187, 112, 0.3);
+        }
+
+        nav.active {
+          right: 0;
+        }
+
+        nav ul {
+          flex-direction: column;
+          align-items: center;
+          gap: 25px;
+        }
+      }
+
+      /* 📜 FORM SECTION */
+      main {
+        flex: 1;
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      form {
+        background: rgba(0, 0, 0, 0.45);
+        padding: 45px 35px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        animation: fadeInForm 0.8s ease forwards;
+        backdrop-filter: blur(8px);
+      }
+
+      @keyframes fadeInForm {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      form h2 {
+        text-align: center;
+        font-weight: 700;
+        color: #70bb70;
+        margin-bottom: 10px;
+      }
+
+      .input-group {
+        position: relative;
+      }
+
+      .input-group i:not(.peek) {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: #bbb;
+        pointer-events: none;
+      }
+
+      .peek {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #bbb;
+        font-size: 18px;
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+
+      .peek:hover {
+        color: #70bb70;
+        transform: scale(1.2);
+      }
+
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 16px 45px 16px 40px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        outline: none;
+        background: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus,
+      .input-group select:focus {
+        border-color: #70bb70;
+        background: rgba(0, 0, 0, 0.45);
+        box-shadow: 0 0 10px rgba(112, 187, 112, 0.4);
+      }
+
+      label {
+        position: absolute;
+        left: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bbb;
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus + label,
+      .input-group input:not(:placeholder-shown) + label,
+      .input-group select:focus + label,
+      .input-group select:not([value=""]) + label {
+        top: -6px;
+        left: 35px;
+        font-size: 12px;
+        color: #70bb70;
+        background: rgba(0, 0, 0, 0.85);
+        padding: 0 6px;
+        border-radius: 4px;
+      }
+
+      /* 🔋 PASSWORD STRENGTH */
+      #strengthBar {
+        height: 6px;
+        width: 100%;
+        border-radius: 6px;
+        background: #333;
+        overflow: hidden;
+        margin-top: -6px;
+        margin-bottom: 10px;
+      }
+
+      #strengthBar div {
+        height: 100%;
+        width: 0;
+        background: #ccc;
+        transition: width 0.4s ease, background 0.4s ease;
+      }
+
+      /* 🟩 BUTTON */
+      form button {
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        background: linear-gradient(135deg, #007a00, #00c853);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.35s ease;
+      }
+
+      form button:hover {
+        background: linear-gradient(135deg, #4ae54a, #70bb70);
+        transform: scale(1.06);
+        box-shadow: 0 0 18px rgba(112, 187, 112, 0.6);
+      }
+
+      form a {
+        text-decoration: none;
+        color: #4ae54a;
+        font-weight: 500;
+      }
+
+      form a:hover {
+        text-decoration: underline;
+        color: #70bb70;
+      }
+
+      /* 🌈 SUCCESS OVERLAY */
+      #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 20, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 2000;
+      }
+
+      #overlay.active {
+        display: flex;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      .overlay-content {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 40px 50px;
+        border-radius: 16px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 0 25px rgba(0, 255, 100, 0.3);
+        animation: popIn 0.5s ease forwards;
+      }
+
+      .overlay-content h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #70bb70;
+      }
+
+      .overlay-content p {
+        margin-bottom: 20px;
+        font-size: 15px;
+      }
+
+      .continue-btn {
+        background: linear-gradient(135deg, #00b300, #70bb70);
+        color: #fff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .continue-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(112, 187, 112, 0.6);
+      }
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* 🦶 FOOTER */
+      footer {
+        background: rgba(0, 128, 0, 0.2);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        padding: 18px 0;
+        font-size: 14px;
+        border-top: 1px solid rgba(112, 187, 112, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ✨ ICON ANIMATIONS */
+      @keyframes bounceIcon {
+        0%,
+        100% {
+          transform: translateY(-50%) scale(1);
+        }
+        50% {
+          transform: translateY(-60%) scale(1.15);
+        }
+      }
+
+      @keyframes bounceMenu {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+
+      /* 🪩 Animate all input icons */
+      .input-group i:not(.peek) {
+        animation: bounceIcon 2.2s ease-in-out infinite;
+      }
+
+      /* 👁️ Password peek icon bounce */
+      .peek {
+        animation: bounceIcon 2.5s ease-in-out infinite;
+      }
+
+      /* 🧭 Navbar menu icon bounce */
+      .menu-toggle {
+        animation: bounceMenu 2.3s ease-in-out infinite;
+      }
+
+      /* 🌿 Header nav hover bounce */
+      nav a:hover i {
+        animation: bounceIcon 0.6s ease-in-out;
+      }
+
+      .input-group:nth-child(1) i {
+        animation-delay: 0s;
+      }
+      .input-group:nth-child(2) i {
+        animation-delay: 0.2s;
+      }
+      .input-group:nth-child(3) i {
+        animation-delay: 0.4s;
+      }
+      .input-group:nth-child(4) i {
+        animation-delay: 0.6s;
+      }
+      .input-group:nth-child(5) i {
+        animation-delay: 0.8s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <h1 id="company-name"><a href="../../Dex-home.html">Dex™</a></h1>
+      <i class="fa fa-bars menu-toggle" id="menuToggle"></i>
+      <nav id="navMenu">
+        <ul id="navList">
+          <li><a href="../../Dex-home.html">Home</a></li>
+          <li><a href="../../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
+          <li><a href="../../DEX_INFO/Dex-about.html">About</a></li>
+          <li><a href="../../DEX_CONTACT/Dex-contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <form id="signupForm">
+        <h2>🛡️ Join Dex - Safe Campus Marketplace</h2>
+        <p
+          style="
+            text-align: center;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+          "
+        >
+          Create your secure buyer account
+        </p>
+
+        <div class="input-group">
+          <i class="fa fa-user"></i>
+          <input type="text" name="fullName" placeholder=" " required />
+          <label>Full Name</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" placeholder=" " required />
+          <label>Email</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-id-badge"></i>
+          <input type="text" name="index_num" placeholder=" " required />
+          <label>Index Number</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-map-marker-alt"></i>
+          <input
+            id="address"
+            name="address"
+            type="text"
+            placeholder=" "
+            required
+          />
+          <label>Address</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-venus-mars"></i>
+          <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <label>Gender</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fab fa-whatsapp" style="color: #25d366"></i>
+          <input type="tel" name="phone" placeholder=" " required />
+          <label>WhatsApp Number</label>
+        </div>
+        <p
+          style="
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: -15px;
+            margin-bottom: 15px;
+            text-align: center;
+          "
+        >
+          📱 <strong style="color: #25d366">Use your WhatsApp number</strong> -
+          we'll verify it via WhatsApp for security
+        </p>
+
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder=" "
+            required
+          />
+          <label>Password</label>
+          <i class="fa fa-eye peek" id="peekPassword"></i>
+        </div>
+
+        <div id="strengthBar"><div></div></div>
+
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder=" "
+            required
+          />
+          <label>Confirm Password</label>
+          <i class="fa fa-eye peek" id="peekConfirm"></i>
+        </div>
+
+        <!-- Safety Agreement -->
+        <div
+          style="
+            background: rgba(110, 187, 112, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #70bb70;
+            margin: 1rem 0;
+          "
+        >
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem">
+            <input
+              type="checkbox"
+              id="safetyAgreement"
+              required
+              style="
+                margin-top: 0.2rem;
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                flex-shrink: 0;
+              "
+            />
+            <label
+              for="safetyAgreement"
+              style="
+                cursor: pointer;
+                font-size: 0.85rem;
+                color: #ddd;
+                position: static;
+                transform: none;
+              "
+              >I agree to follow
+              <strong style="color: #70bb70">Dex Safety Guidelines</strong>:
+              meet in public campus locations, verify items before payment, and
+              report suspicious activity.</label
+            >
+          </div>
+        </div>
+
+        <!-- Terms Agreement -->
+        <div style="margin: 1rem 0">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem">
+            <input
+              type="checkbox"
+              id="termsAgreement"
+              required
+              style="
+                margin-top: 0.2rem;
+                width: 16px;
+                height: 16px;
+                cursor: pointer;
+                flex-shrink: 0;
+              "
+            />
+            <label
+              for="termsAgreement"
+              style="
+                cursor: pointer;
+                font-size: 0.85rem;
+                color: #ddd;
+                position: static;
+                transform: none;
+              "
+              >I agree to the
+              <a
+                href="#"
+                onclick="showDialog('Terms page would open here')"
+                style="color: #70bb70; text-decoration: underline"
+                >Terms of Service</a
+              >
+              and
+              <a
+                href="#"
+                onclick="showDialog('Privacy page would open here')"
+                style="color: #70bb70; text-decoration: underline"
+                >Privacy Policy</a
+              ></label
+            >
+          </div>
+        </div>
+
+        <button type="submit" id="submitBtn">🛡️ Create Safe Account</button>
+
+        <p style="text-align: center; color: #ddd; font-size: 0.95rem">
+          Already a seller?
+          <a href="Sign_in.html">Log in</a>.
+        </p>
+      </form>
+    </main>
+
+    <!-- 🌈 Verification Success Overlay -->
+    <div id="overlay">
+      <div class="overlay-content"></div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Dex™. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // Dialog helper
+      const showDialog = (message) => {
+        const modal = document.createElement("div");
+        modal.style.cssText =
+          "position:fixed;inset:0;background:rgba(0,0,0,0.8);display:flex;align-items:center;justify-content:center;z-index:10001;";
+        modal.innerHTML = `
+          <div style="background:#1a1a1a;padding:2rem;border-radius:16px;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,0.5);text-align:center;">
+            <p style="color:#fff;font-size:1.1rem;margin-bottom:1.5rem;">${message}</p>
+            <button onclick="this.closest('div').parentElement.remove()" style="padding:0.75rem 1.5rem;background:#70bb70;color:#000;border:none;border-radius:8px;cursor:pointer;font-weight:600;">OK</button>
+          </div>
+        `;
+        document.body.appendChild(modal);
+      };
+
+      // 🌐 MENU TOGGLE
+      const menuToggle = document.getElementById("menuToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navMenu.classList.toggle("active");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+          navMenu.classList.remove("active");
+        }
+      });
+
+      document.querySelectorAll("#navList a").forEach((link) => {
+        link.addEventListener("click", () =>
+          navMenu.classList.remove("active")
+        );
+      });
+
+      // 👁️ Password toggle
+      const passwordField = document.getElementById("password");
+      const confirmField = document.getElementById("confirmPassword");
+      const peekPassword = document.getElementById("peekPassword");
+      const peekConfirm = document.getElementById("peekConfirm");
+      const strengthBar = document.querySelector("#strengthBar div");
+
+      function togglePeek(icon, field) {
+        const hidden = field.type === "password";
+        field.type = hidden ? "text" : "password";
+        icon.classList.toggle("fa-eye", !hidden);
+        icon.classList.toggle("fa-eye-slash", hidden);
+      }
+
+      peekPassword.addEventListener("click", () =>
+        togglePeek(peekPassword, passwordField)
+      );
+      peekConfirm.addEventListener("click", () =>
+        togglePeek(peekConfirm, confirmField)
+      );
+
+      // 💪 Password strength
+      passwordField.addEventListener("input", () => {
+        const val = passwordField.value;
+        let strength = 0;
+        if (val.length >= 6) strength++;
+        if (/[A-Z]/.test(val)) strength++;
+        if (/[0-9]/.test(val)) strength++;
+        if (/[\W]/.test(val)) strength++;
+        const widths = ["0", "25%", "50%", "75%", "100%"];
+        const colors = ["#ccc", "#ff3d00", "#ff9100", "#ffd600", "#00c853"];
+        strengthBar.style.width = widths[strength];
+        strengthBar.style.background = colors[strength];
+      });
+
+      // 📝 SIGN UP LOGIC
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Safety and terms validation
+          const safetyChecked =
+            document.getElementById("safetyAgreement").checked;
+          const termsChecked =
+            document.getElementById("termsAgreement").checked;
+
+          if (!safetyChecked) {
+            showDialog(
+              "🛡️ Please agree to follow Dex Safety Guidelines to continue."
+            );
+            return;
+          }
+
+          if (!termsChecked) {
+            showDialog(
+              "📜 Please agree to the Terms of Service and Privacy Policy."
+            );
+            return;
+          }
+
+          // Password strength validation
+          const password = passwordField.value;
+          if (password.length < 8) {
+            showDialog(
+              "🔒 Password must be at least 8 characters long for security."
+            );
+            return;
+          }
+          if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+            showDialog(
+              "🔒 Password must contain at least one uppercase letter, one lowercase letter, and one number."
+            );
+            return;
+          }
+
+          if (passwordField.value !== confirmField.value) {
+            showDialog("⚠️ Passwords don't match! Please check again.");
+            return;
+          }
+
+          const form = e.target;
+          const formData = {
+            name: form.fullName.value.trim(),
+            index_num: form.index_num.value.trim(),
+            address: form.address.value.trim(),
+            email: form.email.value.trim(),
+            password: passwordField.value.trim(),
+            gender: form.gender.value,
+            number: form.phone.value.trim(),
+            role: "buyer",
+            safetyAgreement: document.getElementById("safetyAgreement").checked,
+          };
+
+          try {
+            const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+              ? 'http://localhost:5000' 
+              : 'https://dex-backend.onrender.com';
+            
+            const res = await fetch(
+              `${API_BASE}/api/buyers/register`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+              }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+              showDialog(
+                `🚫 Error: ${data.message || "Something went wrong!"}`
+              );
+              return;
+            }
+
+            // ✅ Store signup info, role, email, and token locally
+            localStorage.setItem(
+              "buyerSignupData",
+              JSON.stringify({
+                ...formData,
+                token: data.token,
+                email: data.email,
+                role: data.role || "buyer",
+              })
+            );
+
+            // ✅ Inform user
+            showDialog(
+              "✅ Account created successfully! 📧 Please check your email to verify your account."
+            );
+
+            // 🎉 Confetti effect
+            import(
+              "https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"
+            )
+              .then((module) => {
+                const confetti = module.default;
+                confetti({
+                  particleCount: 120,
+                  spread: 70,
+                  origin: { y: 0.6 },
+                  colors: ["#00ff99", "#70bb70", "#ffffff"],
+                });
+              })
+              .catch((err) => console.error("Confetti load error:", err));
+
+            // 🚀 Redirect to verification page
+            setTimeout(() => {
+              const role = data.role || "buyer";
+              const token = data.token;
+              const email = data.email || formData.email;
+
+              if (!token || !email) {
+                console.error("Missing token or email from backend response.");
+                return showDialog(
+                  "⚠️ Could not verify account link. Please try again."
+                );
+              }
+
+              const url = `EMAIL_VERIFICATION/verification_dex.html?role=${encodeURIComponent(
+                role
+              )}&token=${encodeURIComponent(token)}&email=${encodeURIComponent(
+                email
+              )}`;
+
+              window.location.href = url;
+            }, 1200);
+          } catch (err) {
+            console.error(err);
+            showDialog(
+              "❌ Cannot connect to backend. Please ensure the server is running 🖥️"
+            );
+          }
+        });
+    </script>
+  </body>
+</html>

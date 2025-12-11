@@ -1,0 +1,204 @@
+╔══════════════════════════════════════════════════════════════════╗
+║           SELLER DASHBOARD GUIDE SYSTEM - FEATURES               ║
+╚══════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────┐
+│ 1. WELCOME TOUR (First-Time Users)                              │
+└──────────────────────────────────────────────────────────────────┘
+
+   🎯 AUTOMATIC ON FIRST LOGIN
+   
+   Step 1: Profile Section
+   ├─ "👤 Your Profile"
+   └─ "Manage your shop info, upload photos, and edit gallery"
+   
+   Step 2: Products Section
+   ├─ "📦 Products"
+   └─ "Add, edit, and manage all your products"
+   
+   Step 3: Orders Section
+   ├─ "🛒 Orders"
+   └─ "View and manage customer orders"
+   
+   Step 4: Share Your Shop
+   ├─ "🔗 Share Your Shop"
+   └─ "Get your unique shop link and QR code"
+   
+   Step 5: Analytics
+   ├─ "📊 Analytics"
+   └─ "Track your shop performance and sales"
+   
+   Step 6: Help Section
+   ├─ "❓ Need Help?"
+   └─ "Visit Help section anytime. Restart tour here!"
+   
+   [Skip Tour] [Next →]
+   
+   ✓ Shows once per user
+   ✓ Stored in localStorage
+   ✓ Can be restarted from Help section
+
+┌──────────────────────────────────────────────────────────────────┐
+│ 2. CONTEXTUAL HELP ICONS (Always Visible)                       │
+└──────────────────────────────────────────────────────────────────┘
+
+   Location: Edit Profile Button
+   Icon: [?]
+   Tooltip: "Update your shop name, contact info, and profile picture"
+   
+   Location: Add Product Button
+   Icon: [?]
+   Tooltip: "Click here to list a new product with photos, price..."
+   
+   Location: Share Your Shop Button
+   Icon: [?]
+   Tooltip: "Share your shop link on WhatsApp, Facebook..."
+   
+   Location: Bulk Actions Menu
+   Icon: [?]
+   Tooltip: "Activate, deactivate, or delete multiple products..."
+   
+   Location: Customize Shop Menu
+   Icon: [?]
+   Tooltip: "Personalize your shop with custom colors and banners"
+   
+   ✓ Hover to see tooltip
+   ✓ Non-intrusive design
+   ✓ Blue circular icon with "?"
+
+┌──────────────────────────────────────────────────────────────────┐
+│ 3. ENHANCED HELP SECTION (Comprehensive Guide)                  │
+└──────────────────────────────────────────────────────────────────┘
+
+   [🎬 Restart Welcome Tour]
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🚀 QUICK START GUIDE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   ▼ 1. Set Up Your Profile
+     • Upload a clear profile picture or shop logo
+     • Add your shop name and contact information
+     • Fill in your email and phone number
+     • Add photos to your gallery
+   
+   ▼ 2. Add Your First Product
+     • Photos: Upload 1-5 clear product images
+     • Details: Add name, price, category, description
+     • Stock: Set quantity and mark as active
+     💡 Tip: Products with multiple photos get 3x more views!
+   
+   ▼ 3. Share Your Shop
+     • Click "Share Your Shop" to get your link
+     • Copy the link or scan the QR code
+     • Share on WhatsApp, Facebook, Instagram
+     • Add to your WhatsApp status or bio
+   
+   ▼ 4. Manage Orders
+     • You'll get a notification instantly
+     • View order details and customer info
+     • Accept or reject the order
+     • Mark as delivered when complete
+     • Chat with customers directly
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ❓ FREQUENTLY ASKED QUESTIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   ▼ How do I get paid?
+     Customers pay you directly via Mobile Money or cash on 
+     delivery. Dex doesn't handle payments - you keep 100%!
+   
+   ▼ How do I edit or delete a product?
+     Go to Products section, click "Edit" button on any product 
+     card. Use Bulk Actions to manage multiple products.
+   
+   ▼ Can I customize my shop appearance?
+     Yes! Go to "Customize Shop" to change colors, add banners, 
+     and personalize your shop's look.
+   
+   ▼ What are the image requirements?
+     Upload clear, well-lit photos. Formats: JPG, PNG. 
+     Max size: 5MB per image. Use multiple angles.
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   💡 PRO TIPS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   ▼ Boost Your Sales
+     ✅ Use high-quality product photos
+     ✅ Write detailed descriptions
+     ✅ Price competitively
+     ✅ Respond to orders quickly
+     ✅ Share your shop link regularly
+     ✅ Keep stock quantities updated
+   
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎧 NEED MORE HELP?
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   
+   📧 Email: support@dex.com
+   📱 WhatsApp: +233 XX XXX XXXX
+   ⏰ Available: Mon-Sat, 8am-6pm
+
+╔══════════════════════════════════════════════════════════════════╗
+║                        IMPLEMENTATION                            ║
+╚══════════════════════════════════════════════════════════════════╝
+
+Files Created:
+  ✓ assets/css/seller-guide.css
+  ✓ assets/js/modules/seller-guide.js
+  ✓ GUIDE_SYSTEM_README.md
+  ✓ GUIDE_FEATURES.txt
+
+Files Modified:
+  ✓ Sellers_page.html (added CSS link)
+  ✓ assets/js/main-seller.js (initialize guide)
+  ✓ assets/js/modules/seller-help.js (integrated content)
+
+Total Code: ~400 lines
+Dependencies: None (Pure Vanilla JS)
+Browser Support: All modern browsers
+
+╔══════════════════════════════════════════════════════════════════╗
+║                      USER EXPERIENCE FLOW                        ║
+╚══════════════════════════════════════════════════════════════════╝
+
+First Visit:
+  1. User logs in
+  2. Dashboard loads
+  3. Wait 1.5 seconds
+  4. Tour overlay appears (dark background)
+  5. First tooltip shows: "👤 Your Profile"
+  6. User clicks "Next" → Step 2
+  7. Continues through 6 steps
+  8. Clicks "Finish" → Tour ends
+  9. localStorage marks as completed
+
+Subsequent Visits:
+  • No tour (already completed)
+  • Contextual hints still visible
+  • Can restart from Help section
+
+Getting Help:
+  1. Click "Help" in sidebar
+  2. See comprehensive guide
+  3. Click accordions to expand
+  4. Click "Restart Tour" if needed
+
+╔══════════════════════════════════════════════════════════════════╗
+║                         BENEFITS                                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+✅ Reduces seller confusion
+✅ Improves onboarding experience
+✅ Self-service support
+✅ Non-intrusive (skippable)
+✅ Lightweight implementation
+✅ Mobile responsive
+✅ No external dependencies
+✅ Easy to customize
+
+╔══════════════════════════════════════════════════════════════════╗
+║                    READY FOR VERSION 1!                          ║
+╚══════════════════════════════════════════════════════════════════╝

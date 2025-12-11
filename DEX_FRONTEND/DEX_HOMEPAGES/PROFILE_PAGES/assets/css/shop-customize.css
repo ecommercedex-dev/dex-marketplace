@@ -1,0 +1,60 @@
+.customize-section {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 20px;
+}
+.customize-section h3 {
+  margin: 0 0 16px;
+  color: var(--green-light);
+  font-size: 1.2rem;
+}
+.customize-section .form-group {
+  margin-bottom: 16px;
+}
+.customize-section label {
+  display: block;
+  margin-bottom: 6px;
+  color: #ddd;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.customize-section input[type="text"],
+.customize-section input[type="color"],
+.customize-section select,
+.customize-section textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+  font-family: inherit;
+}
+.customize-section input[type="color"] {
+  height: 50px;
+  cursor: pointer;
+}
+.customize-section input:focus,
+.customize-section select:focus,
+.customize-section textarea:focus {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: var(--green-light);
+}
+.customize-section input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+.customize-section input[type="file"] {
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px dashed rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  color: #aaa;
+  cursor: pointer;
+}

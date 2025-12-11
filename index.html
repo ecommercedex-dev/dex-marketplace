@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="25; url=./Dex-home.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Cinematic Day-Night Cycle</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Inter:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --brand-green: #0abf53;
+      }
+
+      /* Body & Sky */
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+        background: linear-gradient(to top, #87ceeb, #ffffff);
+      }
+
+      /* Sky gradient animation */
+      @keyframes skyCycle {
+        0% {
+          background: linear-gradient(to top, #87ceeb, #ffffff);
+        }
+        30% {
+          background: linear-gradient(to top, #ffd27f, #fff2e0);
+        }
+        60% {
+          background: linear-gradient(to top, #ffa07a, #ffecd1);
+        }
+        100% {
+          background: linear-gradient(to top, #0b1d3a, #1a2c5a);
+        }
+      }
+      body::before {
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        animation: skyCycle 25s linear forwards;
+      }
+
+      /* Orbits */
+      .orbit {
+        position: absolute;
+        width: 0;
+        height: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
+
+      /* Sun path reversed (anticlockwise) */
+      @keyframes sunPath {
+        0% {
+          transform: rotate(-120deg) translateX(500px) rotate(120deg);
+          opacity: 1;
+          box-shadow: 0 0 60px 15px rgba(255, 223, 0, 0.4);
+        }
+        50% {
+          transform: rotate(-150deg) translateX(500px) rotate(150deg);
+          opacity: 0.8;
+          box-shadow: 0 0 40px 10px rgba(255, 223, 0, 0.2);
+        }
+        100% {
+          transform: rotate(-180deg) translateX(500px) rotate(180deg);
+          opacity: 0;
+          box-shadow: 0 0 20px 5px rgba(255, 223, 0, 0);
+        }
+      }
+      .sun {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        background: radial-gradient(circle, #ffd700 0%, #ff8c00 70%);
+        border-radius: 50%;
+        animation: sunPath 25s linear forwards;
+        z-index: 2;
+      }
+
+      /* Moon path (normal) */
+      @keyframes moonPath {
+        0% {
+          transform: rotate(30deg) translateX(500px) rotate(-30deg);
+          opacity: 0;
+          box-shadow: 0 0 0 0 rgba(200, 220, 255, 0);
+        }
+        50% {
+          transform: rotate(45deg) translateX(500px) rotate(-45deg);
+          opacity: 0.3;
+          box-shadow: 0 0 20px 5px rgba(200, 220, 255, 0.2);
+        }
+        100% {
+          transform: rotate(60deg) translateX(500px) rotate(-60deg);
+          opacity: 0.6;
+          box-shadow: 0 0 40px 10px rgba(200, 220, 255, 0.3);
+        }
+      }
+      .moon {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background: radial-gradient(circle, #f0f0f0 0%, #bbbbff 70%);
+        border-radius: 50%;
+        animation: moonPath 25s linear forwards;
+        z-index: 3;
+      }
+
+      /* Stars */
+      .star {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: white;
+        border-radius: 50%;
+        opacity: 0;
+        animation: starsFade 25s linear forwards,
+          starTwinkle 2s ease-in-out infinite alternate;
+      }
+      @keyframes starsFade {
+        0%,
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      @keyframes starTwinkle {
+        0% {
+          transform: scale(1);
+          opacity: 1;
+        }
+        100% {
+          transform: scale(1.5);
+          opacity: 0.7;
+        }
+      }
+
+      /* Mountains */
+      .mountain {
+        position: absolute;
+        bottom: 0;
+        width: 150%;
+        height: 35%;
+        background: linear-gradient(to top, #505050, #7a7a7a);
+        border-radius: 50% 50% 0 0;
+        clip-path: polygon(
+          0% 100%,
+          15% 60%,
+          30% 80%,
+          45% 55%,
+          60% 70%,
+          75% 50%,
+          90% 75%,
+          100% 100%
+        );
+        z-index: 3;
+      }
+
+      /* Clouds */
+      .cloud {
+        position: absolute;
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 50%;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        z-index: 1;
+        animation: floatCloud linear infinite,
+          wobbleCloud 4s ease-in-out infinite alternate;
+      }
+      .cloud.foreground {
+        width: 180px;
+        height: 90px;
+        top: 20%;
+        left: -200px;
+        animation-duration: 60s, 4s;
+        z-index: 4;
+      }
+      .cloud.middle {
+        width: 140px;
+        height: 70px;
+        top: 35%;
+        left: -180px;
+        animation-duration: 90s, 5s;
+        z-index: 2;
+      }
+      .cloud.background {
+        width: 100px;
+        height: 50px;
+        top: 10%;
+        left: -150px;
+        animation-duration: 120s, 6s;
+        z-index: 1;
+      }
+
+      @keyframes floatCloud {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(120vw);
+        }
+      }
+      @keyframes wobbleCloud {
+        0% {
+          transform: translateY(0);
+        }
+        100% {
+          transform: translateY(-6px);
+        }
+      }
+
+      /* Glass Card */
+      .glass {
+        position: relative;
+        z-index: 5;
+        background: rgba(255, 255, 255, 0.35);
+        backdrop-filter: blur(14px);
+        padding: 35px 60px;
+        border-radius: 20px;
+        text-align: center;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+      }
+      .logo {
+        font-family: "Fredoka One", cursive;
+        font-size: 2rem;
+        font-weight: 800;
+        color: var(--brand-green);
+        margin-bottom: 15px;
+      }
+      .typed-text {
+        font-size: 1rem;
+        color: #333;
+        height: 28px;
+        margin-bottom: 10px;
+      }
+      p {
+        font-size: 0.9rem;
+        color: #555;
+      }
+      a {
+        color: var(--brand-green);
+        font-weight: 600;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .loader {
+        width: 40px;
+        height: 40px;
+        border: 4px solid rgba(0, 0, 0, 0.08);
+        border-top: 4px solid var(--brand-green);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 12px auto 0;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sun & Moon -->
+    <div class="orbit"><div class="sun"></div></div>
+    <div class="orbit"><div class="moon"></div></div>
+
+    <!-- Clouds -->
+    <div class="cloud foreground"></div>
+    <div class="cloud middle"></div>
+    <div class="cloud background"></div>
+
+    <!-- Stars -->
+    <div class="star" style="top: 10%; left: 15%"></div>
+    <div class="star" style="top: 25%; left: 40%"></div>
+    <div class="star" style="top: 5%; left: 70%"></div>
+    <div class="star" style="top: 20%; left: 85%"></div>
+    <div class="star" style="top: 35%; left: 60%"></div>
+
+    <!-- Mountains -->
+    <div class="mountain"></div>
+
+    <!-- Glass Card -->
+    <div class="glass">
+      <div class="logo">Dex™</div>
+      <div class="typed-text" id="typed"></div>
+      <p>
+        If not redirected automatically,
+        <a href="../../DEX_FRONTEND/Dex-home.html">click here</a>.
+      </p>
+      <div class="loader"></div>
+    </div>
+
+    <script>
+      const text = "Loading Dex…";
+      const el = document.getElementById("typed");
+      let idx = 0;
+      function type() {
+        if (idx < text.length) {
+          el.innerHTML += text[idx++];
+          setTimeout(type, 90);
+        }
+      }
+      type();
+    </script>
+  </body>
+</html>

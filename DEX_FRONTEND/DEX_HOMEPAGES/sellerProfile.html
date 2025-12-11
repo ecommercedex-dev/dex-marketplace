@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seller Profile • Dex™</title>
+  <link rel="icon" href="../DEX_FAVICON/favicon.png">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #6ecf45;
+      --dark: #0f0f0f;
+      --card: #1a1a1a;
+      --border: #2a2a2a;
+      --text: #e0e0e0;
+      --text-dim: #888;
+    }
+    body { font-family: 'Quicksand', sans-serif; background: var(--dark); color: var(--text); line-height: 1.6; }
+    
+    /* Header */
+    .header { position: sticky; top: 0; z-index: 100; background: rgba(15,15,15,0.95); backdrop-filter: blur(20px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; }
+    .header-content { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-family: 'Fredoka One', cursive; font-size: 1.5rem; color: var(--primary); text-decoration: none; }
+    .back-btn { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; transition: 0.2s; }
+    .back-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+
+    /* Cover Banner */
+    .cover-banner { width: 100%; height: 250px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); position: relative; overflow: hidden; }
+    .cover-banner img { width: 100%; height: 100%; object-fit: cover; }
+    .cover-banner::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 100px; background: linear-gradient(to top, var(--dark), transparent); }
+
+    /* Profile Header */
+    .profile-header { max-width: 1400px; margin: -60px auto 2rem; padding: 0 2rem; position: relative; z-index: 10; }
+    .profile-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 2rem; display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: start; }
+    .profile-avatar { width: 140px; height: 140px; border-radius: 50%; object-fit: cover; border: 4px solid var(--primary); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
+    .profile-info h1 { font-size: 2rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .badge { padding: 0.25rem 0.75rem; border-radius: 50px; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem; }
+    .badge-verified { background: var(--primary); color: #000; }
+    .badge-level { background: #f39c12; color: #000; }
+    .badge-top { background: #e74c3c; color: #fff; }
+    .profile-meta { display: flex; gap: 1.5rem; margin: 0.75rem 0; flex-wrap: wrap; }
+    .meta-item { display: flex; align-items: center; gap: 0.5rem; color: var(--text-dim); font-size: 0.9rem; }
+    .meta-item i { color: var(--primary); }
+    .profile-bio { color: var(--text-dim); line-height: 1.8; margin-top: 1rem; }
+    .profile-actions { display: flex; flex-direction: column; gap: 0.75rem; }
+    .btn { padding: 0.75rem 1.5rem; border-radius: 8px; border: none; cursor: pointer; font-weight: 600; transition: 0.2s; display: flex; align-items: center; gap: 0.5rem; justify-content: center; text-decoration: none; white-space: nowrap; }
+    .btn-primary { background: var(--primary); color: #000; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }
+    .btn-secondary:hover { border-color: var(--primary); }
+
+    /* Stats Grid */
+    .stats-grid { max-width: 1400px; margin: 2rem auto; padding: 0 2rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .stat-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; transition: 0.2s; }
+    .stat-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .stat-value { font-size: 2rem; font-weight: 700; color: var(--primary); }
+    .stat-label { color: var(--text-dim); font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* Main Layout */
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem 4rem; display: grid; grid-template-columns: 320px 1fr; gap: 2rem; }
+    .sidebar { position: sticky; top: 100px; height: fit-content; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1rem; }
+    .card h3 { font-size: 1rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .card h3 i { color: var(--primary); }
+    .info-row { padding: 0.75rem 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 0.75rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row i { color: var(--primary); width: 20px; }
+
+    /* Reviews */
+    .review-item { background: rgba(255,255,255,0.03); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .review-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.75rem; }
+    .review-avatar { width: 40px; height: 40px; border-radius: 50%; }
+    .review-author { font-weight: 600; }
+    .review-date { color: var(--text-dim); font-size: 0.85rem; }
+    .review-rating { color: #f39c12; }
+    .review-text { color: var(--text-dim); line-height: 1.6; }
+
+    /* Products */
+    .products-section h2 { margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.5rem; }
+    .product-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; cursor: pointer; transition: 0.2s; }
+    .product-card:hover { border-color: var(--primary); transform: translateY(-4px); }
+    .product-img { width: 100%; height: 180px; object-fit: cover; background: var(--dark); }
+    .product-info { padding: 1rem; }
+    .product-name { font-weight: 600; margin-bottom: 0.5rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .product-price { font-size: 1.25rem; font-weight: 700; color: var(--primary); }
+
+    .loading { text-align: center; padding: 4rem; color: var(--text-dim); }
+    .loading i { font-size: 2rem; color: var(--primary); animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+    /* Trust Score */
+    .trust-score { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; }
+    .trust-score h3 { margin-bottom: 1rem; }
+    .trust-meter { background: rgba(255,255,255,0.2); height: 12px; border-radius: 6px; overflow: hidden; margin: 1rem 0; }
+    .trust-fill { height: 100%; background: #fff; border-radius: 6px; transition: width 0.5s; }
+    .trust-breakdown { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.85rem; }
+
+    /* Filters */
+    .filters { display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem; }
+    .filters-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .input { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 0.75rem 1rem; border-radius: 8px; outline: none; width: 100%; }
+    .input:focus { border-color: var(--primary); }
+    .search-wrapper { position: relative; width: 100%; }
+    .search-input-wrapper { position: relative; display: flex; align-items: center; width: 100%; }
+    .search-input-wrapper input { padding-right: 2.5rem; width: 100%; }
+    .clear-search { position: absolute; right: 0.75rem; background: none; border: none; color: var(--text-dim); cursor: pointer; padding: 0.25rem; display: none; font-size: 1.1rem; transition: 0.2s; }
+    .clear-search:hover { color: var(--primary); }
+    .clear-search.active { display: block; }
+    .search-suggestions { position: absolute; top: 100%; left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-top: none; border-radius: 0 0 8px 8px; max-height: 200px; overflow-y: auto; z-index: 10; display: none; }
+    .search-suggestions.active { display: block; }
+    .suggestion-item { padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border); transition: 0.2s; }
+    .suggestion-item:last-child { border-bottom: none; }
+    .suggestion-item:hover { background: rgba(110,207,69,0.1); color: var(--primary); }
+
+    /* Activity Timeline */
+    .timeline { margin-bottom: 1rem; }
+    .timeline-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-icon { width: 40px; height: 40px; border-radius: 50%; background: var(--primary); display: grid; place-items: center; color: #000; flex-shrink: 0; }
+    .timeline-content { flex: 1; }
+    .timeline-title { font-weight: 600; margin-bottom: 0.25rem; }
+    .timeline-date { color: var(--text-dim); font-size: 0.85rem; }
+
+    /* Achievements */
+    .achievements { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-top: 1rem; }
+    .achievement { background: var(--card); border: 1px solid var(--border); padding: 0.5rem 1rem; border-radius: 8px; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
+    .achievement i { color: var(--primary); }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #e74c3c; color: #fff; padding: 12px 24px; border-radius: 8px; z-index: 1000; font-weight: 600; animation: slideUp 0.3s; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .toast.success { background: var(--primary); color: #000; }
+
+    /* Social Proof */
+    .social-proof { background: rgba(110,207,69,0.1); border: 1px solid var(--primary); border-radius: 8px; padding: 1rem; margin-bottom: 1rem; text-align: center; color: var(--primary); font-weight: 600; }
+
+    /* Review Form */
+    .review-form { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+    .review-form h2 { margin-bottom: 1rem; }
+    .star-rating { display: flex; gap: 0.5rem; font-size: 2rem; margin: 1rem 0; }
+    .star-rating i { color: var(--border); cursor: pointer; transition: 0.2s; }
+    .star-rating i:hover, .star-rating i.active { color: #f39c12; }
+    .textarea { background: var(--card); border: 1px solid var(--border); color: var(--text); padding: 1rem; border-radius: 8px; outline: none; width: 100%; resize: vertical; min-height: 100px; font-family: inherit; }
+    .textarea:focus { border-color: var(--primary); }
+    .submit-btn { background: var(--primary); color: #000; padding: 0.75rem 2rem; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; margin-top: 1rem; }
+    .submit-btn:hover { opacity: 0.9; }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    /* Modal */
+    .modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 1000; padding: 2rem; overflow-y: auto; }
+    .modal.active { display: flex; align-items: center; justify-content: center; }
+    .modal-content { background: var(--card); border: 1px solid var(--border); border-radius: 16px; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: var(--card); z-index: 10; }
+    .modal-header h2 { margin: 0; }
+    .modal-close { background: none; border: none; color: var(--text); font-size: 1.5rem; cursor: pointer; padding: 0; width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; }
+    .modal-close:hover { background: var(--border); }
+    @media (hover: none) {
+      .modal-close:hover { background: none; }
+      .modal-close:active { background: var(--border); }
+    }
+    .modal-body { padding: 1.5rem; }
+    .follower-item { display: flex; align-items: center; gap: 1rem; padding: 1rem; border-bottom: 1px solid var(--border); }
+    .follower-item:last-child { border-bottom: none; }
+    .follower-avatar { width: 48px; height: 48px; border-radius: 50%; }
+    .follower-info { flex: 1; }
+    .follower-name { font-weight: 600; margin-bottom: 0.25rem; }
+    .follower-meta { color: var(--text-dim); font-size: 0.85rem; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text-dim); }
+    .empty-state i { font-size: 3rem; margin-bottom: 1rem; opacity: 0.3; }
+    .stat-card { cursor: pointer; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .container { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .profile-card { grid-template-columns: 1fr; text-align: center; }
+      .profile-avatar { margin: 0 auto; }
+      .profile-meta { justify-content: center; }
+      .profile-actions { flex-direction: row; justify-content: center; flex-wrap: wrap; }
+    }
+    @media (max-width: 768px) {
+      .header { padding: 0.75rem 1rem; }
+      .logo { font-size: 1.25rem; }
+      .back-btn { padding: 0.4rem 0.8rem; font-size: 0.9rem; }
+      .cover-banner { height: 180px; }
+      .profile-header { margin-top: -40px; padding: 0 1rem; }
+      .profile-card { padding: 1.5rem 1rem; }
+      .profile-avatar { width: 100px; height: 100px; }
+      .profile-info h1 { font-size: 1.5rem; }
+      .profile-meta { font-size: 0.85rem; gap: 1rem; }
+      .profile-bio { font-size: 0.9rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); padding: 0 1rem; gap: 0.75rem; }
+      .stat-card { padding: 1rem; }
+      .stat-value { font-size: 1.75rem; }
+      .stat-label { font-size: 0.85rem; }
+      .container { padding: 0 1rem 2rem; gap: 1.5rem; }
+      .filters { grid-template-columns: 1fr; gap: 0.75rem; }
+      .products-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+      .product-img { height: 140px; }
+      .product-name { font-size: 0.9rem; }
+      .product-price { font-size: 1.1rem; }
+      .modal { padding: 1rem; }
+      .modal-content { max-height: 90vh; }
+      .modal-header { padding: 1rem; }
+      .modal-body { padding: 1rem; }
+    }
+    @media (max-width: 480px) {
+      .header { padding: 0.5rem 0.75rem; }
+      .logo { font-size: 1.1rem; }
+      .back-btn { padding: 0.35rem 0.7rem; font-size: 0.85rem; }
+      .cover-banner { height: 150px; }
+      .profile-header { margin-top: -30px; }
+      .profile-card { padding: 1rem 0.75rem; }
+      .profile-avatar { width: 80px; height: 80px; border-width: 3px; }
+      .profile-info h1 { font-size: 1.1rem; }
+      .badge { font-size: 0.65rem; padding: 0.2rem 0.5rem; }
+      .profile-meta { font-size: 0.8rem; gap: 0.75rem; flex-direction: column; align-items: center; }
+      .meta-item { justify-content: center; }
+      .profile-bio { font-size: 0.85rem; line-height: 1.6; }
+      .profile-actions { gap: 0.5rem; }
+      .btn { padding: 0.6rem 1rem; font-size: 0.85rem; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 0.5rem; }
+      .stat-card { padding: 0.75rem; }
+      .stat-value { font-size: 1.5rem; }
+      .stat-label { font-size: 0.75rem; }
+      .container { padding: 0 0.75rem 1.5rem; gap: 1rem; }
+      .card { padding: 1rem; margin-bottom: 0.75rem; }
+      .card h3 { font-size: 0.9rem; }
+      .trust-score { padding: 1rem; }
+      .trust-breakdown { font-size: 0.75rem; }
+      .products-section h2 { font-size: 1.25rem; margin-bottom: 1rem; }
+      .products-grid { gap: 0.75rem; }
+      .product-card { border-radius: 8px; }
+      .product-img { height: 120px; }
+      .product-info { padding: 0.75rem; }
+      .product-name { font-size: 0.85rem; }
+      .product-price { font-size: 1rem; }
+      .modal { padding: 0.5rem; }
+      .modal-header { padding: 0.75rem; }
+      .modal-header h2 { font-size: 1.1rem; }
+      .modal-body { padding: 0.75rem; }
+      .review-form { padding: 1rem; }
+      .star-rating { font-size: 1.75rem; }
+      .textarea { min-height: 80px; font-size: 0.9rem; }
+      .submit-btn { padding: 0.6rem 1.5rem; font-size: 0.9rem; }
+      .review-item { padding: 0.75rem; margin-bottom: 0.75rem; }
+      .review-avatar { width: 35px; height: 35px; }
+      .review-author { font-size: 0.9rem; }
+      .review-date { font-size: 0.75rem; }
+      .review-rating { font-size: 0.9rem; }
+      .review-text { font-size: 0.85rem; }
+      .follower-item { padding: 0.75rem; }
+      .follower-avatar { width: 40px; height: 40px; }
+      .follower-name { font-size: 0.9rem; }
+      .follower-meta { font-size: 0.75rem; }
+      .empty-state { padding: 2rem 0.5rem; }
+      .empty-state i { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <a href="Dex-shop.html" class="logo">Dex™</a>
+      <button class="back-btn" onclick="history.back()"><i class="fas fa-arrow-left"></i> Back</button>
+    </div>
+  </header>
+
+  <div class="cover-banner" id="coverBanner"></div>
+
+  <div class="profile-header" id="profileHeader">
+    <div class="loading"><i class="fas fa-spinner fa-spin"></i><p>Loading profile...</p></div>
+  </div>
+
+  <div class="stats-grid" id="statsGrid" style="display:none;"></div>
+
+  <div class="container">
+    <aside class="sidebar" id="sidebar" style="display:none;"></aside>
+    <main>
+      <div class="social-proof" id="socialProof" style="display:none;"></div>
+
+      <section class="products-section">
+        <h2><i class="fas fa-box"></i> Products</h2>
+        <div class="filters" id="filters" style="display:none;">
+          <div class="search-wrapper">
+            <div class="search-input-wrapper">
+              <input type="text" id="search" class="input" placeholder="🔍 Search products..." autocomplete="off">
+              <button class="clear-search" id="clearSearch"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="search-suggestions" id="searchSuggestions"></div>
+          </div>
+          <div class="filters-row">
+            <select id="category" class="input"><option value="">All Categories</option></select>
+            <select id="sort" class="input">
+              <option value="newest">Newest First</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="products-grid" id="products"></div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(location.search);
+    const sellerId = params.get('id');
+    const BASE = 'http://localhost:5000';
+
+    if (!sellerId) {
+      document.body.innerHTML = '<div class="loading"><p>Missing seller ID</p></div>';
+      throw '';
+    }
+
+    let seller = null;
+    let products = [];
+
+    (async () => {
+      try {
+        const [productsRes, reviewsRes] = await Promise.all([
+          fetch(`${BASE}/api/products?sellerId=${sellerId}`),
+          fetch(`${BASE}/api/seller-reviews/${sellerId}`).catch(() => ({ ok: false }))
+        ]);
+
+        if (!productsRes.ok) throw new Error('Failed to load');
+        
+        const data = await productsRes.json();
+        products = Array.isArray(data) ? data : data.products || [];
+        seller = products[0]?.seller || {};
+
+        const reviewData = reviewsRes.ok ? await reviewsRes.json() : { reviews: [], averageRating: 5, totalReviews: 0 };
+        const reviews = reviewData.reviews || [];
+        const avgRating = reviewData.averageRating || 5;
+        
+        // Calculate trust score
+        const trustScore = Math.min(100, Math.round(
+          (avgRating / 5 * 30) + // 30% from rating
+          (Math.min(products.length, 20) / 20 * 20) + // 20% from products
+          (Math.min(reviews.length, 50) / 50 * 25) + // 25% from reviews
+          25 // 25% base score
+        ));
+        
+        // Get recent activity
+        const recentProducts = products
+          .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .slice(0, 5);
+        
+        // Get subcategories from products
+        const productSubcategories = [...new Set(products.map(p => p.subCategory).filter(Boolean))];
+        
+        // Calculate achievements
+        const achievements = [];
+        if (products.length >= 10) achievements.push({ icon: 'box', text: 'Active Seller' });
+        if (avgRating >= 4.5) achievements.push({ icon: 'star', text: 'Top Rated' });
+        if (reviews.length >= 20) achievements.push({ icon: 'comments', text: 'Trusted' });
+        if (products.filter(p => p.stock > 0).length >= 15) achievements.push({ icon: 'check-circle', text: 'Well Stocked' });
+
+        // Cover banner
+        document.getElementById('coverBanner').innerHTML = `<img src="https://images.unsplash.com/photo-1557683316-973673baf926?w=1400&h=250&fit=crop" alt="Cover">`;
+
+        // Profile header
+        const joinDate = new Date(seller.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+        const phone = (seller.phone || '').replace(/\D/g, '').replace(/^0/, '233');
+        
+        document.getElementById('profileHeader').innerHTML = `
+          <div class="profile-card">
+            <img src="${seller.profilePic ? BASE + seller.profilePic : 'data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'%23ccc\'%3E%3Cpath d=\'M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z\'/%3E%3C/svg%3E'}" alt="${seller.name}" class="profile-avatar">
+            <div class="profile-info">
+              <h1>
+                ${seller.name || 'Seller'}
+                <span class="badge badge-verified"><i class="fas fa-check-circle"></i> Verified</span>
+                <span class="badge badge-level"><i class="fas fa-star"></i> Gold Seller</span>
+              </h1>
+              <div class="profile-meta">
+                <div class="meta-item"><i class="fas fa-calendar"></i> Joined ${joinDate}</div>
+                <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${seller.businessAddress || 'Ghana'}</div>
+                <div class="meta-item"><i class="fas fa-bolt"></i> Responds in ~2 hours</div>
+                <div class="meta-item"><i class="fas fa-star"></i> ${avgRating} Rating</div>
+              </div>
+              <p class="profile-bio">${seller.storeName ? `🏪 ${seller.storeName} - ` : ''}Trusted seller on Dex™ Campus Marketplace. Quality products, fast delivery, excellent service!</p>
+            </div>
+            <div class="profile-actions">
+              <button class="btn btn-primary" id="followBtn"><i class="fas fa-user-plus"></i> Follow</button>
+              <button class="btn btn-secondary" id="likeBtn"><i class="far fa-heart"></i> Like</button>
+              <a href="sellerShop.html?sellerId=${sellerId}" class="btn btn-secondary"><i class="fas fa-store"></i> Visit Shop</a>
+              ${phone ? `<a href="https://wa.me/${phone}" class="btn btn-secondary" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>` : ''}
+              <button class="btn btn-secondary" id="shareBtn"><i class="fas fa-share-alt"></i> Share</button>
+            </div>
+          </div>
+        `;
+
+        // Stats
+        const activeProducts = products.filter(p => p.stock > 0).length;
+        document.getElementById('statsGrid').innerHTML = `
+          <div class="stat-card"><div class="stat-value">${products.length}</div><div class="stat-label">📦 Total Products</div></div>
+          <div class="stat-card"><div class="stat-value">${activeProducts}</div><div class="stat-label">✅ Available</div></div>
+          <div class="stat-card" id="reviewsCard"><div class="stat-value">${reviews.length}</div><div class="stat-label">⭐ Reviews</div></div>
+          <div class="stat-card"><div class="stat-value">${avgRating}</div><div class="stat-label">🏆 Rating</div></div>
+          <div class="stat-card" id="followersCard"><div class="stat-value" id="followers">0</div><div class="stat-label">👥 Followers</div></div>
+          <div class="stat-card"><div class="stat-value" id="likes">0</div><div class="stat-label">❤️ Likes</div></div>
+        `;
+        document.getElementById('statsGrid').style.display = 'grid';
+
+        // Social proof
+        const views = Math.floor(Math.random() * 50) + 20;
+        document.getElementById('socialProof').innerHTML = `👀 ${views} people viewed this profile today`;
+        document.getElementById('socialProof').style.display = 'block';
+        
+        // Sidebar
+        let sidebarHTML = `
+          <div class="trust-score">
+            <h3><i class="fas fa-shield-alt"></i> Trust Score</h3>
+            <div style="font-size:2rem;font-weight:700;margin:0.5rem 0;">${trustScore}/100</div>
+            <div class="trust-meter"><div class="trust-fill" style="width:${trustScore}%;"></div></div>
+            <div class="trust-breakdown">
+              <div>⭐ Rating: ${avgRating}/5</div>
+              <div>📝 ${reviews.length} Reviews</div>
+              <div>📦 ${products.length} Products</div>
+              <div>✅ Verified Seller</div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-trophy"></i> Achievements</h3>
+            <div class="achievements">
+              ${achievements.map(a => `<div class="achievement"><i class="fas fa-${a.icon}"></i> ${a.text}</div>`).join('')}
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-clock"></i> Recent Activity</h3>
+            <div class="timeline">
+              ${recentProducts.slice(0, 3).map(p => {
+                const daysAgo = Math.floor((Date.now() - new Date(p.createdAt)) / (1000 * 60 * 60 * 24));
+                return `
+                  <div class="timeline-item">
+                    <div class="timeline-icon"><i class="fas fa-plus"></i></div>
+                    <div class="timeline-content">
+                      <div class="timeline-title">Listed ${p.name}</div>
+                      <div class="timeline-date">${daysAgo === 0 ? 'Today' : daysAgo === 1 ? 'Yesterday' : daysAgo + ' days ago'}</div>
+                    </div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3><i class="fas fa-info-circle"></i> About</h3>
+            <div class="info-row"><i class="fas fa-tag"></i> ${seller.productCategory || 'General'}</div>
+            <div class="info-row"><i class="fas fa-briefcase"></i> ${seller.businessType || 'Individual'}</div>
+            ${seller.email ? `<div class="info-row"><i class="fas fa-envelope"></i> ${seller.email}</div>` : ''}
+            ${seller.phone ? `<div class="info-row"><i class="fas fa-phone"></i> ${seller.phone}</div>` : ''}
+          </div>
+        `;
+
+        if (reviews.length) {
+          sidebarHTML += `
+            <div class="card">
+              <h3><i class="fas fa-star"></i> Recent Reviews</h3>
+              ${reviews.slice(0, 3).map(r => `
+                <div class="review-item">
+                  <div class="review-header">
+                    <img src="https://ui-avatars.com/api/?name=${encodeURIComponent(r.buyer?.name || 'Buyer')}&background=333&color=fff" class="review-avatar">
+                    <div style="flex:1;">
+                      <div class="review-author">${r.buyer?.name || 'Anonymous'}</div>
+                      <div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div>
+                    </div>
+                  </div>
+                  <div class="review-text">${r.comment || 'Great seller!'}</div>
+                </div>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        document.getElementById('sidebar').innerHTML = sidebarHTML;
+        document.getElementById('sidebar').style.display = 'block';
+
+        // Setup filters
+        if (products.length > 0) {
+          const mainCategory = seller.productCategory?.toLowerCase();
+          const subcategories = {
+            electronics: ['Phones', 'Laptops', 'Chargers', 'Earbuds', 'Headsets', 'Power Banks', 'Bluetooth Speakers', 'Computer Accessories'],
+            fashion: ['Clothing', 'Shoes', 'Bags', 'Accessories']
+          };
+          
+          const relevantSubcategories = subcategories[mainCategory] || productSubcategories;
+          document.getElementById('category').innerHTML = '<option value="">All ' + (seller.productCategory || 'Categories') + '</option>' + 
+            relevantSubcategories.map(c => `<option value="${c}">${c.replace(/_/g, ' ')}</option>`).join('');
+          document.getElementById('filters').style.display = 'grid';
+          
+          const searchInput = document.getElementById('search');
+          const clearBtn = document.getElementById('clearSearch');
+          const suggestions = document.getElementById('searchSuggestions');
+          let searchTimeout;
+          
+          const applyFilters = () => {
+            let filtered = [...products];
+            const search = searchInput.value.toLowerCase();
+            const subcategory = document.getElementById('category').value;
+            const sort = document.getElementById('sort').value;
+            
+            if (search) filtered = filtered.filter(p => p.name?.toLowerCase().includes(search) || p.subCategory?.toLowerCase().includes(search.toLowerCase()));
+            if (subcategory) filtered = filtered.filter(p => p.subCategory === subcategory);
+            
+            if (sort === 'price-asc') filtered.sort((a, b) => a.price - b.price);
+            if (sort === 'price-desc') filtered.sort((a, b) => b.price - a.price);
+            if (sort === 'newest') filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+            
+            renderProducts(filtered);
+          };
+          
+          searchInput.oninput = (e) => {
+            clearTimeout(searchTimeout);
+            const query = e.target.value.trim().toLowerCase();
+            clearBtn.classList.toggle('active', query.length > 0);
+            
+            if (query) {
+              const matches = products.filter(p => p.name?.toLowerCase().includes(query)).slice(0, 5);
+              if (matches.length) {
+                suggestions.innerHTML = matches.map(p => `<div class="suggestion-item" onclick="document.getElementById('search').value='${p.name.replace(/'/g, "\\'")}';
+document.getElementById('search').dispatchEvent(new Event('input'));
+document.getElementById('searchSuggestions').classList.remove('active');">${p.name}</div>`).join('');
+                suggestions.classList.add('active');
+              } else {
+                suggestions.classList.remove('active');
+              }
+            } else {
+              suggestions.classList.remove('active');
+            }
+            
+            searchTimeout = setTimeout(applyFilters, 300);
+          };
+          
+          clearBtn.onclick = () => {
+            searchInput.value = '';
+            clearBtn.classList.remove('active');
+            suggestions.classList.remove('active');
+            applyFilters();
+          };
+          
+          document.addEventListener('click', (e) => {
+            if (!searchInput.contains(e.target) && !suggestions.contains(e.target)) {
+              suggestions.classList.remove('active');
+            }
+          });
+          
+          document.getElementById('category').onchange = applyFilters;
+          document.getElementById('sort').onchange = applyFilters;
+        }
+        
+        // Products
+        const renderProducts = (items) => {
+          document.getElementById('products').innerHTML = items.length ? items.map(p => {
+            const stock = p.stock ?? 0;
+            const stockStatus = stock === 0 ? 'Out of Stock' : `Stock: ${stock}`;
+            const stockColor = stock === 0 ? '#e74c3c' : stock < 5 ? '#f39c12' : '#6ecf45';
+            return `
+          <div class="product-card" onclick="location.href='Dex-product-details.html?id=${p.id}'">
+            <img src="${BASE}${p.images?.[0] || '/uploads/placeholder.jpg'}" alt="${p.name}" class="product-img" loading="lazy" onerror="this.src='https://via.placeholder.com/240x180/1a1a1a/666?text=No+Image'">
+            <div class="product-info">
+              <div class="product-name">${p.name}</div>
+              <div class="product-price">₵${Number(p.price).toLocaleString()}</div>
+              <div style="font-size:0.85rem;color:${stockColor};margin-top:4px;font-weight:600;">${stockStatus}</div>
+            </div>
+          </div>
+        `;
+          }).join('') : '<div class="loading"><p>No products found</p></div>';
+        };
+        
+        renderProducts(products);
+
+        // Follow and Like buttons
+        const followBtn = document.getElementById('followBtn');
+        const likeBtn = document.getElementById('likeBtn');
+        let followers = 0;
+        let likes = 0;
+        let isFollowing = false;
+        let isLiked = false;
+        
+        try {
+          const followRes = await fetch(`${BASE}/api/seller/followers/${sellerId}`);
+          if (followRes.ok) {
+            const followData = await followRes.json();
+            followers = followData.count || 0;
+            document.getElementById('followers').textContent = followers;
+          }
+          
+          const likesRes = await fetch(`${BASE}/api/seller/likes/${sellerId}`);
+          if (likesRes.ok) {
+            const likesData = await likesRes.json();
+            likes = likesData.count || 0;
+            document.getElementById('likes').textContent = likes;
+          }
+          
+          const stored = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+          const user = stored ? JSON.parse(stored) : {};
+          if (user.token) {
+            const statusRes = await fetch(`${BASE}/api/seller/follow/${sellerId}`, {
+              headers: { 'Authorization': `Bearer ${user.token}` }
+            });
+            if (statusRes.ok) {
+              const statusData = await statusRes.json();
+              isFollowing = statusData.isFollowing || false;
+              if (isFollowing) followBtn.innerHTML = '<i class="fas fa-check"></i> Following';
+            }
+            
+            const likeRes = await fetch(`${BASE}/api/seller/like/${sellerId}`, {
+              headers: { 'Authorization': `Bearer ${user.token}` }
+            });
+            if (likeRes.ok) {
+              const likeData = await likeRes.json();
+              isLiked = likeData.isLiked || false;
+              likeBtn.innerHTML = isLiked ? '<i class="fas fa-heart"></i> Liked' : '<i class="far fa-heart"></i> Like';
+              if (isLiked) likeBtn.classList.add('btn-primary');
+            }
+          }
+        } catch (err) {
+          console.error('Failed to fetch followers:', err);
+        }
+        
+        const showToast = (msg, success = false) => {
+          const toast = document.createElement('div');
+          toast.className = 'toast' + (success ? ' success' : '');
+          toast.textContent = msg;
+          document.body.appendChild(toast);
+          setTimeout(() => toast.remove(), 3000);
+        };
+
+        likeBtn.onclick = async () => {
+          const stored = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+          const user = stored ? JSON.parse(stored) : {};
+          if (!user.token) return alert('Please login to like sellers');
+          
+          likeBtn.disabled = true;
+          
+          try {
+            if (isLiked) {
+              const res = await fetch(`${BASE}/api/seller/like/${sellerId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${user.token}` }
+              });
+              if (res.ok) {
+                isLiked = false;
+                likes--;
+                likeBtn.innerHTML = '<i class="far fa-heart"></i> Like';
+                likeBtn.classList.remove('btn-primary');
+                document.getElementById('likes').textContent = likes;
+              } else if (res.status === 403) {
+                const err = await res.json();
+                showToast(err.message || "You can't like your own profile");
+              }
+            } else {
+              const res = await fetch(`${BASE}/api/seller/like`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                body: JSON.stringify({ sellerId: parseInt(sellerId) })
+              });
+              if (res.ok) {
+                isLiked = true;
+                likes++;
+                likeBtn.innerHTML = '<i class="fas fa-heart"></i> Liked';
+                likeBtn.classList.add('btn-primary');
+                document.getElementById('likes').textContent = likes;
+              } else if (res.status === 403) {
+                const err = await res.json();
+                showToast(err.message || "You can't like your own profile");
+              }
+            }
+            likeBtn.style.animation = 'pulse 0.3s';
+            setTimeout(() => likeBtn.style.animation = '', 300);
+          } catch (err) {
+            console.error('Like error:', err);
+            alert('Failed to update like status');
+          } finally {
+            likeBtn.disabled = false;
+          }
+        };
+
+        followBtn.onclick = async () => {
+          const stored = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+          const user = stored ? JSON.parse(stored) : {};
+          console.log('Current user:', user);
+          if (!user.token) return alert('Please login to follow sellers');
+          
+          followBtn.disabled = true;
+          
+          try {
+            if (isFollowing) {
+              const res = await fetch(`${BASE}/api/seller/follow/${sellerId}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${user.token}` }
+              });
+              if (res.ok) {
+                const data = await res.json();
+                isFollowing = false;
+                followers = data.followers || followers - 1;
+                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+              } else if (res.status === 403) {
+                const err = await res.json();
+                showToast(err.message || "You can't follow your own profile");
+              }
+            } else {
+              const res = await fetch(`${BASE}/api/seller/follow`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${user.token}` },
+                body: JSON.stringify({ sellerId: parseInt(sellerId) })
+              });
+              if (res.ok) {
+                const data = await res.json();
+                isFollowing = true;
+                followers = data.followers || followers + 1;
+                followBtn.innerHTML = '<i class="fas fa-check"></i> Following';
+              } else if (res.status === 403) {
+                const err = await res.json();
+                showToast(err.message || "You can't follow your own profile");
+              }
+            }
+            followBtn.style.animation = 'pulse 0.3s';
+            setTimeout(() => followBtn.style.animation = '', 300);
+            document.getElementById('followers').textContent = followers;
+          } catch (err) {
+            console.error('Follow error:', err);
+            alert('Failed to update follow status');
+          } finally {
+            followBtn.disabled = false;
+          }
+        };
+
+        // Share button
+        document.getElementById('shareBtn').onclick = () => {
+          if (navigator.share) {
+            navigator.share({ title: seller.name, url: window.location.href });
+          } else {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Link copied!');
+          }
+        };
+
+        // Reviews modal
+        const reviewsModal = document.createElement('div');
+        reviewsModal.className = 'modal';
+        reviewsModal.innerHTML = `<div class="modal-content"><div class="modal-header"><h2><i class="fas fa-star"></i> Reviews</h2><button class="modal-close" onclick="this.closest('.modal').classList.remove('active')">&times;</button></div><div class="modal-body" id="reviewsModalBody"></div></div>`;
+        document.body.appendChild(reviewsModal);
+
+        document.getElementById('reviewsCard').onclick = () => {
+          const stored = localStorage.getItem('currentUser') || sessionStorage.getItem('currentUser');
+          const currentUser = stored ? JSON.parse(stored) : {};
+          const alreadyReviewed = reviews.some(r => r.buyerId === currentUser.id);
+          let html = '';
+          
+          if (alreadyReviewed) {
+            html += `<div style="background:rgba(110,207,69,0.1);border:1px solid var(--primary);border-radius:8px;padding:1rem;margin-bottom:1.5rem;text-align:center;color:var(--primary);font-weight:600;">✅ You already reviewed this seller</div>`;
+          } else {
+            html += `<div class="review-form" style="margin-bottom:1.5rem;"><h3>⭐ Rate this Seller</h3><div class="star-rating" id="modalStarRating"><i class="far fa-star" data-rating="1"></i><i class="far fa-star" data-rating="2"></i><i class="far fa-star" data-rating="3"></i><i class="far fa-star" data-rating="4"></i><i class="far fa-star" data-rating="5"></i></div><textarea id="modalReviewComment" class="textarea" placeholder="Share your experience with this seller..."></textarea><button class="submit-btn" id="modalSubmitReview">Submit Review</button></div>`;
+          }
+          
+          if (reviews.length) {
+            html += '<h3 style="margin-bottom:1rem;">All Reviews</h3>';
+            reviews.forEach(r => {
+              html += `<div class="review-item"><div class="review-header"><img src="https://ui-avatars.com/api/?name=${encodeURIComponent(r.buyer?.name || 'Buyer')}&background=333&color=fff" class="review-avatar"><div style="flex:1;"><div class="review-author">${r.buyer?.name || 'Anonymous'}</div><div class="review-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5-r.rating)}</div></div><div class="review-date">${new Date(r.createdAt).toLocaleDateString()}</div></div>${r.comment ? `<div class="review-text">${r.comment}</div>` : ''}</div>`;
+            });
+          } else {
+            html += '<div class="empty-state"><i class="fas fa-star"></i><p>No reviews yet</p></div>';
+          }
+          
+          document.getElementById('reviewsModalBody').innerHTML = html;
+          reviewsModal.classList.add('active');
+          
+          if (!alreadyReviewed) {
+            let selectedRating = 0;
+            const stars = document.querySelectorAll('#modalStarRating i');
+            stars.forEach(star => {
+              star.onclick = () => {
+                selectedRating = parseInt(star.dataset.rating);
+                stars.forEach((s, i) => s.className = i < selectedRating ? 'fas fa-star active' : 'far fa-star');
+              };
+            });
+            
+            document.getElementById('modalSubmitReview').onclick = async () => {
+              if (!selectedRating) return alert('Please select a rating');
+              const btn = document.getElementById('modalSubmitReview');
+              btn.disabled = true;
+              btn.textContent = 'Submitting...';
+              
+              try {
+                const res = await fetch(`${BASE}/api/sellers/${sellerId}/reviews`, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentUser.token}` },
+                  body: JSON.stringify({ rating: selectedRating, comment: document.getElementById('modalReviewComment').value.trim() })
+                });
+                
+                if (res.ok) {
+                  alert('✅ Review submitted!');
+                  location.reload();
+                } else {
+                  const err = await res.json();
+                  alert(err.message || 'Failed');
+                  btn.disabled = false;
+                  btn.textContent = 'Submit Review';
+                }
+              } catch (err) {
+                alert('Error');
+                btn.disabled = false;
+                btn.textContent = 'Submit Review';
+              }
+            };
+          }
+        };
+
+        // Followers modal
+        const followersModal = document.createElement('div');
+        followersModal.className = 'modal';
+        followersModal.innerHTML = `<div class="modal-content"><div class="modal-header"><h2><i class="fas fa-users"></i> Followers</h2><button class="modal-close" onclick="this.closest('.modal').classList.remove('active')">&times;</button></div><div class="modal-body" id="followersModalBody"></div></div>`;
+        document.body.appendChild(followersModal);
+
+        document.getElementById('followersCard').onclick = async () => {
+          console.log('Followers card clicked');
+          document.getElementById('followersModalBody').innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i></div>';
+          followersModal.classList.add('active');
+          
+          try {
+            const url = `${BASE}/api/seller/followers/${sellerId}`;
+            console.log('Fetching followers from:', url);
+            const res = await fetch(url);
+            console.log('Response status:', res.status);
+            const data = await res.json();
+            console.log('Followers data:', data);
+            
+            let html = '';
+            if (data.followers && data.followers.length) {
+              data.followers.forEach(f => {
+                const avatar = f.buyer.profilePic ? BASE + f.buyer.profilePic : `https://ui-avatars.com/api/?name=${encodeURIComponent(f.buyer.name)}&background=6ecf45&color=000`;
+                html += `<div class="follower-item"><img src="${avatar}" class="follower-avatar"><div class="follower-info"><div class="follower-name">${f.buyer.name}</div><div class="follower-meta">Following since ${new Date(f.createdAt).toLocaleDateString()}</div></div></div>`;
+              });
+            } else {
+              html = '<div class="empty-state"><i class="fas fa-users"></i><p>No followers yet</p></div>';
+            }
+            document.getElementById('followersModalBody').innerHTML = html;
+          } catch (err) {
+            console.error('Followers fetch error:', err);
+            document.getElementById('followersModalBody').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Failed to load followers</p></div>';
+          }
+        };
+
+        document.title = `${seller.name || 'Seller'} • Dex™`;
+      } catch (err) {
+        console.error(err);
+        document.getElementById('profileHeader').innerHTML = '<div class="loading"><p>Failed to load profile</p></div>';
+      }
+    })();
+  </script>
+</body>
+</html>

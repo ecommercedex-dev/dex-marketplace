@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title id="page-title">Loading... • Dex™</title>
+    <link rel="icon" href="../DEX_FAVICON/favicon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="assets/css/product-details.css" />
+  </head>
+  <body>
+    <header>
+      <h1 id="company-name"><a href="Dex-shop.html">Dex™</a></h1>
+      <button class="back-btn" onclick="history.back()">← Back to Shop</button>
+    </header>
+
+    <div class="breadcrumb" id="breadcrumb">
+      <a href="Dex-home.html">Home</a>
+      <span>/</span>
+      <a href="Dex-shop.html">Shop</a>
+      <span>/</span>
+      <span id="breadcrumb-category">...</span>
+      <span>/</span>
+      <span id="breadcrumb-product">...</span>
+    </div>
+
+    <div class="product-container">
+      <div class="loading" id="loading">
+        <i
+          class="fas fa-spinner fa-spin"
+          style="font-size: 3rem; margin-bottom: 20px"
+        ></i>
+        <p>Loading product details...</p>
+      </div>
+
+      <div class="product-layout" id="product-layout" style="display: none">
+        <!-- Left Column: Gallery -->
+        <div class="product-gallery">
+          <div class="gallery-main" id="gallery-main">
+            <img id="main-image" src="" alt="Product" />
+            <div class="image-counter" id="image-counter">1 / 1</div>
+            <div class="gallery-badges" id="gallery-badges"></div>
+            <div class="gallery-actions">
+              <button class="icon-btn" id="share-btn" title="Share">
+                <i class="fas fa-share-alt"></i>
+              </button>
+              <button
+                class="icon-btn"
+                id="fullscreen-btn"
+                title="View Fullscreen"
+              >
+                <i class="fas fa-expand"></i>
+              </button>
+            </div>
+          </div>
+          <div class="thumbnail-container" id="thumbnail-container"></div>
+        </div>
+
+        <!-- Right Column: Product Info -->
+        <div class="product-info">
+          <h1 id="product-name">Product Name</h1>
+          <div class="product-meta">
+            <span class="category-tag" id="category-tag">Category</span>
+            <div class="rating-summary" id="rating-summary">
+              <span class="stars">★★★★★</span>
+              <span>(0 reviews)</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price" id="product-price">₵0</div>
+            <div class="stock-status" id="stock-status" style="display: none">
+              <span id="stock-text">Only 5 left in stock!</span>
+              <div class="stock-bar">
+                <div
+                  class="stock-fill"
+                  id="stock-fill"
+                  style="width: 30%"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-buttons">
+            <button class="btn btn-primary" id="place-order-btn">
+              <i class="fas fa-shopping-cart"></i> Place Order
+            </button>
+            <button class="btn btn-wishlist" id="wishlist-btn">
+              <i class="far fa-heart"></i>
+            </button>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tabs">
+            <div class="tab-buttons">
+              <button class="tab-btn active" data-tab="overview">
+                Overview
+              </button>
+              <button class="tab-btn" data-tab="reviews">Reviews</button>
+              <button class="tab-btn" data-tab="seller">Seller Info</button>
+            </div>
+          </div>
+
+          <!-- Tab Contents -->
+          <div class="tab-content active" id="tab-overview">
+            <div class="description" id="product-description">Loading...</div>
+            <div class="specs-grid" id="specs-grid"></div>
+          </div>
+
+          <div class="tab-content" id="tab-reviews">
+            <div class="reviews-section">
+              <div
+                class="rating-breakdown"
+                id="rating-breakdown"
+                style="display: none"
+              >
+                <div class="rating-overview">
+                  <div class="rating-number" id="avg-rating">0.0</div>
+                  <div class="stars" id="avg-stars">★★★★★</div>
+                  <div style="color: #aaa; margin-top: 8px" id="total-reviews">
+                    0 reviews
+                  </div>
+                </div>
+                <div class="rating-bars" id="rating-bars"></div>
+              </div>
+              <div class="reviews-list" id="reviews-list"></div>
+              <div class="review-form" id="review-form" style="display: none">
+                <h3>Write a Review</h3>
+                <div class="star-rating" id="star-rating">
+                  <span class="star" data-value="1">☆</span>
+                  <span class="star" data-value="2">☆</span>
+                  <span class="star" data-value="3">☆</span>
+                  <span class="star" data-value="4">☆</span>
+                  <span class="star" data-value="5">☆</span>
+                </div>
+                <textarea
+                  class="review-textarea"
+                  id="review-text"
+                  placeholder="Share your experience with this product..."
+                ></textarea>
+                <button class="btn btn-primary" id="submit-review">
+                  Submit Review
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="tab-content" id="tab-seller">
+            <div class="seller-card" id="seller-card"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Safety Tips Slideshow -->
+      <div class="safety-tips" id="safety-tips" style="display: none"></div>
+
+      <!-- Related Products -->
+      <div class="related-products" id="related-products" style="display: none">
+        <h2>Similar Products You Might Like</h2>
+        <div class="products-grid" id="related-grid"></div>
+      </div>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+      <div class="lightbox-content">
+        <button class="lightbox-close" id="lightbox-close">×</button>
+        <button class="lightbox-nav lightbox-prev" id="lightbox-prev">‹</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="" />
+        <button class="lightbox-nav lightbox-next" id="lightbox-next">›</button>
+      </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div class="share-modal" id="share-modal">
+      <div class="share-content">
+        <h3>Share this Product</h3>
+        <div class="share-options">
+          <button class="share-option" data-platform="whatsapp">
+            <i class="fab fa-whatsapp"></i>
+            <span>WhatsApp</span>
+          </button>
+          <button class="share-option" data-platform="facebook">
+            <i class="fab fa-facebook"></i>
+            <span>Facebook</span>
+          </button>
+          <button class="share-option" data-platform="twitter">
+            <i class="fab fa-twitter"></i>
+            <span>Twitter</span>
+          </button>
+          <button class="share-option" data-platform="copy">
+            <i class="fas fa-copy"></i>
+            <span>Copy Link</span>
+          </button>
+        </div>
+        <div class="share-link-box">
+          <input
+            type="text"
+            class="share-link-input"
+            id="share-link"
+            readonly
+          />
+        </div>
+        <button
+          class="btn btn-secondary"
+          onclick="document.getElementById('share-modal').classList.remove('active')"
+          style="width: 100%; margin-top: 16px"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Sticky Bar -->
+    <div class="mobile-sticky-bar" id="mobile-sticky-bar">
+      <div class="mobile-sticky-content">
+        <div class="mobile-price">
+          <div class="mobile-price-amount" id="mobile-price">₵0</div>
+          <div class="mobile-price-label">Best Price</div>
+        </div>
+        <button
+          class="btn btn-primary"
+          id="mobile-whatsapp-btn"
+          style="flex: 0 0 auto"
+        >
+          <i class="fab fa-whatsapp"></i> Chat Now
+        </button>
+      </div>
+    </div>
+
+    <!-- Notification Sidebar -->
+    <div id="notificationSidebar">
+      <div class="notif-header">
+        <h3>Notifications</h3>
+        <button id="clearAllBtn">Clear All</button>
+      </div>
+      <div id="notificationList"></div>
+      <div id="notifEmptyState" style="display: none">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications</p>
+      </div>
+    </div>
+
+    <!-- Order Modal -->
+    <div class="order-modal" id="order-modal">
+      <div class="order-modal-content">
+        <button class="order-modal-close" onclick="document.getElementById('order-modal').classList.remove('active')">&times;</button>
+        <h2>Place Your Order</h2>
+        <div class="order-form">
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" id="order-quantity" min="1" value="1" />
+          </div>
+          <div class="form-group">
+            <label>Delivery Address</label>
+            <textarea id="order-address" placeholder="Enter your delivery address (e.g., Hostel A, Room 205)" rows="3"></textarea>
+          </div>
+          <div class="order-summary">
+            <div class="summary-row">
+              <span>Price per item:</span>
+              <span id="order-unit-price">₵0</span>
+            </div>
+            <div class="summary-row">
+              <span>Quantity:</span>
+              <span id="order-qty-display">1</span>
+            </div>
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span id="order-total-price">₵0</span>
+            </div>
+          </div>
+          <button class="btn btn-primary" id="confirm-order-btn" style="width: 100%; margin-top: 20px;">
+            <i class="fas fa-check"></i> Confirm Order
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Success Modal -->
+    <div class="order-modal" id="order-success-modal">
+      <div class="order-modal-content">
+        <div style="text-align: center; padding: 20px;">
+          <i class="fas fa-check-circle" style="font-size: 4rem; color: #6ecf45; margin-bottom: 20px;"></i>
+          <h2>Order Placed Successfully! 🎉</h2>
+          <p style="color: #aaa; margin: 20px 0;">Your order has been sent to the seller. You'll be notified when they accept it.</p>
+          <div id="seller-contact-info" style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin: 20px 0;">
+            <h3 style="margin-bottom: 15px;">Contact Seller</h3>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+              <a id="seller-whatsapp-link" class="btn btn-primary" style="text-decoration: none;">
+                <i class="fab fa-whatsapp"></i> Chat on WhatsApp
+              </a>
+              <a id="seller-phone-link" class="btn btn-secondary" style="text-decoration: none;">
+                <i class="fas fa-phone"></i> Call Seller
+              </a>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="document.getElementById('order-success-modal').classList.remove('active'); location.href='PROFILE_PAGES/Buyer_profile.html'" style="width: 100%;">
+            View My Orders
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overlay -->
+    <div class="overlay"></div>
+
+    <script type="module" src="assets/js/config.js"></script>
+    <script type="module">
+      import { initNotifications } from './assets/js/modules/notifications.js';
+      initNotifications();
+    </script>
+    <script src="assets/js/purchase-verification.js"></script>
+    <script src="assets/js/product-details.js"></script>
+  </body>
+</html>

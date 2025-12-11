@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Kill User 2 Forever</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #000;
+      color: #fff;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+      padding: 40px;
+      background: #222;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(255,0,0,0.3);
+    }
+    button {
+      padding: 20px 40px;
+      font-size: 20px;
+      background: #e74c3c;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      margin: 10px;
+    }
+    button:hover {
+      background: #c0392b;
+    }
+    .success {
+      color: #2ecc71;
+      font-size: 24px;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔥 KILL USER 2 FOREVER 🔥</h1>
+    <p>This will permanently remove ALL traces of user 2 from your browser</p>
+    <button onclick="killUser2()">NUKE IT NOW</button>
+    <div class="success" id="success">✅ USER 2 OBLITERATED!</div>
+  </div>
+
+  <script>
+    function killUser2() {
+      // Clear everything
+      localStorage.clear();
+      sessionStorage.clear();
+      
+      // Clear cookies
+      document.cookie.split(";").forEach(c => {
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+      });
+      
+      // Clear IndexedDB
+      if (window.indexedDB) {
+        indexedDB.databases().then(dbs => {
+          dbs.forEach(db => indexedDB.deleteDatabase(db.name));
+        });
+      }
+      
+      // Clear cache
+      if ('caches' in window) {
+        caches.keys().then(names => {
+          names.forEach(name => caches.delete(name));
+        });
+      }
+      
+      console.log("🔥 USER 2 DESTROYED");
+      document.getElementById('success').style.display = 'block';
+      
+      // Redirect to login after 2 seconds
+      setTimeout(() => {
+        window.location.href = 'DEX_FRONTEND/DEX_HOMEPAGES/REGISTRY_PAGES/seller_sign_in.html';
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

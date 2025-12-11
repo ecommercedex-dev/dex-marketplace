@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dex™ — Safe Seller Registration</title>
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png">
+    <style>
+        /* Enhanced styles for safety-focused registration */
+        .safety-notice {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .verification-steps {
+            background: rgba(0, 255, 156, 0.1);
+            border: 2px solid #00ff9c;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #00ff9c;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .trust-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #f5e371, #d4c247);
+            color: #000;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+            margin: 2px;
+        }
+        
+        .security-info {
+            background: rgba(0, 0, 0, 0.3);
+            border-left: 4px solid #f5e371;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .phone-verification {
+            display: none;
+            background: rgba(0, 255, 156, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        
+        .document-upload {
+            border: 2px dashed #d4c247;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .document-upload:hover {
+            border-color: #f5e371;
+            background: rgba(245, 227, 113, 0.1);
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff9c, #f5e371);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <form id="enhanced-seller-form">
+            <!-- Safety Notice -->
+            <div class="safety-notice">
+                🛡️ Safe Marketplace Registration
+                <br><small>We verify all sellers to ensure a secure trading environment</small>
+            </div>
+
+            <!-- Verification Steps Overview -->
+            <div class="verification-steps">
+                <h3 style="color: #00ff9c; margin-bottom: 15px;">📋 Verification Process</h3>
+                <div class="step">
+                    <div class="step-icon">1</div>
+                    <span>Complete registration form</span>
+                </div>
+                <div class="step">
+                    <div class="step-icon">2</div>
+                    <span>Verify email & phone number</span>
+                </div>
+                <div class="step">
+                    <div class="step-icon">3</div>
+                    <span>Upload student ID for verification</span>
+                </div>
+                <div class="step">
+                    <div class="step-icon">4</div>
+                    <span>Confirm safety guidelines</span>
+                </div>
+                <div class="step">
+                    <div class="step-icon">✓</div>
+                    <span>Start selling safely!</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <h2>Create Your Seller Account</h2>
+
+            <!-- Personal Information -->
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" name="name" placeholder="Full Name (as on student ID)" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" name="email" placeholder="University Email Address" required>
+                <small style="color: #f5e371;">Use your official university email (.edu domain)</small>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-phone"></i>
+                <input type="tel" id="phone" name="phone" placeholder="Phone Number" required>
+                <button type="button" id="verify-phone-btn" style="margin-left: 10px; padding: 8px 12px; background: #00ff9c; color: #000; border: none; border-radius: 4px;">Verify</button>
+            </div>
+
+            <!-- Phone Verification Section -->
+            <div class="phone-verification" id="phone-verification">
+                <h4 style="color: #00ff9c;">📱 Phone Verification</h4>
+                <p>Enter the 6-digit code sent to your phone:</p>
+                <div class="input-group">
+                    <i class="fas fa-key"></i>
+                    <input type="text" id="phone-code" placeholder="000000" maxlength="6">
+                    <button type="button" id="confirm-phone-btn" style="margin-left: 10px; padding: 8px 12px; background: #f5e371; color: #000; border: none; border-radius: 4px;">Confirm</button>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-venus-mars"></i>
+                <select id="gender" name="gender" required>
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <!-- Business Information -->
+            <div class="security-info">
+                <h4 style="color: #f5e371;">🏪 Business Information</h4>
+                <p>This information will be verified for authenticity</p>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-store"></i>
+                <input type="text" id="storeName" name="storeName" placeholder="Store/Business Name" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-briefcase"></i>
+                <select id="businessType" name="businessType" required>
+                    <option value="">Select Business Type</option>
+                    <option value="individual">Individual Seller</option>
+                    <option value="small_business">Small Business</option>
+                    <option value="student_entrepreneur">Student Entrepreneur</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-map-marker-alt"></i>
+                <textarea id="businessAddress" name="businessAddress" placeholder="Complete Business Address" rows="3" required></textarea>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-tags"></i>
+                <select id="productCategory" name="productCategory" required>
+                    <option value="">Select Product Category</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="fashion">Fashion & Clothing</option>
+                    <option value="books">Books & Academic</option>
+                    <option value="services">Services</option>
+                    <option value="hostels">Hostels & Accommodation</option>
+                </select>
+            </div>
+
+            <!-- Payment Information -->
+            <div class="security-info">
+                <h4 style="color: #f5e371;">💳 Payment Information</h4>
+                <p>Secure payment details for transaction processing</p>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-credit-card"></i>
+                <input type="text" id="paymentInfo" name="paymentInfo" placeholder="Bank Account or Mobile Money Details" required>
+            </div>
+
+            <!-- Document Upload -->
+            <div class="security-info">
+                <h4 style="color: #f5e371;">📄 Identity Verification</h4>
+                <p>Upload your student ID for verification (Required)</p>
+            </div>
+
+            <div class="document-upload" onclick="document.getElementById('student-id').click()">
+                <i class="fas fa-cloud-upload-alt" style="font-size: 2em; color: #d4c247; margin-bottom: 10px;"></i>
+                <p>Click to upload Student ID</p>
+                <small>Accepted formats: JPG, PNG, PDF (Max 5MB)</small>
+                <input type="file" id="student-id" name="studentId" accept=".jpg,.jpeg,.png,.pdf" style="display: none;">
+            </div>
+
+            <!-- Safety Confirmations -->
+            <div class="security-info">
+                <h4 style="color: #f5e371;">🛡️ Safety Commitments</h4>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="safety-guidelines" name="safetyGuidelines" required>
+                <label for="safety-guidelines">
+                    I agree to follow <a href="#" style="color: #f5e371;">Dex Safety Guidelines</a> and maintain honest business practices
+                </label>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="anti-scam" name="antiScam" required>
+                <label for="anti-scam">
+                    I commit to <a href="#" style="color: #f5e371;">Anti-Scam Policies</a> and will not engage in fraudulent activities
+                </label>
+            </div>
+
+            <div class="checkbox">
+                <input type="checkbox" id="terms" name="terms" required>
+                <label for="terms">
+                    I accept the <a href="#" style="color: #f5e371;">Terms of Service</a> and <a href="#" style="color: #f5e371;">Privacy Policy</a>
+                </label>
+            </div>
+
+            <!-- Password -->
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" name="password" placeholder="Create Strong Password" required>
+                <i class="fas fa-eye peek" onclick="togglePassword('password')"></i>
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                <i class="fas fa-eye peek" onclick="togglePassword('confirmPassword')"></i>
+            </div>
+
+            <!-- Trust Badges Preview -->
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="color: #ddd; margin-bottom: 10px;">Upon verification, you'll earn these trust badges:</p>
+                <span class="trust-badge">✅ Email Verified</span>
+                <span class="trust-badge">📱 Phone Verified</span>
+                <span class="trust-badge">🎓 Student Verified</span>
+                <span class="trust-badge">🛡️ Safety Confirmed</span>
+            </div>
+
+            <button type="submit" id="register-btn">
+                🚀 Start Verification Process
+            </button>
+
+            <p style="text-align: center; margin-top: 15px; color: #ddd;">
+                Already have an account? 
+                <a href="seller_sign_in.html" style="color: #f5e371;">Sign In</a>
+            </p>
+        </form>
+    </main>
+
+    <script>
+        // Enhanced registration with safety features
+        let verificationStep = 0;
+        let phoneVerified = false;
+        
+        // Update progress bar
+        function updateProgress() {
+            const progress = (verificationStep / 4) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+        
+        // Phone verification
+        document.getElementById('verify-phone-btn').addEventListener('click', async () => {
+            const phone = document.getElementById('phone').value;
+            if (!phone) {
+                showNotification('Please enter your phone number', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/seller/send-phone-verification', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone })
+                });
+                
+                if (response.ok) {
+                    document.getElementById('phone-verification').style.display = 'block';
+                    showNotification('Verification code sent!', 'success');
+                    verificationStep = 1;
+                    updateProgress();
+                } else {
+                    showNotification('Failed to send verification code', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+            }
+        });
+        
+        // Confirm phone verification
+        document.getElementById('confirm-phone-btn').addEventListener('click', async () => {
+            const code = document.getElementById('phone-code').value;
+            const phone = document.getElementById('phone').value;
+            
+            if (!code || code.length !== 6) {
+                showNotification('Please enter the 6-digit code', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/seller/verify-phone', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, code })
+                });
+                
+                if (response.ok) {
+                    phoneVerified = true;
+                    document.getElementById('phone-verification').style.display = 'none';
+                    document.getElementById('verify-phone-btn').textContent = '✅ Verified';
+                    document.getElementById('verify-phone-btn').disabled = true;
+                    showNotification('Phone verified successfully!', 'success');
+                    verificationStep = 2;
+                    updateProgress();
+                } else {
+                    showNotification('Invalid verification code', 'error');
+                }
+            } catch (error) {
+                showNotification('Verification failed. Please try again.', 'error');
+            }
+        });
+        
+        // Form validation with enhanced security
+        function validateForm() {
+            const name = document.getElementById('name').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Name validation (no HTML tags)
+            if (name.length < 2 || /<[^>]*>/.test(name)) {
+                showNotification('Please enter a valid name (no HTML tags)', 'error');
+                return false;
+            }
+            
+            // Email domain validation
+            const emailDomain = email.toLowerCase();
+            if (!emailDomain.includes('.edu') && !emailDomain.includes('university')) {
+                showNotification('Please use your institutional email address', 'error');
+                return false;
+            }
+            
+            // Phone verification check
+            if (!phoneVerified) {
+                showNotification('Please verify your phone number first', 'error');
+                return false;
+            }
+            
+            // Password strength validation
+            if (password.length < 8 || !/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+                showNotification('Password must be at least 8 characters with uppercase, lowercase, and number', 'error');
+                return false;
+            }
+            
+            if (password !== confirmPassword) {
+                showNotification('Passwords do not match', 'error');
+                return false;
+            }
+            
+            // Document upload check
+            const studentId = document.getElementById('student-id').files[0];
+            if (!studentId) {
+                showNotification('Please upload your student ID', 'error');
+                return false;
+            }
+            
+            // Safety confirmations check
+            const safetyGuidelines = document.getElementById('safety-guidelines').checked;
+            const antiScam = document.getElementById('anti-scam').checked;
+            const terms = document.getElementById('terms').checked;
+            
+            if (!safetyGuidelines || !antiScam || !terms) {
+                showNotification('Please confirm all safety commitments', 'error');
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Enhanced form submission
+        document.getElementById('enhanced-seller-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            if (!validateForm()) return;
+            
+            const formData = new FormData();
+            const form = e.target;
+            
+            // Append all form fields
+            for (let element of form.elements) {
+                if (element.name && element.type !== 'submit') {
+                    if (element.type === 'file') {
+                        if (element.files[0]) {
+                            formData.append(element.name, element.files[0]);
+                        }
+                    } else if (element.type === 'checkbox') {
+                        formData.append(element.name, element.checked);
+                    } else {
+                        formData.append(element.name, element.value);
+                    }
+                }
+            }
+            
+            const registerBtn = document.getElementById('register-btn');
+            registerBtn.classList.add('loading');
+            registerBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/seller/register-enhanced', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    verificationStep = 4;
+                    updateProgress();
+                    showNotification('Registration successful! Check your email for verification.', 'success');
+                    
+                    // Redirect to verification page
+                    setTimeout(() => {
+                        window.location.href = 'EMAIL_VERFICATION/verification_dex.html?email=' + 
+                            encodeURIComponent(document.getElementById('email').value);
+                    }, 2000);
+                } else {
+                    showNotification(data.message || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showNotification('Network error. Please try again.', 'error');
+            } finally {
+                registerBtn.classList.remove('loading');
+                registerBtn.disabled = false;
+            }
+        });
+        
+        // File upload preview
+        document.getElementById('student-id').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const uploadDiv = document.querySelector('.document-upload');
+                uploadDiv.innerHTML = `
+                    <i class="fas fa-check-circle" style="font-size: 2em; color: #00ff9c; margin-bottom: 10px;"></i>
+                    <p style="color: #00ff9c;">✅ ${file.name}</p>
+                    <small>Click to change file</small>
+                `;
+                verificationStep = 3;
+                updateProgress();
+            }
+        });
+        
+        // Password toggle function
+        function togglePassword(fieldId) {
+            const field = document.getElementById(fieldId);
+            const icon = field.nextElementSibling;
+            
+            if (field.type === 'password') {
+                field.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                field.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+        
+        // Notification system
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i>
+                <span>${message}</span>
+            `;
+            
+            const container = document.querySelector('.notification-container') || 
+                (() => {
+                    const container = document.createElement('div');
+                    container.className = 'notification-container';
+                    document.body.appendChild(container);
+                    return container;
+                })();
+            
+            container.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 5000);
+        }
+        
+        // Initialize progress
+        updateProgress();
+    </script>
+</body>
+</html>

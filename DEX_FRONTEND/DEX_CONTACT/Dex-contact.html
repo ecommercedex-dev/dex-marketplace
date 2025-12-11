@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; Contact Us</title>
+
+    <link rel="icon" type="image/x-icon" href="../DEX_FAVICON/favicon.png" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <!-- For the days I chose to rise again. -->
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        background-image: url("images/Contact-us.jpg"),
+          url("images/Contact%20us.jpg"), url("images/contact-us.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        overflow-x: hidden;
+      }
+
+      /* ---------- HEADER ---------- */
+      .header-bar {
+        position: fixed;
+        top: 12px;
+        left: 12px;
+        right: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 18px;
+        border-radius: 14px;
+        background: rgba(0, 128, 0, 0.18);
+        backdrop-filter: blur(12px) saturate(150%);
+        box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25);
+        z-index: 900;
+        animation: fadeDown 0.8s ease forwards;
+      }
+      @keyframes fadeDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      #company-name a {
+        font-family: "Fredoka One", cursive;
+        color: #fff;
+        text-decoration: none;
+        font-size: 2.15rem;
+        text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
+      }
+
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 8px 10px;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: 0.3s;
+      }
+      nav a:hover,
+      .active {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-3px);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+      }
+
+      nav.open {
+        display: flex !important;
+      }
+
+      .header-utils {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .header-utils a {
+        color: var(--white);
+        text-decoration: none;
+        padding: 8px 10px;
+        border-radius: 8px;
+        font-weight: 600;
+      }
+      .header-utils a.active,
+      .header-utils a:hover {
+        background: var(--brand-green-soft);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+      }
+
+      .header-utils a i {
+        font-size: 1.2rem;
+      }
+
+      .header-utils a i:hover {
+        color: #ff5e5e;
+        text-shadow: 0 0 8px rgba(255, 80, 80, 0.8);
+        transition: 0.3s;
+      }
+
+      /* Overlay */
+      #notifOverlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+        z-index: 900;
+        backdrop-filter: blur(2px);
+      }
+
+      #notifOverlay.show {
+        opacity: 1;
+        pointer-events: all;
+      }
+
+      /* Glassy Sidebar */
+      #notifSidebar {
+        position: fixed;
+        top: 0;
+        right: -350px;
+        width: 300px;
+        height: 100vh;
+        background: rgba(255, 255, 255, 0.25);
+        box-shadow: -4px 0 20px rgba(0, 0, 0, 0.25);
+        padding: 16px;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        transition: right 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+        /* Glass polish */
+        backdrop-filter: blur(12px) saturate(130%);
+        -webkit-backdrop-filter: blur(12px) saturate(130%);
+        border-left: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      #notifSidebar.open {
+        right: 0;
+      }
+
+      /* Entrance animation for items */
+      .notif-item {
+        background: rgba(255, 255, 255, 0.4);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-direction: column;
+        opacity: 0;
+        transform: translateX(20px);
+        animation: fadeSlideIn 0.4s ease forwards;
+        animation-delay: calc(var(--i) * 60ms);
+
+        /* glass polish */
+        backdrop-filter: blur(6px);
+        -webkit-backdrop-filter: blur(6px);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+      }
+
+      .notif-item.unread {
+        border-left: 4px solid var(--brand-green);
+      }
+
+      /* Timestamp */
+      .notif-item span {
+        font-size: 0.75rem;
+        color: #646464;
+      }
+
+      /* Close button hover */
+      #closeNotif {
+        font-size: 1.3rem;
+        cursor: pointer;
+        color: #ddd;
+        transition: transform 0.25s, color 0.25s;
+      }
+
+      #closeNotif:hover {
+        transform: rotate(90deg) scale(1.2);
+        color: var(--brand-green);
+      }
+
+      /* Bell badge */
+      .notif-badge {
+        position: absolute;
+        top: -3px;
+        right: -6px;
+        background: red;
+        color: #fff;
+        font-size: 0.65rem;
+        padding: 2px 6px;
+        border-radius: 50%;
+        animation: pulse 1.8s infinite ease-in-out;
+      }
+
+      /* NOTIF LIST SCROLL */
+      .notif-list {
+        margin-top: 15px;
+        overflow-y: auto;
+        animation: fadeUp 0.35s ease;
+      }
+
+      /* ===== ANIMATIONS ===== */
+      @keyframes fadeSlideIn {
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(6px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+
+      /* RESPONSIVE: remove heavy blur on phones */
+      @media (max-width: 768px) {
+        #notifSidebar {
+          backdrop-filter: blur(6px) saturate(110%);
+        }
+      }
+
+      /* ---------- MAIN ---------- */
+      main {
+        flex: 1;
+        margin-top: 120px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        gap: 24px;
+        flex-wrap: wrap;
+        opacity: 0;
+        animation: fadeInMain 1.2s ease forwards;
+      }
+
+      @keyframes fadeInMain {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .section-box {
+        border-radius: 20px;
+        padding: 25px;
+        font-size: 16px;
+        backdrop-filter: blur(18px) saturate(160%);
+        background: rgba(255, 255, 255, 0.12);
+        border: 1.5px solid rgba(255, 255, 255, 0.2);
+        color: #fff;
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+        transition: 0.45s ease;
+        flex: 1 1 400px;
+        max-width: 600px;
+        animation: fadeUp 1.2s ease forwards;
+      }
+      .section-box:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 22px 38px rgba(0, 0, 0, 0.45);
+        border-color: rgba(0, 255, 0, 0.5);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .position-left {
+        background: rgba(168, 230, 163, 0.9);
+      }
+      .position-right {
+        background: rgba(91, 153, 91, 0.9);
+      }
+
+      h2 {
+        margin-bottom: 15px;
+        font-size: 24px;
+        color: #1f4d1f;
+        transition: transform 0.3s;
+      }
+      h2:hover {
+        transform: scale(1.05);
+      }
+
+      .contact-image {
+        width: 100%;
+        max-width: 520px;
+        border-radius: 12px;
+        margin-bottom: 14px;
+        box-shadow: 0 10px 22px rgba(0, 0, 0, 0.4);
+        transition: 0.5s ease;
+      }
+      .contact-image:hover {
+        transform: scale(1.06) rotate(1deg);
+        filter: brightness(1.15);
+      }
+      .contact-info a {
+        color: #fff;
+        text-decoration: none;
+        transition: 0.3s;
+      }
+      .contact-info a:hover {
+        color: #0f0;
+        text-decoration: underline;
+      }
+
+      .social-links {
+        margin-top: 12px;
+      }
+      .social-links a {
+        font-size: 22px;
+        margin-right: 15px;
+        color: #1f4d1f;
+        transition: 0.3s;
+      }
+      .social-links a:hover {
+        color: #0f0;
+        transform: scale(1.25) rotate(-6deg);
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        animation: fadeInForm 1s ease forwards;
+      }
+      @keyframes fadeInForm {
+        to {
+          opacity: 1;
+        }
+      }
+      form label {
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #fff;
+        text-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+      }
+      form input,
+      form textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 16px;
+        border-radius: 12px;
+        border: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        transition: 0.35s;
+      }
+      form input:focus,
+      form textarea:focus {
+        outline: none;
+        background: rgba(0, 255, 0, 0.25);
+        box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.4);
+        transform: scale(1.03);
+      }
+      form textarea {
+        resize: none;
+        height: 120px;
+      }
+
+      button {
+        background: #035a03;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.35s;
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
+      }
+      button:hover {
+        background: #00a400;
+        box-shadow: 0 12px 24px rgba(0, 255, 0, 0.35);
+        transform: scale(1.08) translateY(-3px);
+      }
+
+      /* ---------- FOOTER ---------- */
+      footer {
+        background: rgba(0, 128, 0, 0.65);
+        backdrop-filter: blur(6px);
+        width: 100%;
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: white;
+        animation: fadeInFooter 1s ease forwards;
+      }
+      @keyframes fadeInFooter {
+        to {
+          opacity: 1;
+        }
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      #menuToggle {
+        z-index: 1001;
+      }
+
+      /* ---------- RESPONSIVE ---------- */
+      @media (max-width: 820px) {
+        .header-bar {
+          padding: 10px 18px;
+          flex-wrap: nowrap;
+        }
+
+        #company-name,
+        #company-name a {
+          font-size: 1.9rem !important;
+        }
+
+        nav {
+          display: flex;
+          flex-direction: row; /* ✅ keeps nav links inline */
+          justify-content: center;
+          align-items: center;
+          flex-wrap: wrap; /* ✅ wraps if needed */
+          gap: 16px;
+          margin-top: 10px;
+          padding: 12px 18px;
+          border-radius: 12px;
+          background: linear-gradient(
+            90deg,
+            rgba(0, 128, 0, 0.14),
+            rgba(0, 128, 0, 0.06)
+          );
+          backdrop-filter: blur(6px);
+          position: absolute;
+          top: 100%;
+          left: 0;
+          right: 0;
+          box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+          animation: dropdownSlide 0.3s ease forwards;
+        }
+
+        nav.active {
+          display: flex;
+        }
+
+        nav a {
+          padding: 10px 14px;
+          border-radius: 8px;
+          text-align: center;
+          font-size: 1rem;
+          transition: background 0.25s ease;
+        }
+
+        nav a:hover {
+          background: rgba(255, 255, 255, 0.12);
+        }
+
+        #company-wrap {
+          flex: 1;
+        }
+
+        .header-utils {
+          gap: 8px;
+        }
+
+        .profile-avatar {
+          width: 34px;
+          height: 34px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        #menuToggle {
+          display: inline-flex !important;
+        }
+
+        .mobile_navigation_and_company_name {
+          max-width: 160px;
+          gap: 4px;
+        }
+
+        nav {
+          display: none;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          gap: 12px;
+          position: absolute;
+          top: 60px;
+          left: 0;
+          width: 100%;
+          margin-top: 10px;
+          padding: 18px 0;
+          border-radius: 14px;
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          background: rgba(0, 128, 0, 0.25);
+          text-align: center;
+          z-index: 1000;
+          transition: opacity 0.3s ease-in-out;
+          opacity: 0;
+        }
+
+        nav.active {
+          display: flex;
+          opacity: 1;
+        }
+
+        nav a {
+          padding: 10px 0;
+          font-size: 1.05rem;
+          color: #fff !important;
+          text-decoration: none;
+          transition: 0.25s;
+        }
+
+        nav a:hover {
+          transform: scale(1.05);
+          background: rgba(255, 255, 255, 0.1);
+        }
+
+        #company-name {
+          font-size: 1.1rem !important;
+          color: #fff;
+        }
+
+        .header-utils {
+          font-size: 0.8rem;
+          margin-left: 8px;
+          gap: 2px;
+          color: #fff;
+        }
+
+        /* ================================ */
+        /* 🔔 NOTIFICATION OVERLAY & SIDEBAR */
+        /* ================================ */
+
+        /* Overlay */
+        #notifOverlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.45);
+          backdrop-filter: blur(4px);
+          display: none;
+          z-index: 999;
+          opacity: 0;
+          transition: opacity 0.3s ease;
+        }
+
+        #notifOverlay.show {
+          display: block;
+          opacity: 1;
+        }
+
+        /* Sidebar */
+        #notifSidebar {
+          position: fixed;
+          right: -320px;
+          top: 0;
+          width: 300px;
+          height: 100%;
+          background: rgba(255, 255, 255, 0.06);
+          border-left: 1px solid rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(12px);
+          box-shadow: -2px 0 15px rgba(0, 0, 0, 0.3);
+          transition: right 0.35s ease;
+          z-index: 1000;
+          padding: 20px;
+          color: white;
+        }
+
+        /* Sidebar active */
+        #notifSidebar.open {
+          right: 0;
+        }
+
+        /* Inside */
+        .notifHeader {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 14px;
+        }
+
+        #closeNotif {
+          cursor: pointer;
+          font-size: 1.4rem;
+          font-weight: bold;
+          transition: transform 0.2s;
+        }
+
+        #closeNotif:hover {
+          transform: scale(1.2);
+          color: red;
+        }
+
+        /* Notification badge */
+        .notif-badge {
+          position: absolute;
+          top: -4px;
+          right: -4px;
+          background: red;
+          color: white;
+          font-size: 0.65rem;
+          padding: 2px 6px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 600;
+        }
+
+        /* Notification list sample */
+        .notification-item {
+          background: rgba(255, 255, 255, 0.08);
+          padding: 10px 12px;
+          border-radius: 10px;
+          margin-bottom: 10px;
+          font-size: 0.85rem;
+          transition: background 0.2s;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .notification-item:hover {
+          background: rgba(255, 255, 255, 0.15);
+        }
+
+        /* Scroll styling */
+        #notifSidebar::-webkit-scrollbar {
+          width: 6px;
+        }
+
+        #notifSidebar::-webkit-scrollbar-thumb {
+          background: rgba(255, 255, 255, 0.2);
+          border-radius: 8px;
+        }
+
+        main {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .section-box {
+          flex: 1 1 auto;
+          max-width: 100%;
+          padding: 18px;
+        }
+
+        .section-box h2 {
+          font-size: 20px;
+          color: #fff;
+        }
+
+        .contact-image {
+          max-width: 100%;
+          height: auto;
+        }
+
+        form input,
+        form textarea,
+        button {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        button {
+          width: 100%;
+        }
+
+        footer p {
+          font-size: 0.85rem;
+          color: #fff;
+        }
+
+        footer a {
+          display: block;
+          margin: 4px 0;
+          color: #fff;
+        }
+      }
+
+      @media (max-width: 320px) {
+        .mobile_navigation_and_company_name {
+          gap: 2px;
+          max-width: 120px;
+          width: fit-content;
+          flex-shrink: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        #company-name a {
+          margin-right: 12px;
+          font-size: 1rem !important;
+          white-space: nowrap;
+        }
+
+        #menuToggle i {
+          font-size: 0.85rem;
+        }
+
+        nav {
+          padding: 12px 0;
+        }
+
+        .header-utils {
+          max-width: 120px;
+          width: fit-content;
+          flex-shrink: 1;
+          font-size: 0.75rem;
+          gap: 2px;
+          white-space: nowrap;
+        }
+      }
+
+      /* ---------- TOAST ---------- */
+      #toast {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: darkgreen;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        z-index: 9999;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(-10px);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="header-bar" id="headerBar">
+        <div
+          style="display: flex; align-items: center; gap: 14px; min-width: 0"
+          class="mobile_navigation_and_company_name"
+        >
+          <button
+            id="menuToggle"
+            aria-label="Toggle menu"
+            aria-expanded="false"
+            style="
+              display: none;
+              background: transparent;
+              border: 0;
+              color: var(--white);
+              font-size: 1.125rem;
+              cursor: pointer;
+            "
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+          <h1 id="company-name">
+            <a href="../../DEX_FRONTEND/Dex-home.html">Dex&trade;</a>
+          </h1>
+        </div>
+
+        <nav aria-label="Primary navigation">
+          <a href="../../DEX_FRONTEND/Dex-home.html">Home</a>
+          <!-- <a href="../DEX_HOMEPAGES/Dex-services.html">Services</a> -->
+          <a href="../../DEX_FRONTEND/DEX_HOMEPAGES/Dex-shop.html">Shop</a>
+          <a href="../../DEX_FRONTEND/DEX_INFO/Dex-about.html">About</a>
+          <a
+            href="../../DEX_FRONTEND/DEX_CONTACT/Dex-contact.html"
+            class="active"
+            >Contact</a
+          >
+        </nav>
+
+        <div class="header-utils" id="header-utils" aria-live="polite"></div>
+      </div>
+
+      <!-- Notification Overlay -->
+      <div id="notifOverlay"></div>
+
+      <!-- Notification Sidebar -->
+      <div id="notifSidebar">
+        <div class="notif-header">
+          <h3>Notifications</h3>
+          <i id="closeNotif" class="fas fa-times"></i>
+        </div>
+
+        <div class="notif-list">
+          <div class="notif-item unread" style="--i: 0">
+            <p>Your item has been shipped ✅</p>
+            <span>2h ago</span>
+          </div>
+
+          <div class="notif-item unread" style="--i: 0">
+            <p>You have a new message 💬</p>
+            <span>5h ago</span>
+          </div>
+
+          <div class="notif-item" style="--i: 0">
+            <p>Price drop on a monitored product 🔥</p>
+            <span>1d ago</span>
+          </div>
+
+          <audio id="notifClickSound" src="click.mp3" preload="auto"></audio>
+
+          <button
+            id="markAllRead"
+            style="
+              margin-top: 10px;
+              padding: 7px 10px;
+              border-radius: 6px;
+              background: var(--brand-green);
+              border: none;
+              color: white;
+              font-weight: 600;
+              cursor: pointer;
+            "
+          >
+            Mark all as read
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <div class="section-box position-left contact-info">
+        <h2>Contact Us</h2>
+        <img
+          src="images/Contact-us.jpg"
+          onerror="this.onerror=null;this.src='images/Contact%20us.jpg';"
+          alt="Students using Dex"
+          class="contact-image"
+          loading="lazy"
+        />
+        <p>
+          In case of any misunderstanding, fraud, or theft, reach us at
+          <a href="mailto:Dex@gmail.com">Dex@gmail.com</a>.
+        </p>
+        <p>Or contact us using this number:</p>
+        <ul>
+          <li><a href="tel:0502946803">0502946803</a></li>
+        </ul>
+        <p>You can also reach us on social media:</p>
+        <div class="social-links">
+          <a href="https://www.facebook.com/Dex-campus-shop" target="_blank"
+            ><i class="fab fa-facebook"></i
+          ></a>
+          <a href="https://www.twitter.com/Dex-campus-shop" target="_blank"
+            ><i class="fab fa-twitter"></i
+          ></a>
+          <a href="https://www.instagram.com/Dex-campus-shop" target="_blank"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a href="https://wa.me/233502946803" target="_blank"
+            ><i class="fab fa-whatsapp"></i
+          ></a>
+        </div>
+      </div>
+
+      <div class="section-box position-right">
+        <h2>Send Us a Message</h2>
+        <form id="contactForm">
+          <label for="email">Email:</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Please enter your email."
+            required
+          />
+          <label for="name">Name:</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Please enter your name."
+            required
+          />
+          <label for="message">Message:</label>
+          <textarea
+            id="message"
+            name="messages"
+            placeholder="Please enter your message."
+          ></textarea>
+          <button type="submit">Send</button>
+        </form>
+      </div>
+    </main>
+
+    <footer>
+      <p>All legal rights reserved for Dex&trade; © 2025</p>
+      <p>
+        <a href="../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+
+    <div id="toast"></div>
+
+    <script>
+      const headerUtils = document.getElementById("header-utils");
+      const KEY = { PROFILE_PIC: "buyerProfilePic" };
+
+      function createLink(href, text, iconClass) {
+        const a = document.createElement("a");
+        a.href = href;
+        a.style.display = "flex";
+        a.style.alignItems = "center";
+        a.style.gap = "6px";
+        a.style.position = "relative"; // Needed for badge positioning
+        if (iconClass) {
+          const i = document.createElement("i");
+          i.className = iconClass;
+          a.appendChild(i);
+        }
+        a.appendChild(document.createTextNode(text));
+        return a;
+      }
+
+      function handleLogout(e) {
+        e?.preventDefault();
+        if (!confirm("Logout?")) return;
+        localStorage.removeItem("currentUser");
+        sessionStorage.removeItem("currentUser");
+        showToast("Logged out successfully");
+        setTimeout(
+          () =>
+            (window.location.href =
+              "DEX_HOMEPAGES/REGISTORY_PAGES/Sign_in.html"),
+          500
+        );
+      }
+
+      function loadUserUI(currentUser) {
+        headerUtils.innerHTML = "";
+        headerUtils.style.display = "flex";
+        headerUtils.style.alignItems = "center";
+        headerUtils.style.gap = "12px";
+
+        if (!currentUser) {
+          const signIn = createLink(
+            "../DEX_HOMEPAGES/REGISTRY_PAGES/Sign_in.html",
+            "Sign in"
+          );
+          headerUtils.appendChild(signIn);
+          return;
+        }
+
+        // Profile Picture
+        const img = document.createElement("img");
+        const storedPic = localStorage.getItem(KEY.PROFILE_PIC);
+        if (!currentUser.profilePic && storedPic) {
+          currentUser.profilePic = storedPic;
+          localStorage.setItem("currentUser", JSON.stringify(currentUser));
+        }
+        img.src =
+          currentUser.profilePic ||
+          "../DEX_HOMEPAGES/REGISTORY_PAGES/default_account_picture/account.png";
+        img.alt = "Profile";
+
+        Object.assign(img.style, {
+          width: "35px",
+          height: "35px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          border: "2px solid var(--brand-green)",
+          cursor: "pointer",
+          transition: "transform 0.3s",
+        });
+
+        img.addEventListener(
+          "mouseenter",
+          () => (img.style.transform = "scale(1.2)")
+        );
+        img.addEventListener(
+          "mouseleave",
+          () => (img.style.transform = "scale(1)")
+        );
+
+        img.addEventListener("click", () => {
+          if (currentUser.role === "buyer")
+            window.location.href =
+              "../DEX_HOMEPAGES/REGISTORY_PAGES/Buyer_profile.html";
+          else if (currentUser.role === "seller")
+            window.location.href =
+              "../DEX_HOMEPAGES/REGISTORY_PAGES/Sellers_page.html";
+          else
+            window.location.href =
+              "../DEX_HOMEPAGES/REGISTORY_PAGES/Sign_in.html";
+        });
+
+        headerUtils.appendChild(img);
+
+        // ===== NOTIFICATION SIDEBAR ELEMENTS ===== //
+        const notifOverlay = document.getElementById("notifOverlay");
+        const notifSidebar = document.getElementById("notifSidebar");
+        const closeNotif = document.getElementById("closeNotif");
+
+        // ===== NOTIFICATION BELL (CREATION) ===== //
+        const notifBell = document.createElement("a");
+        notifBell.href = "javascript:void(0)";
+        notifBell.style.position = "relative";
+
+        const bellIcon = document.createElement("i");
+        bellIcon.className = "fas fa-bell";
+        bellIcon.style.fontSize = "1.3rem";
+        bellIcon.style.cursor = "pointer";
+        notifBell.appendChild(bellIcon);
+
+        // Badge
+        const notifBadge = document.createElement("span");
+        notifBadge.className = "notif-badge";
+        notifBadge.textContent = "3";
+        notifBell.appendChild(notifBadge);
+
+        notifBell.addEventListener("click", () => {
+          notifSidebar.classList.add("open");
+          notifOverlay.classList.add("show");
+          notifBadge.style.display = "none";
+        });
+
+        headerUtils.appendChild(notifBell);
+
+        // Close sidebar
+        closeNotif.addEventListener("click", () => {
+          notifSidebar.classList.remove("open");
+          notifOverlay.classList.remove("show");
+        });
+
+        // Click outside to close
+        notifOverlay.addEventListener("click", () => {
+          notifSidebar.classList.remove("open");
+          notifOverlay.classList.remove("show");
+        });
+
+        document.getElementById("notifClickSound").play();
+
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        notifSidebar.addEventListener("touchstart", (e) => {
+          touchStartX = e.changedTouches[0].screenX;
+        });
+
+        notifSidebar.addEventListener("touchend", (e) => {
+          touchEndX = e.changedTouches[0].screenX;
+          handleSwipe();
+        });
+
+        function handleSwipe() {
+          if (touchEndX - touchStartX > 80) {
+            // swipe right
+            notifSidebar.classList.remove("open");
+            notifOverlay.classList.remove("show");
+          }
+        }
+
+        const markAllBtn = document.getElementById("markAllRead");
+        const notifItems = document.querySelectorAll(".notif-item");
+
+        markAllBtn.addEventListener("click", () => {
+          notifItems.forEach((item) => item.classList.remove("unread"));
+          notifBadge.style.display = "none";
+        });
+
+        // Replace this with fetch() later
+        let notifications = [
+          { msg: "Order shipped", read: false },
+          { msg: "New offer launched", read: false },
+          { msg: "Wallet credited", read: true },
+        ];
+
+        function updateNotifCount() {
+          const unread = notifications.filter((n) => !n.read).length;
+          notifBadge.textContent = unread;
+          if (unread === 0) notifBadge.style.display = "none";
+          else notifBadge.style.display = "block";
+        }
+
+        updateNotifCount();
+
+        markAllBtn.addEventListener("click", () => {
+          notifications.forEach((n) => (n.read = true));
+          updateNotifCount();
+          notifItems.forEach((item) => item.classList.remove("unread"));
+        });
+
+        notifItems.forEach((item) => {
+          item.addEventListener("click", () => {
+            document.getElementById("notifClickSound").play();
+            item.classList.remove("unread");
+            const idx = [...notifItems].indexOf(item);
+            notifications[idx].read = true;
+            updateNotifCount();
+          });
+        });
+
+        // ===== LOGOUT ICON ===== //
+        const logout = document.createElement("a");
+        logout.href = "#";
+        logout.innerHTML = '<i class="fas fa-right-from-bracket"></i>';
+        logout.style.fontSize = "1.2rem";
+        logout.style.display = "flex";
+        logout.style.alignItems = "center";
+        logout.style.cursor = "pointer";
+        logout.title = "Logout";
+
+        logout.onmouseenter = () =>
+          (logout.firstChild.style.transform = "scale(1.2)");
+        logout.onmouseleave = () =>
+          (logout.firstChild.style.transform = "scale(1)");
+
+        logout.addEventListener("click", handleLogout);
+        headerUtils.appendChild(logout);
+      }
+
+      // Load user UI
+      function loadHeaderLinks() {
+        const currentUser =
+          JSON.parse(localStorage.getItem("currentUser")) ||
+          JSON.parse(sessionStorage.getItem("currentUser"));
+        loadUserUI(currentUser);
+      }
+
+      loadHeaderLinks();
+
+      const menuToggle = document.getElementById("menuToggle");
+      const nav = document.querySelector("nav");
+
+      menuToggle.addEventListener("click", () => {
+        nav.classList.toggle("active");
+
+        // UI feedback — icon change
+        const icon = menuToggle.querySelector("i");
+        if (nav.classList.contains("active")) {
+          icon.classList.remove("fa-bars");
+          icon.classList.add("fa-times");
+          menuToggle.setAttribute("aria-expanded", "true");
+        } else {
+          icon.classList.remove("fa-times");
+          icon.classList.add("fa-bars");
+          menuToggle.setAttribute("aria-expanded", "false");
+        }
+      });
+
+      // Close mobile menu when link clicked
+      document.querySelectorAll("nav a").forEach((link) => {
+        link.addEventListener("click", () => {
+          nav.classList.remove("active");
+          const icon = menuToggle.querySelector("i");
+          icon.classList.add("fa-bars");
+          icon.classList.remove("fa-times");
+        });
+      });
+
+      // For the days I chose to rise again.
+    </script>
+  </body>
+</html>

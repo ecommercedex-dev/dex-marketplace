@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Setup Admin Access</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f5f5f5; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; }
+        .btn { padding: 10px 20px; margin: 10px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        .success { background: #27ae60; }
+        .warning { background: #f39c12; }
+        .result { margin: 15px 0; padding: 15px; border-radius: 5px; background: #f8f9fa; border-left: 4px solid #3498db; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>🔧 Setup Admin Access</h2>
+        
+        <h3>Step 1: Set Secret Key</h3>
+        <button class="btn" onclick="setSecretKey()">Set Admin Secret Key</button>
+        <div id="keyResult"></div>
+        
+        <h3>Step 2: Test Backend Connection</h3>
+        <button class="btn warning" onclick="testBackend()">Test Backend (Port 5000)</button>
+        <div id="backendResult"></div>
+        
+        <h3>Step 3: Create Admin User</h3>
+        <button class="btn success" onclick="window.open('create-admin.html', '_blank')">Open Admin Creator</button>
+        
+        <h3>Step 4: Access Admin Panel</h3>
+        <button class="btn" onclick="window.open('DEX_FRONTEND/secret-dex-admin-2024/login.html', '_blank')">Open Admin Login</button>
+        
+        <div class="result">
+            <h4>📋 Quick Reference:</h4>
+            <p><strong>Default Admin Credentials:</strong></p>
+            <ul>
+                <li>Email: admin@dex.com</li>
+                <li>Password: Admin123!</li>
+            </ul>
+            <p><strong>Secret Key:</strong> DEX_ADMIN_2024_SECURE_KEY</p>
+        </div>
+    </div>
+
+    <script>
+        function setSecretKey() {
+            localStorage.setItem('adminSecretKey', 'DEX_ADMIN_2024_SECURE_KEY');
+            document.getElementById('keyResult').innerHTML = '<div class="result" style="background: #d4edda; color: #155724;">✅ Secret key set successfully!</div>';
+        }
+        
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:5000/');
+                const text = await response.text();
+                document.getElementById('backendResult').innerHTML = `<div class="result" style="background: #d4edda; color: #155724;">✅ Backend is running: ${text}</div>`;
+            } catch (error) {
+                document.getElementById('backendResult').innerHTML = '<div class="result" style="background: #f8d7da; color: #721c24;">❌ Backend not running. Start with: <code>cd DEX_BACKEND && npm start</code></div>';
+            }
+        }
+    </script>
+</body>
+</html>

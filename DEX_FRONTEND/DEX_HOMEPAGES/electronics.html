@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electronics - Select Category | Dex™</title>
+  <link rel="icon" href="../DEX_FAVICON/favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root { --brand-blue: #2196F3; --blue-light: #64B5F6; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Quicksand', sans-serif; background: #f9f9f9; }
+    
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--brand-blue), var(--blue-light)), url('images/bg-electronics.webp') center/cover;
+      background-blend-mode: overlay;
+      color: white;
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 16px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .container {
+      max-width: 1100px;
+      margin: -40px auto 60px;
+      padding: 0 20px;
+    }
+    .subcategory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .subcategory-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px 20px;
+      text-align: center;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: #333;
+    }
+    .subcategory-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+    }
+    .subcategory-card .icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+    .subcategory-card h3 {
+      font-size: 1.2rem;
+      color: var(--brand-blue);
+      margin-bottom: 6px;
+    }
+    .subcategory-card p {
+      font-size: 0.85rem;
+      color: #888;
+    }
+    .back-btn {
+      display: inline-block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      background: white;
+      color: var(--brand-blue);
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      .subcategory-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px; }
+      .subcategory-card { padding: 24px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div>
+      <h1>💻 Electronics</h1>
+      <p>Select a category to browse products</p>
+      <a href="../Dex-home.html" class="back-btn">← Back to Home</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="subcategory-grid">
+      <a href="electronics-products.html?sub=laptops" class="subcategory-card">
+        <div class="icon">💻</div>
+        <h3>Laptops</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=phones" class="subcategory-card">
+        <div class="icon">📱</div>
+        <h3>Phones</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=tablets" class="subcategory-card">
+        <div class="icon">📲</div>
+        <h3>Tablets</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=headsets" class="subcategory-card">
+        <div class="icon">🎧</div>
+        <h3>Headsets</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=speakers" class="subcategory-card">
+        <div class="icon">🔊</div>
+        <h3>Speakers</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=chargers" class="subcategory-card">
+        <div class="icon">🔌</div>
+        <h3>Chargers</h3>
+        <p>View all</p>
+      </a>
+      <a href="electronics-products.html?sub=accessories" class="subcategory-card">
+        <div class="icon">🖱️</div>
+        <h3>Accessories</h3>
+        <p>View all</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

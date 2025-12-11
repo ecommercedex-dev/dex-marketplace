@@ -1,0 +1,475 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Buyer {
+  id                Int       @id @default(autoincrement())
+  name              String
+  index_num         String    @unique @default("UNKNOWN")
+  email             String    @unique
+  password          String
+  gender            String
+  number            String    @unique
+  address           String?
+  role              String    @default("buyer")
+  profilePic        String?
+  isVerified        Boolean   @default(false)
+  phoneVerified     Boolean   @default(false)
+  studentVerified   Boolean   @default(false)
+  verificationToken String?   @unique
+  verificationCode  String?   @unique
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  notifications  Notification[]   @relation("BuyerNotifications")
+  orders         Order[]
+  wishlist       Wishlist[]
+  recentlyViewed RecentlyViewed[]
+  reviews        Review[]
+  sellerReviews  SellerReview[]
+  followedSellers SellerFollow[]
+  likedSellers    SellerLike[]
+  settings        BuyerSettings?
+  studentVerifications StudentVerification[]
+}
+
+model Seller {
+  id                Int       @id @default(autoincrement())
+  name              String
+  email             String    @unique
+  phone             String    @unique
+  gender            String
+  storeName         String    @unique
+  businessType      String
+  authId            String?   @unique
+  businessAddress   String
+  productCategory   String
+  paymentInfo       String?   @unique
+  password          String
+  businessDescription String?
+  role              String    @default("seller")
+  
+  // V1 Multi-tier verification system
+  sellerType        String    @default("basic") // basic, campus, business
+  verificationTier  Int       @default(1) // 1=Basic, 2=Campus, 3=Business
+  isVerified        Boolean   @default(false)
+  phoneVerified     Boolean   @default(false)
+  campusVerified    Boolean   @default(false)
+  businessVerified  Boolean   @default(false)
+  
+  // Safety commitments
+  safetyConfirmed   Boolean   @default(false)
+  antiScamConfirmed Boolean   @default(false)
+  
+  // Verification tokens
+  verificationToken String?   @unique
+  verificationCode  String?   @unique
+  resetToken        String?   @unique
+  resetTokenExpiry  DateTime?
+  
+  // Profile
+  profilePic        String?
+  emergencyContact  String?
+  campusConnection  String?   // student_id, staff_id, alumni, address_proof
+  
+  // Verification codes and expiry
+  phoneVerificationCode    String?
+  phoneVerificationExpiry  DateTime?
+  emergencyVerificationCode String?
+  emergencyVerificationExpiry DateTime?
+  emergencyContactVerified Boolean   @default(false)
+  
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  products      Product[]
+  galleryImages SellerGalleryImage[]
+  notifications Notification[]       @relation("SellerNotifications")
+  orders        Order[]
+  reviews       SellerReview[]
+  shopSettings  ShopSettings?
+  shopTemplates ShopTemplate[]
+  followers     SellerFollow[]
+  likes         SellerLike[]
+  verificationDocuments VerificationDocument[]
+}
+
+model ShopSettings {
+  id              Int      @id @default(autoincrement())
+  sellerId        Int      @unique
+  seller          Seller   @relation(fields: [sellerId], references: [id])
+  
+  bannerImage     String?
+  bannerConfig    Json?    // Banner builder configuration
+  shopLogo        String?
+  logoType        String?  // text, icon, combo, upload
+  logoText        String?
+  logoIcon        String?
+  logoTextColor   String?
+  logoIconColor   String?
+  logoBackgroundColor String?
+  logoFont        String?
+  logoLayout      String?
+  tagline         String?
+  aboutShop       String?
+  primaryColor    String?  @default("#6ecf45")
+  accentColor     String?  @default("#2b7a0b")
+  
+  featuredProducts Int[]   @default([])
+  announcement     String?
+  showAnnouncement Boolean @default(false)
+  
+  socialLinks      Json?   // {instagram, facebook, tiktok, twitter, whatsapp}
+  businessHours    String?
+  location         String?
+  returnPolicy     String?
+  paymentMethods   String?
+  deliveryInfo     String?
+  
+  gridColumns      Int     @default(3)
+  showFilters      Boolean @default(true)
+  productBadges    Boolean @default(true)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  templates       ShopTemplate[]
+}
+
+model ShopTemplate {
+  id              Int      @id @default(autoincrement())
+  sellerId        Int
+  seller          Seller   @relation(fields: [sellerId], references: [id])
+  shopSettingsId  Int
+  shopSettings    ShopSettings @relation(fields: [shopSettingsId], references: [id])
+  
+  name            String   // "Summer Sale", "Minimalist", "Bold & Bright"
+  description     String?  // Optional description
+  icon            String?  // Template icon emoji
+  
+  // Saved customization data
+  bannerConfig    Json?
+  logoType        String?
+  logoText        String?
+  logoIcon        String?
+  logoTextColor   String?
+  logoIconColor   String?
+  logoBackgroundColor String?
+  logoFont        String?
+  logoLayout      String?
+  primaryColor    String?
+  accentColor     String?
+  tagline         String?
+  
+  isActive        Boolean  @default(false) // Currently applied template
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@index([sellerId])
+}
+
+model SellerGalleryImage {
+  id        Int      @id @default(autoincrement())
+  url       String
+  seller    Seller   @relation(fields: [sellerId], references: [id])
+  sellerId  Int
+  createdAt DateTime @default(now())
+
+  @@unique([sellerId, url])
+}
+
+// Seller Review Model
+model SellerReview {
+  id        Int      @id @default(autoincrement())
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+
+  // Relations
+  seller    Seller   @relation(fields: [sellerId], references: [id])
+  sellerId  Int
+
+  buyer     Buyer    @relation(fields: [buyerId], references: [id])
+  buyerId   Int
+
+  @@unique([sellerId, buyerId]) // One review per buyer per seller
+}
+
+model SellerFollow {
+  id        Int      @id @default(autoincrement())
+  buyerId   Int
+  sellerId  Int
+  createdAt DateTime @default(now())
+
+  buyer  Buyer  @relation(fields: [buyerId], references: [id])
+  seller Seller @relation(fields: [sellerId], references: [id])
+
+  @@unique([buyerId, sellerId])
+}
+
+model SellerLike {
+  id        Int      @id @default(autoincrement())
+  buyerId   Int
+  sellerId  Int
+  createdAt DateTime @default(now())
+
+  buyer  Buyer  @relation(fields: [buyerId], references: [id])
+  seller Seller @relation(fields: [sellerId], references: [id])
+
+  @@unique([buyerId, sellerId])
+}
+
+// UPDATED PRODUCT MODEL – Now supports BOTH regular products AND hostel listings
+model Product {
+  id                 Int              @id @default(autoincrement())
+  name               String
+  category           String
+  subCategory        String? // e.g., Phones, Laptops, Clothes
+  price              Float
+  stock              Int?
+  description        String?
+  images             String[]
+  featured           Boolean          @default(false)
+  sellerId           Int
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  deployed           Boolean          @default(false)
+  amenities          String[]         @default([])
+  availability       String?
+  bookedAt           DateTime?
+  bookedBy           Int?
+  bookingNotes       String?
+  bookingStatus      String?          @default("none")
+  caretakerPhone     String?
+  distanceFromCampus Float?
+  isHostel           Boolean          @default(false)
+  location           String?
+  roomType           String?
+  details            Json? // <-- NEW field for subcategory-specific info
+  orders             Order[]
+  seller             Seller           @relation(fields: [sellerId], references: [id])
+  recentlyViewed     RecentlyViewed[]
+  wishlists          Wishlist[]
+  reviews            Review[]
+
+  @@index([sellerId])
+  @@index([isHostel])
+  @@index([category])
+  @@index([deployed])
+}
+
+model Notification {
+  id       String  @id @default(cuid())
+  buyerId  Int?
+  sellerId Int?
+  buyer    Buyer?  @relation("BuyerNotifications", fields: [buyerId], references: [id])
+  seller   Seller? @relation("SellerNotifications", fields: [sellerId], references: [id])
+
+  title     String
+  message   String
+  type      String
+  read      Boolean  @default(false)
+  orderId   Int?     // Link to order for "View Order" button
+  createdAt DateTime @default(now())
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([buyerId, read])
+  @@index([sellerId, read])
+  @@index([sellerId, type])
+  @@index([buyerId, type])
+  @@index([type, createdAt])
+}
+
+model Order {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+  buyerId   Int
+  buyer     Buyer   @relation(fields: [buyerId], references: [id])
+  sellerId  Int
+  seller    Seller  @relation(fields: [sellerId], references: [id])
+
+  quantity     Int
+  totalPrice   Float
+  status       String   @default("pending")
+  address      String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  productImage String?
+  messages     OrderMessage[]
+
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+}
+
+model OrderMessage {
+  id         Int      @id @default(autoincrement())
+  orderId    Int
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  senderId   Int
+  senderType String
+  message    String
+  read       Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@index([orderId])
+  @@index([orderId, read])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  buyerId   Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  buyer   Buyer   @relation(fields: [buyerId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([buyerId, productId])
+}
+
+model RecentlyViewed {
+  id        Int      @id @default(autoincrement())
+  buyerId   Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  buyer   Buyer   @relation(fields: [buyerId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@unique([buyerId, productId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  rating    Int // 1–5 stars
+  comment   String
+  createdAt DateTime @default(now())
+
+  // Relations
+  product   Product @relation(fields: [productId], references: [id])
+  productId Int
+
+  buyer   Buyer @relation(fields: [buyerId], references: [id])
+  buyerId Int
+
+  @@index([productId])
+  @@index([buyerId])
+}
+
+model SupportTicket {
+  id        Int      @id @default(autoincrement())
+  sellerId  Int
+  subject   String
+  message   String
+  status    String   @default("open")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([sellerId])
+  @@index([status])
+}
+
+model HostelTenant {
+  id            String   @id @default(cuid())
+  sellerId      Int
+  name          String
+  room          String
+  rent          Float
+  phone         String
+  paymentStatus String   @default("unpaid")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([sellerId])
+}
+
+model BuyerSettings {
+  id                Int     @id @default(autoincrement())
+  buyerId           Int     @unique
+  buyer             Buyer   @relation(fields: [buyerId], references: [id])
+  
+  // Privacy settings
+  profileVisibility String  @default("public") // public, campus, private
+  contactPrefs      String  @default("everyone") // everyone, verified, followed
+  showRealName      Boolean @default(false)
+  
+  // Safety settings
+  meetingLocations  String?
+  emergencyContact  String?
+  
+  // Trust settings
+  showTrustScore    Boolean @default(true)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model UserReport {
+  id             Int      @id @default(autoincrement())
+  reporterId     Int
+  reportedUserId Int
+  reason         String
+  status         String   @default("pending") // pending, reviewed, resolved
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  
+  @@index([reporterId])
+  @@index([reportedUserId])
+  @@index([status])
+}
+
+model Admin {
+  id                Int       @id @default(autoincrement())
+  name              String
+  email             String    @unique
+  password          String
+  role              String    @default("admin")
+  isVerified        Boolean   @default(true)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+}
+
+model StudentVerification {
+  id           Int      @id @default(autoincrement())
+  buyerId      Int
+  documentPath String
+  status       String   @default("pending") // pending, approved, rejected
+  reviewNotes  String?
+  submittedAt  DateTime @default(now())
+  reviewedAt   DateTime?
+  reviewedBy   Int?
+  
+  buyer        Buyer    @relation(fields: [buyerId], references: [id])
+  
+  @@map("student_verifications")
+}
+
+model VerificationDocument {
+  id                Int       @id @default(autoincrement())
+  sellerId          Int
+  verificationType  String
+  primaryDocPath    String?
+  secondaryDocPath  String?
+  selfieDocPath     String?
+  notes             String?
+  status            String    @default("pending")
+  submittedAt       DateTime  @default(now())
+  reviewedAt        DateTime?
+  reviewedBy        String?
+  rejectionReason   String?
+  
+  seller            Seller    @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  
+  @@index([sellerId])
+  @@index([status])
+}

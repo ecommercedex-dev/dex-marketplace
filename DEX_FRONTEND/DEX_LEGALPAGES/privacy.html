@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy Policy - Dex™</title>
+
+    <link rel="icon" type="image/x-icon" href="../DEX_FAVICON/favicon.png" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        line-height: 1.6;
+        color: #222;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+
+        background-image: url("images/privacy-bg.jpg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+
+      .main-header {
+        background: rgba(0, 128, 0, 0.6);
+        backdrop-filter: blur(4px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+      }
+
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      #company-name a:hover {
+        text-shadow: 2px 2px 5px #c2c0c0;
+      }
+
+      /* Navbar */
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.25s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      main {
+        flex: 1;
+        margin-top: 120px;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+      }
+
+      .policy {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 40px;
+        border-radius: 20px;
+        max-width: 900px;
+        width: 100%;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      }
+
+      .policy h1 {
+        font-size: 32px;
+        margin-bottom: 15px;
+        color: #1f4d1f;
+        text-align: center;
+      }
+
+      .policy h2 {
+        font-size: 22px;
+        margin-top: 25px;
+        color: #2f6d2f;
+      }
+
+      .policy p,
+      .policy li {
+        font-size: 16px;
+        margin-bottom: 12px;
+      }
+
+      footer {
+        background: rgba(0, 128, 0, 0.7);
+        backdrop-filter: blur(6px);
+        width: 100%;
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: white;
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      @media (max-width: 768px) {
+        .main-header {
+          flex-direction: row;
+          align-items: center;
+          justify-content: center; /* center navbar */
+          padding: 12px 15px;
+          gap: 10px; /* small gap between navbar and logo/search if present */
+        }
+
+        nav ul {
+          display: flex;
+          flex-direction: row;
+          gap: 6px; /* smaller gap between links */
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 0;
+        }
+
+        nav a {
+          font-size: 12px; /* shrinked text */
+          padding: 6px 8px;
+          transition: all 0.25s ease;
+        }
+
+        nav a:hover,
+        nav a.active {
+          background-color: #70bb70;
+          color: #fff;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+          transform: translateY(-2px); /* subtle hover lift */
+        }
+
+        h1#company-name a {
+          font-size: 22px;
+        }
+
+        main {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .section-box {
+          flex: 1 1 auto;
+          max-width: 100%;
+          padding: 20px;
+          display: flex;
+          flex-direction: column;
+        }
+
+        .position-left,
+        .position-right {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .section-box h2 {
+          font-size: 20px;
+        }
+
+        .contact-image {
+          max-width: 100%;
+          height: auto;
+        }
+
+        form input,
+        form textarea,
+        button {
+          font-size: 14px;
+          padding: 10px;
+        }
+
+        button {
+          width: 100%;
+        }
+      }
+
+      @media (max-width: 480px) {
+        footer p {
+          font-size: 0.85rem;
+        }
+        footer a {
+          display: block;
+          margin: 4px 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="main-header">
+        <h1 id="company-name">
+          <a href="../DEX_FRONTEND/Dex-home.html">Dex&trade;</a>
+        </h1>
+        <nav>
+          <ul>
+            <li><a href="../DEX_FRONTEND/Dex-home.html">Home.</a></li>
+            <li><a href="../DEX_INFO/Dex-about.html">About.</a></li>
+            <li><a href="../DEX_CONTACT/Dex-contact.html">Contact.</a></li>
+            <li><a href="../DEX_CONTACT/Dex-faq.html">FAQ.</a></li>
+            <li>
+              <a href="../DEX_LEGALPAGES/privacy.html" class="active"
+                >Privacy.</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="policy">
+        <h1>Privacy Policy</h1>
+        <p><strong>Last updated:</strong> September 27, 2025</p>
+
+        <p>
+          At Dex™, we value your privacy. This Privacy Policy explains how we
+          collect, use, and protect your information when you use our website.
+        </p>
+
+        <h2>Information We Collect</h2>
+        <ul>
+          <li>
+            Personal details you provide (like your name and email when
+            contacting us).
+          </li>
+          <li>
+            Usage data (such as pages visited, browser type, and time spent).
+          </li>
+          <li>Cookies and similar tracking technologies.</li>
+        </ul>
+
+        <h2>How We Use Your Information</h2>
+        <p>We use your data to:</p>
+        <ul>
+          <li>Respond to inquiries or provide services you request.</li>
+          <li>Improve website performance and user experience.</li>
+          <li>
+            Send important updates related to our services (with your consent).
+          </li>
+        </ul>
+
+        <h2>Sharing of Information</h2>
+        <p>
+          We do not sell or rent your personal data. We may share data with
+          trusted third-party providers who help us run the website, but only as
+          necessary.
+        </p>
+
+        <h2>Your Rights</h2>
+        <p>
+          You can request to access, correct, or delete your personal
+          information. Contact us at
+          <a href="mailto:Dex@gmail.com">Dex@gmail.com</a>.
+        </p>
+
+        <h2>Cookies</h2>
+        <p>
+          Our site may use cookies to improve your browsing experience. You can
+          disable cookies in your browser settings.
+        </p>
+
+        <h2>Changes to This Policy</h2>
+        <p>
+          We may update this Privacy Policy from time to time. Updates will be
+          posted on this page with the “last updated” date.
+        </p>
+
+        <h2>Contact Us</h2>
+        <p>
+          If you have questions about this Privacy Policy, please email us at
+          <a href="mailto:Dex@gmail.com">Dex@gmail.com</a>.
+        </p>
+
+        <p>© 2025 Dex™. All rights reserved.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>All legal rights reserved for Dex&trade; © 2025</p>
+      <p>
+        <a href="../DEX_LEGALPAGES/privacy.html">Privacy Policy</a> |
+        <a href="../DEX_LEGALPAGES/terms.html">Terms of Service</a>
+      </p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,170 @@
+/* Main Layout */
+.container {
+  display: flex;
+  min-height: calc(100vh - 80px);
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.welcome-banner {
+  background: linear-gradient(135deg, var(--green-light), var(--green));
+  padding: 1.8rem;
+  text-align: center;
+  font-weight: 600;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: var(--blur);
+  padding: 2rem;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.section {
+  display: none;
+  animation: 0.6s ease-out fadeIn;
+}
+
+.section.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+#loader {
+  display: none;
+  text-align: center;
+  padding: 2rem;
+}
+
+#loader.show {
+  display: block;
+}
+
+/* WhatsApp Float */
+.whatsapp-float {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+}
+
+#whatsappBtn {
+  background: #25d366;
+  color: #fff;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  border: none;
+  font-size: 2.2rem;
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: 3s ease-in-out infinite float;
+}
+
+#whatsappBtn:hover {
+  transform: scale(1.15) !important;
+  box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  nav {
+    padding: 0.75rem 1rem;
+  }
+
+  #company-name a {
+    font-size: 1.8rem;
+  }
+
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .main-content {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .card {
+    padding: 1.2rem;
+  }
+
+  #notificationSidebar {
+    width: 85%;
+    right: -100%;
+  }
+
+  .product-modal {
+    width: 95%;
+    max-width: none;
+  }
+
+  #whatsappBtn {
+    width: 56px;
+    height: 56px;
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  nav {
+    padding: 0.6rem 0.8rem;
+  }
+
+  #company-name a {
+    font-size: 1.5rem;
+  }
+
+  .main-content {
+    padding: 0.8rem;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  #notificationSidebar {
+    width: 90%;
+  }
+
+  .product-modal {
+    width: 100%;
+  }
+
+  #whatsappBtn {
+    width: 52px;
+    height: 52px;
+    font-size: 1.8rem;
+  }
+}

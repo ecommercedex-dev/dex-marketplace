@@ -1,0 +1,57 @@
+/* Base Theme & Variables */
+:root {
+  --green: #2b7a0b;
+  --green-light: #6ecf45;
+  --theme-bg: rgba(50, 50, 0, 0.55);
+  --radius: 16px;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --transition: 0.35s ease;
+  --blur: blur(12px);
+}
+
+.theme-electronics {
+  --bg-image: url("../../../images/bg-electronics.webp");
+}
+
+.theme-fashion {
+  --green: #0066cc;
+  --green-light: #3399ff;
+  --theme-bg: rgba(0, 30, 80, 0.6);
+  --bg-image: url("../../../images/bg-fashion.webp");
+}
+
+.theme-hostels {
+  --green: #cc8800;
+  --green-light: #ffaa00;
+  --theme-bg: rgba(80, 40, 0, 0.6);
+  --bg-image: url("../../../images/bg-hostels.webp");
+}
+
+/* Base Styles */
+*, ::after, ::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Quicksand, sans-serif;
+  background: linear-gradient(var(--theme-bg), rgba(0, 0, 0, 0.75)), var(--bg-image) center/cover fixed;
+  min-height: 100vh;
+  color: #fff;
+  overflow-x: hidden;
+  transition: background-image 1s, background-color 0.6s;
+}
+
+/* Hostel Seller Visibility */
+body.is-hostel-seller .non-hostel-only {
+  display: none !important;
+}
+
+body.is-hostel-seller .hostel-only {
+  display: block !important;
+}
+
+.hostel-only {
+  display: none !important;
+}

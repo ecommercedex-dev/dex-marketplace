@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend Test - Dex™</title>
+  <link rel="icon" href="DEX_FRONTEND/DEX_FAVICON/favicon.png" type="image/png">
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; background: #0f0f0f; color: #e0e0e0; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 { color: #6ecf45; }
+    .section { background: #1a1a1a; padding: 20px; margin: 20px 0; border-radius: 8px; border: 1px solid #2a2a2a; }
+    button { background: #6ecf45; color: #000; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; margin: 5px; }
+    button:hover { opacity: 0.9; }
+    pre { background: #0a0a0a; padding: 15px; border-radius: 5px; overflow-x: auto; border: 1px solid #2a2a2a; }
+    .product-card { background: #222; padding: 15px; margin: 10px 0; border-radius: 5px; border-left: 3px solid #6ecf45; }
+    .error { color: #ff5252; }
+    .success { color: #6ecf45; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Dex Backend Test</h1>
+    
+    <div class="section">
+      <h2>1. Test Backend Connection</h2>
+      <button onclick="testConnection()">Test Connection</button>
+      <div id="connection-result"></div>
+    </div>
+
+    <div class="section">
+      <h2>2. Fetch All Products</h2>
+      <button onclick="fetchAllProducts()">Fetch All Products</button>
+      <div id="all-products-result"></div>
+    </div>
+
+    <div class="section">
+      <h2>3. Filter by Category</h2>
+      <button onclick="filterByCategory('fashion')">Fashion Products</button>
+      <button onclick="filterByCategory('electronics')">Electronics Products</button>
+      <button onclick="filterByCategory('hostels')">Hostels</button>
+      <div id="category-result"></div>
+    </div>
+
+    <div class="section">
+      <h2>4. Test Subcategory Filtering</h2>
+      <button onclick="testSubcategory('fashion', 'shirts')">Fashion - Shirts</button>
+      <button onclick="testSubcategory('electronics', 'laptops')">Electronics - Laptops</button>
+      <div id="subcategory-result"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = 'http://localhost:5000/api/products';
+
+    async function testConnection() {
+      const result = document.getElementById('connection-result');
+      result.innerHTML = '<p>Testing connection...</p>';
+      
+      try {
+        const res = await fetch(API_URL);
+        if (res.ok) {
+          result.innerHTML = '<p class="success">✅ Backend is running!</p>';
+        } else {
+          result.innerHTML = `<p class="error">❌ Backend returned status: ${res.status}</p>`;
+        }
+      } catch (err) {
+        result.innerHTML = `<p class="error">❌ Cannot connect to backend: ${err.message}</p>`;
+      }
+    }
+
+    async function fetchAllProducts() {
+      const result = document.getElementById('all-products-result');
+      result.innerHTML = '<p>Fetching products...</p>';
+      
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const products = data.products || data || [];
+        
+        result.innerHTML = `
+          <p class="success">✅ Found ${products.length} products</p>
+          <pre>${JSON.stringify(products.slice(0, 3), null, 2)}</pre>
+          ${products.length > 3 ? '<p>... and more</p>' : ''}
+        `;
+      } catch (err) {
+        result.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+      }
+    }
+
+    async function filterByCategory(category) {
+      const result = document.getElementById('category-result');
+      result.innerHTML = `<p>Filtering ${category}...</p>`;
+      
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const products = data.products || data || [];
+        
+        const filtered = products.filter(p => {
+          if (category === 'hostels') {
+            return p.category?.toLowerCase() === 'hostels' || p.isHostel === true;
+          }
+          return p.category?.toLowerCase() === category.toLowerCase();
+        });
+        
+        result.innerHTML = `
+          <p class="success">✅ Found ${filtered.length} ${category} products</p>
+          ${filtered.map(p => `
+            <div class="product-card">
+              <strong>${p.name}</strong><br>
+              Category: ${p.category}<br>
+              SubCategory: ${p.subCategory || 'N/A'}<br>
+              RoomType: ${p.roomType || 'N/A'}<br>
+              Price: ₵${p.price}<br>
+              IsHostel: ${p.isHostel ? 'Yes' : 'No'}
+            </div>
+          `).join('')}
+        `;
+      } catch (err) {
+        result.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+      }
+    }
+
+    async function testSubcategory(category, subcategory) {
+      const result = document.getElementById('subcategory-result');
+      result.innerHTML = `<p>Filtering ${category} - ${subcategory}...</p>`;
+      
+      try {
+        const res = await fetch(API_URL);
+        const data = await res.json();
+        const products = data.products || data || [];
+        
+        const filtered = products.filter(p => 
+          p.category?.toLowerCase() === category.toLowerCase() && 
+          p.subCategory?.toLowerCase() === subcategory.toLowerCase()
+        );
+        
+        result.innerHTML = `
+          <p class="success">✅ Found ${filtered.length} ${category} - ${subcategory} products</p>
+          ${filtered.length === 0 ? '<p class="error">⚠️ No products found. Make sure products have correct category and subCategory fields.</p>' : ''}
+          ${filtered.map(p => `
+            <div class="product-card">
+              <strong>${p.name}</strong><br>
+              Category: ${p.category}<br>
+              SubCategory: ${p.subCategory}<br>
+              Price: ₵${p.price}
+            </div>
+          `).join('')}
+        `;
+      } catch (err) {
+        result.innerHTML = `<p class="error">❌ Error: ${err.message}</p>`;
+      }
+    }
+
+    // Auto-test on load
+    window.onload = () => {
+      testConnection();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion - Select Gender | Dex™</title>
+  <link rel="icon" href="../DEX_FAVICON/favicon.png" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --brand-green: #008000;
+      --brand-pink: #E91E63;
+      --pink-light: #F48FB1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background: #f9f9f9;
+    }
+    .hero {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--brand-pink), var(--pink-light)), url('images/fashion.webp') center/cover;
+      background-blend-mode: overlay;
+      color: white;
+      text-align: center;
+      padding: 80px 20px 60px;
+    }
+    .hero h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      margin-bottom: 16px;
+      text-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      opacity: 0.95;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .container {
+      max-width: 900px;
+      margin: -40px auto 60px;
+      padding: 0 20px;
+    }
+    .gender-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+    }
+    .gender-card {
+      background: white;
+      border-radius: 20px;
+      padding: 50px 30px;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      color: #333;
+    }
+    .gender-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+    .gender-card .icon {
+      font-size: 5rem;
+      margin-bottom: 20px;
+    }
+    .gender-card h2 {
+      font-size: 2rem;
+      margin-bottom: 12px;
+      color: var(--brand-pink);
+    }
+    .gender-card p {
+      color: #666;
+      font-size: 1rem;
+    }
+    .back-btn {
+      display: inline-block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      background: white;
+      color: var(--brand-pink);
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    @media (max-width: 768px) {
+      .hero { min-height: 50vh; padding: 60px 20px 40px; }
+      .gender-card { padding: 40px 20px; }
+      .gender-card .icon { font-size: 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <div>
+      <h1>👗 Fashion</h1>
+      <p>Select your gender to explore fashion items</p>
+      <a href="../Dex-home.html" class="back-btn">← Back to Home</a>
+    </div>
+  </section>
+
+  <div class="container">
+    <div class="gender-grid">
+      <a href="fashion-subcategory.html?gender=men" class="gender-card">
+        <div class="icon">👨</div>
+        <h2>Men's Fashion</h2>
+        <p>Shirts, pants, shoes, accessories & more</p>
+      </a>
+      <a href="fashion-subcategory.html?gender=women" class="gender-card">
+        <div class="icon">👩</div>
+        <h2>Women's Fashion</h2>
+        <p>Dresses, tops, shoes, bags & more</p>
+      </a>
+    </div>
+  </div>
+</body>
+</html>

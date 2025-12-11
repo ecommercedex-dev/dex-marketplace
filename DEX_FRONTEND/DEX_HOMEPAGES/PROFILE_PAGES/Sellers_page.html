@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <!-- Cache Buster: 20251208155900 -->
+    <title>Dex™ Seller Dashboard</title>
+    <!-- SEO & OG -->
+    <meta property="og:title" content="Dex™ Seller Dashboard" />
+    <meta
+      property="og:description"
+      content="Manage your shop on Ghana's #1 marketplace"
+    />
+    <meta property="og:image" content="https://dex.com/assets/og-seller.jpg" />
+    <meta property="og:url" content="https://dex.com/seller" />
+    <!-- Preload Critical Assets -->
+    <link
+      rel="preload"
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;700&display=swap"
+      as="style"
+    />
+    <!-- Fonts & Icons - Deferred -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@400;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      media="print"
+      onload="this.media='all'"
+    />
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png" />
+    <link rel="stylesheet" href="assets/css/seller-base.css" />
+    <link rel="stylesheet" href="assets/css/seller-nav.css" />
+    <link rel="stylesheet" href="assets/css/seller-notifications.css" />
+    <link rel="stylesheet" href="assets/css/seller-layout.css" />
+    <link rel="stylesheet" href="assets/css/seller-products.css" />
+    <link rel="stylesheet" href="assets/css/seller-modals.css" />
+    <link rel="stylesheet" href="assets/css/seller-extras.css" />
+    <link rel="stylesheet" href="assets/css/shop-customize.css" />
+    <link rel="stylesheet" href="assets/css/seller-production.css" />
+    <link rel="stylesheet" href="assets/css/seller-orders.css" />
+    <link rel="stylesheet" href="assets/css/bulk-actions.css" />
+    <link rel="stylesheet" href="assets/css/seller-search.css" />
+    <link rel="stylesheet" href="assets/css/loading-skeleton.css" />
+    <link rel="stylesheet" href="assets/css/seller-guide.css" />
+  </head>
+  <body>
+    <!-- Overlays -->
+    <div id="globalOverlay"></div>
+    <div id="notificationOverlay"></div>
+    <!-- Navbar -->
+    <nav>
+      <div id="company-name"><a href="../../Dex-home.html">Dex™</a></div>
+      <div class="nav-icons">
+        <img
+          id="headerAvatar"
+          class="profile-avatar"
+          src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
+          onclick="switchSection('profile')"
+        />
+        <div id="notificationBtn">
+          <i class="fa-solid fa-bell"></i><span id="notificationBadge">0</span>
+        </div>
+        <i
+          class="fa-solid fa-right-from-bracket"
+          id="logoutBtn"
+          title="Logout"
+        ></i>
+        <div class="hamburger" id="hamburger"><i class="fas fa-bars"></i></div>
+      </div>
+    </nav>
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+      <a href="#" data-section="profile"><i class="fas fa-user"></i> Profile</a>
+      <a href="#" data-section="products"
+        ><i class="fas fa-box"></i> Products</a
+      >
+      <a href="#" data-section="orders" id="mobileOrdersTab"
+        ><i class="fas fa-shopping-cart"></i> Orders</a
+      >
+      <a href="#" data-section="hostel-bookings" id="mobileHostelBookingsTab"
+        ><i class="fas fa-bed"></i> Hostel Bookings</a
+      >
+      <a href="#" data-section="hostel-payments" class="hostel-only"
+        ><i class="fas fa-money-bill-wave"></i> Payment Tracking</a
+      >
+      <a href="#" data-section="customize-shop" class="non-hostel-only"
+        ><i class="fas fa-paint-brush"></i> Customize Shop</a
+      >
+      <a href="#" data-section="analytics"
+        ><i class="fas fa-chart-line"></i> Analytics</a
+      >
+      <a href="#" data-section="bulk-actions" class="non-hostel-only"
+        ><i class="fas fa-tasks"></i> Bulk Actions</a
+      >
+      <a href="#" data-section="search" class="non-hostel-only"
+        ><i class="fas fa-search"></i> Search Products</a
+      >
+      <a href="#" data-section="settings"
+        ><i class="fas fa-cog"></i> Settings</a
+      >
+      <a href="#" data-section="help"
+        ><i class="fas fa-question-circle"></i> Help</a
+      >
+      <a href="#" id="mobileViewShopLink" target="_blank" class="non-hostel-only"
+        ><i class="fas fa-external-link-alt"></i> View My Shop</a
+      >
+      <hr />
+      <a href="../../Dex-home.html"><i class="fas fa-home"></i> Home</a>
+      <a href="../Dex-shop.html"><i class="fa-solid fa-shop"></i> Shop</a>
+      <a href="../../DEX_INFO/Dex-about.html"
+        ><i class="fa fa-info-circle"></i> About</a
+      >
+      <a href="../../DEX_CONTACT/Dex-contact.html"
+        ><i class="fa fa-envelope"></i> Contact</a
+      >
+    </div>
+    <!-- Notification Sidebar -->
+    <div id="notificationSidebar">
+      <div class="notif-header">
+        <h3>Notifications</h3>
+        <button id="clearAllBtn">Clear All</button>
+      </div>
+      <div id="notificationList"></div>
+      <div
+        id="emptyState"
+        style="display: none; text-align: center; padding: 3rem; color: #aaa"
+      >
+        <i
+          class="fas fa-bell-slash"
+          style="font-size: 2.5rem; opacity: 0.4"
+        ></i>
+        <p>No new notifications</p>
+      </div>
+    </div>
+    <!-- Gallery Dialog -->
+    <div id="galleryOverlay">
+      <div class="gallery-dialog">
+        <button class="close-gallery" id="closeGalleryBtn">x</button>
+        <h3>Your Gallery</h3>
+        <p style="text-align: center; color: #aaa; margin: 10px 0">
+          Drag to reorder • Click to set • Delete
+        </p>
+        <div class="gallery-grid" id="dialogGalleryGrid"></div>
+      </div>
+    </div>
+    <!-- Main Layout -->
+    <div class="container">
+      <div class="sidebar" id="sidebar">
+        <a href="#" class="active" data-section="profile"
+          ><i class="fas fa-user"></i> Profile</a
+        >
+        <a href="#" data-section="products"
+          ><i class="fas fa-box"></i> Products</a
+        >
+        <a href="#" data-section="orders" id="ordersTab"
+          ><i class="fas fa-shopping-cart"></i> Orders</a
+        >
+        <a href="#" data-section="hostel-bookings" id="hostelBookingsTab"
+          ><i class="fas fa-bed"></i> Hostel Bookings</a
+        >
+        <a href="#" data-section="hostel-payments" class="hostel-only"
+          ><i class="fas fa-money-bill-wave"></i> Payment Tracking</a
+        >
+        <a href="#" data-section="customize-shop" class="non-hostel-only"
+          ><i class="fas fa-paint-brush"></i> Customize Shop</a
+        >
+        <a href="#" data-section="analytics"
+          ><i class="fas fa-chart-line"></i> Analytics</a
+        >
+        <a href="#" data-section="bulk-actions" class="non-hostel-only"
+          ><i class="fas fa-tasks"></i> Bulk Actions</a
+        >
+        <a href="#" data-section="search" class="non-hostel-only"
+          ><i class="fas fa-search"></i> Search Products</a
+        >
+        <a href="#" data-section="settings"
+          ><i class="fas fa-cog"></i> Settings</a
+        >
+        <a href="#" data-section="help"
+          ><i class="fas fa-question-circle"></i> Help</a
+        >
+        <a href="#" id="viewShopLink" target="_blank" class="non-hostel-only"
+          ><i class="fas fa-external-link-alt"></i> View My Shop</a
+        >
+        <hr />
+        <a href="../../Dex-home.html"><i class="fas fa-home"></i> Home</a>
+        <a href="../Dex-shop.html"><i class="fa-solid fa-shop"></i> Shop</a>
+        <a href="../../DEX_INFO/Dex-about.html"
+          ><i class="fa fa-info-circle"></i> About</a
+        >
+        <a href="../../DEX_CONTACT/Dex-contact.html"
+          ><i class="fa fa-envelope"></i> Contact</a
+        >
+      </div>
+      <div class="main-content">
+        <div class="welcome-banner" id="welcomeBanner">
+          <h2>Welcome back, <span id="sellerName">Seller</span>! ❤️</h2>
+          <p>Early Access — You’re one of our first 100 sellers. Thank you!</p>
+        </div>
+        
+        <!-- Campus Verification Banner -->
+        <div class="verification-banner" id="verificationBanner" style="display: block; background: linear-gradient(135deg, #7b1fa2, #9c27b0); padding: 20px; border-radius: 15px; margin-bottom: 20px; color: white; box-shadow: 0 8px 25px rgba(123,31,162,0.3); transition: all 0.3s ease;">
+          <!-- Full Banner Content -->
+          <div id="fullBannerContent" style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+            <div style="font-size: 2.5rem;">🎓</div>
+            <div style="flex: 1; min-width: 250px;">
+              <h3 style="margin: 0 0 8px 0; font-size: 1.3rem;">Upgrade to Campus Connected Seller!</h3>
+              <p style="margin: 0; opacity: 0.9; font-size: 0.95rem;">Verify your campus connection to unlock Tier 2 benefits: Higher visibility, campus badge, and featured placement in campus section.</p>
+              <div style="margin-top: 12px; display: flex; align-items: center; gap: 8px; font-size: 0.9rem; opacity: 0.8;">
+                <span>Current: <strong>Tier 1 - Basic Seller</strong></span>
+                <i class="fas fa-arrow-right" style="margin: 0 5px;"></i>
+                <span>Upgrade to: <strong>Tier 2 - Campus Connected</strong></span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+              <a href="seller_verification.html" style="background: white; color: #7b1fa2; padding: 12px 24px; border-radius: 25px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                <i class="fas fa-graduation-cap"></i>
+                Complete Verification
+              </a>
+              <button onclick="dismissVerificationBanner()" style="background: transparent; color: white; border: 1px solid rgba(255,255,255,0.3); padding: 12px 20px; border-radius: 25px; cursor: pointer; font-weight: 500; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                Maybe Later
+              </button>
+            </div>
+          </div>
+          
+          <!-- Minimized Banner Content -->
+          <div id="miniBannerContent" style="display: none; align-items: center; gap: 12px;">
+            <div style="font-size: 1.5rem;">🎓</div>
+            <div style="flex: 1;">
+              <span style="font-weight: 600; font-size: 0.95rem;">Campus Verification Available</span>
+            </div>
+            <a href="seller_verification.html" style="background: white; color: #7b1fa2; padding: 8px 16px; border-radius: 20px; text-decoration: none; font-weight: 600; font-size: 0.85rem; transition: all 0.3s ease;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+              Upgrade
+            </a>
+            <button onclick="expandVerificationBanner()" style="background: transparent; color: white; border: none; padding: 8px; border-radius: 50%; cursor: pointer; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'" title="Show details">
+              <i class="fas fa-chevron-down" style="font-size: 0.8rem;"></i>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Safety Tips Card -->
+        <div class="safety-tips-card" id="safetyTipsCard">
+          <div class="safety-header">
+            <h3><i class="fas fa-shield-alt"></i> Safety & Selling Tips</h3>
+            <button id="toggleSafetyBtn" class="toggle-btn"><i class="fas fa-chevron-up"></i></button>
+          </div>
+          <div class="safety-content" id="safetyContent"></div>
+        </div>
+        
+        <!-- Share Card – Collapsible -->
+        <div class="share-card-collapsible">
+          <button id="toggleShareBtn" class="share-toggle-btn">
+            <i class="fas fa-share-alt"></i> Share Your Shop
+          </button>
+          <div id="shareContent" class="share-content collapsed">
+            <h3>Share Your Shop</h3>
+            <div class="share-link" id="shopLink">dex.com/shop/unknown</div>
+            <!-- QR will be injected here by JS -->
+            <div id="qrPlaceholder"></div>
+            <div class="share-actions">
+              <button class="share-btn copy-btn" id="copyBtn">
+                <i class="fas fa-copy"></i> Copy Link
+              </button>
+              <button class="share-btn share-social" id="shareBtn">
+                <i class="fab fa-whatsapp"></i> Share
+              </button>
+            </div>
+          </div>
+        </div>
+        <!-- Profile -->
+        <div id="profile" class="section active card">
+          <div
+            style="
+              display: flex;
+              gap: 2rem;
+              align-items: center;
+              flex-wrap: wrap;
+            "
+          >
+            <div style="position: relative">
+              <img
+                id="profilePic"
+                src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23ccc'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E"
+                style="
+                  width: 130px;
+                  height: 130px;
+                  border-radius: 50%;
+                  border: 5px solid #fff;
+                  box-shadow: var(--shadow);
+                  background: rgba(255,255,255,0.1);
+                "
+              />
+              <label
+                for="picInput"
+                style="
+                  position: absolute;
+                  bottom: 8px;
+                  right: 8px;
+                  background: var(--green);
+                  width: 44px;
+                  height: 44px;
+                  border-radius: 50%;
+                  display: grid;
+                  place-items: center;
+                  cursor: pointer;
+                "
+              >
+                <i class="fa-solid fa-camera" style="color: #fff"></i>
+                <input
+                  type="file"
+                  id="picInput"
+                  accept="image/*"
+                  style="display: none"
+                />
+              </label>
+            </div>
+            <div>
+              <h2 id="fullName">Loading...</h2>
+              <p id="storeName">Loading...</p>
+              <p id="email">email@dex.com</p>
+              <p id="phone">Phone: Loading...</p>
+              <button
+                id="editProfileBtn"
+                style="
+                  margin-top: 12px;
+                  padding: 10px 28px;
+                  background: linear-gradient(
+                    135deg,
+                    var(--green),
+                    var(--green-light)
+                  );
+                  border: none;
+                  border-radius: 50px;
+                  color: #fff;
+                  font-weight: bold;
+                  cursor: pointer;
+                "
+              >
+                Edit Profile
+              </button>
+              <div
+                id="openGalleryBtn"
+                title="View Gallery"
+                style="
+                  margin-top: 16px;
+                  font-size: 1.8rem;
+                  color: var(--green-light);
+                  cursor: pointer;
+                "
+              >
+                <i class="fas fa-images"></i>
+              </div>
+            </div>
+          </div>
+          <div
+            id="editDropdown"
+            style="
+              display: none;
+              margin-top: 20px;
+              padding-top: 20px;
+              border-top: 1px solid rgba(255, 255, 255, 0.3);
+            "
+          >
+            <input
+              type="text"
+              id="editShopName"
+              placeholder="Shop Name"
+              style="
+                width: 100%;
+                max-width: 300px;
+                margin: 8px 0;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+              "
+            />
+            <input
+              type="text"
+              id="editFullName"
+              placeholder="Full Name"
+              style="
+                width: 100%;
+                max-width: 300px;
+                margin: 8px 0;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+              "
+            />
+            <input
+              type="email"
+              id="editEmail"
+              placeholder="Email"
+              style="
+                width: 100%;
+                max-width: 300px;
+                margin: 8px 0;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+              "
+            />
+            <input
+              type="text"
+              id="editPhone"
+              placeholder="Phone"
+              style="
+                width: 100%;
+                max-width: 300px;
+                margin: 8px 0;
+                padding: 10px;
+                border-radius: 8px;
+                border: none;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+              "
+            />
+            <button
+              id="saveEditBtn"
+              style="
+                margin-top: 12px;
+                padding: 8px 16px;
+                background: var(--green-light);
+                color: #000;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+              "
+            >
+              Save
+            </button>
+            <button
+              id="cancelEditBtn"
+              style="
+                margin-top: 12px;
+                margin-left: 8px;
+                padding: 8px 16px;
+                background: rgba(255, 255, 255, 0.2);
+                color: #fff;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+              "
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+        <!-- Products -->
+        <div id="products" class="section card">
+          <div
+            style="
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              margin-bottom: 1rem;
+            "
+          >
+            <h2>Products</h2>
+            <button
+              id="addProductBtn"
+              style="
+                padding: 10px 20px;
+                background: var(--green-light);
+                color: #000;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+              "
+            >
+              Add Product
+            </button>
+          </div>
+          <div id="loader" class="loader">
+            <i
+              class="fas fa-spinner fa-spin"
+              style="font-size: 2rem; color: var(--green-light)"
+            ></i>
+          </div>
+          <div
+            id="productsGrid"
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+              gap: 1.5rem;
+            "
+          ></div>
+        </div>
+
+        <!-- Orders -->
+        <div id="orders" class="section card" style="display: none">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;">
+            <h2 style="margin:0;">Orders</h2>
+            <div style="display:flex;gap:1rem;">
+              <div class="order-tab-icon" id="activeTab" title="Active Orders" style="cursor:pointer;">
+                <i class="fas fa-shopping-cart" style="font-size:1.5rem;color:#3498db;"></i>
+              </div>
+              <div class="order-tab-icon" id="deliveredTab" title="Delivered Orders" style="cursor:pointer;">
+                <i class="fas fa-truck" style="font-size:1.5rem;color:#27ae60;"></i>
+                <span id="deliveredBadge" class="order-badge" style="display:none;">0</span>
+              </div>
+              <div class="order-tab-icon" id="rejectedTab" title="Rejected Orders" style="cursor:pointer;">
+                <i class="fas fa-trash-alt" style="font-size:1.5rem;color:#e74c3c;"></i>
+                <span id="rejectedBadge" class="order-badge" style="display:none;">0</span>
+              </div>
+            </div>
+          </div>
+          <div id="newOrdersContainer" class="order-view active"></div>
+          <div id="deliveredSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+              <h3 style="margin:0;color:#27ae60;">Delivered Orders</h3>
+              <button id="clearDeliveredBtn" class="btn btn-secondary" style="padding:8px 16px;font-size:0.9rem;">Clear All</button>
+            </div>
+            <div id="ordersContainer" class="order-view"></div>
+          </div>
+          <div id="rejectedSection" style="display:none;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+              <h3 style="margin:0;color:#e74c3c;">Rejected/Cancelled Orders</h3>
+              <button id="clearRejectedBtn" class="btn btn-secondary" style="padding:8px 16px;font-size:0.9rem;">Clear All</button>
+            </div>
+            <div id="trashContainer" class="order-view"></div>
+          </div>
+        </div>
+
+        <!-- Hostel Bookings (Only visible to hostel sellers) -->
+        <div id="hostel-bookings" class="section card" style="display: none">
+          <h2>Hostel Booking Requests</h2>
+          <div id="incomingBookingsList">
+            <p style="text-align: center; color: #aaa; padding: 2rem">
+              <i
+                class="fas fa-bed"
+                style="
+                  font-size: 3rem;
+                  opacity: 0.3;
+                  display: block;
+                  margin-bottom: 1rem;
+                "
+              ></i>
+              No booking requests yet.<br />
+              Students will appear here when they book your rooms.
+            </p>
+          </div>
+        </div>
+
+        <!-- Customize Shop -->
+        <div id="customize-shop" class="section card">
+          <h2><i class="fas fa-paint-brush"></i> Customize Your Shop</h2>
+          <p style="color: #aaa; margin-bottom: 2rem">Make your shop unique! Customize colors, banners, and more.</p>
+          <div id="customizeShopContent"></div>
+        </div>
+
+        <!-- Analytics -->
+        <div id="analytics" class="section card">
+          <h2><i class="fas fa-chart-line"></i> Analytics & Insights</h2>
+          <div id="analyticsContent"></div>
+        </div>
+
+        <!-- Bulk Actions -->
+        <div id="bulk-actions" class="section card">
+          <h2><i class="fas fa-tasks"></i> Bulk Product Actions</h2>
+          <p style="color: #aaa; margin-bottom: 1rem">Select multiple products to activate, deactivate, or delete at once.</p>
+          <div id="bulkActionsContent"></div>
+        </div>
+
+        <!-- Search -->
+        <div id="search" class="section card">
+          <div id="searchContent"></div>
+        </div>
+
+        <!-- Settings -->
+        <div id="settings" class="section card">
+          <h2><i class="fas fa-cog"></i> Account Settings</h2>
+          <div id="settingsContent"></div>
+        </div>
+
+        <!-- Help -->
+        <div id="help" class="section card">
+          <h2><i class="fas fa-question-circle"></i> Help & Support</h2>
+          <div id="helpContent"></div>
+        </div>
+
+        <!-- Hostel Payments -->
+        <div id="hostel-payments" class="section card">
+          <h2><i class="fas fa-money-bill-wave"></i> Payment Tracking</h2>
+          <div id="hostelPaymentsContent"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product / Hostel Modal -->
+    <div class="product-modal" id="productModal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Add Product</h3>
+        <button class="close-modal" id="closeModalBtn">x</button>
+      </div>
+      <!-- We'll inject the correct form here via JavaScript -->
+      <div id="modalFormContainer"></div>
+      <div class="modal-actions">
+        <button type="button" class="cancel-btn" id="cancelProductBtn">
+          Cancel
+        </button>
+        <button type="button" class="save-btn" id="saveProductBtn">
+          <span id="saveText">Save Listing</span>
+          <span id="savingText" style="display: none">Saving...</span>
+        </button>
+      </div>
+    </div>
+    <!-- WhatsApp Float -->
+    <div class="whatsapp-float" id="whatsappFloat">
+      <button id="whatsappBtn">
+        <i class="fab fa-whatsapp"></i>
+      </button>
+    </div>
+    <script type="module" src="assets/js/main-seller.js?v=20251208180000"></script>
+  </body>
+</html>

@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex&trade; Sign In</title>
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png" />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(0, 50, 0, 0.6), rgba(0, 0, 0, 0.7)),
+          url("../Images/pexels-ann-h-45017-2646531.webp") center/cover
+            no-repeat;
+      }
+
+      /* Header */
+      .main-header {
+        background: rgba(0, 128, 0, 0.25);
+        backdrop-filter: blur(6px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 30px;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        flex-wrap: wrap;
+      }
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+        transition: text-shadow 0.3s ease;
+      }
+      h1#company-name a:hover {
+        text-shadow: 2px 2px 8px #c2c0c0;
+      }
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Main Sign-In Form */
+      main {
+        flex: 1;
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+      form {
+        background: rgba(0, 0, 0, 0.35);
+        padding: 30px 25px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+        max-width: 400px;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeIn 0.6s ease forwards;
+      }
+      form.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      form h2 {
+        text-align: center;
+        font-size: 28px;
+        color: #69d369;
+        margin-bottom: 6px;
+      }
+      form p {
+        text-align: center;
+        font-size: 15px;
+        color: #fff;
+      }
+
+      /* Shake animation for invalid login */
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-10px) rotate(-2deg);
+        }
+        30% {
+          transform: translateX(8px) rotate(2deg);
+        }
+        45% {
+          transform: translateX(-6px) rotate(-1deg);
+        }
+        60% {
+          transform: translateX(6px) rotate(1deg);
+        }
+        75% {
+          transform: translateX(-3px) rotate(0.5deg);
+        }
+        100% {
+          transform: translateX(0) rotate(0);
+        }
+      }
+      form.shake {
+        animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        border: 2px solid #ff4d4d;
+        box-shadow: 0 0 12px #ff4d4d;
+      }
+
+      /* Input fields */
+      .input-group {
+        position: relative;
+        width: 100%;
+      }
+      .input-group i.fa-envelope,
+      .input-group i.fa-lock {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bbb;
+        font-size: 16px;
+        pointer-events: none;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 12px 40px 12px 40px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+      .input-group input::placeholder {
+        color: transparent;
+      }
+      .input-group label {
+        position: absolute;
+        left: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 14px;
+        color: #aaa;
+        transition: 0.3s ease all;
+        pointer-events: none;
+        background: transparent;
+        padding: 0 4px;
+      }
+      .input-group input:focus ~ label,
+      .input-group input:not(:placeholder-shown) ~ label {
+        top: -6px;
+        left: 32px;
+        font-size: 12px;
+        color: #fff;
+        background: rgba(0, 0, 0, 0.4);
+        border-radius: 4px;
+      }
+      .peek {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #bbb;
+        font-size: 18px;
+        transition: color 0.2s ease;
+      }
+      .peek:hover {
+        color: #fff;
+      }
+
+      /* Checkbox */
+      .checkbox {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 14px;
+        color: #fff;
+      }
+      .checkbox input[type="checkbox"] {
+        appearance: none;
+        background: transparent;
+        border: 1px solid #ccc;
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.2s ease;
+      }
+      .checkbox input[type="checkbox"]:checked {
+        background: #70bb70;
+        border-color: #70bb70;
+      }
+      .checkbox input[type="checkbox"]:checked::after {
+        content: "✔";
+        color: #000;
+        font-size: 12px;
+        position: absolute;
+        left: 2px;
+        top: -1px;
+      }
+
+      form button {
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: #008000;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      form button:hover {
+        background: #70bb70;
+        transform: scale(1.02);
+      }
+
+      form a {
+        color: #7cfc7c;
+        text-decoration: none;
+      }
+      form a:hover {
+        text-decoration: underline;
+      }
+
+      footer {
+        background: rgba(0, 128, 0, 0.25);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        font-size: 0.95rem;
+        padding: 18px 0;
+        color: #fff;
+      }
+      footer a {
+        color: #d4ffd4;
+        text-decoration: none;
+        margin: 0 8px;
+      }
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Animations */
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        15% {
+          transform: translateX(-10px) rotate(-2deg);
+        }
+        30% {
+          transform: translateX(8px) rotate(2deg);
+        }
+        45% {
+          transform: translateX(-6px) rotate(-1deg);
+        }
+        60% {
+          transform: translateX(6px) rotate(1deg);
+        }
+        75% {
+          transform: translateX(-3px) rotate(0.5deg);
+        }
+        100% {
+          transform: translateX(0) rotate(0);
+        }
+      }
+      form.shake {
+        animation: shake 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+        border: 2px solid #ff4d4d;
+        box-shadow: 0 0 12px #ff4d4d;
+      }
+
+      /* Hamburger Menu - Only for small screens */
+      .menu-toggle {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+        position: absolute;
+        right: 20px; /* far right */
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1101; /* above overlay and nav */
+      }
+
+      /* Hamburger bars */
+      .menu-toggle div {
+        width: 25px;
+        height: 3px;
+        background-color: #fff;
+        border-radius: 2px;
+        transition: all 0.3s ease;
+      }
+
+      /* Hamburger open animation */
+      .menu-toggle.open div:first-child.rotate1 {
+        transform: rotate(45deg) translate(5px, 5px);
+      }
+      .menu-toggle.open div:nth-child(2).fade {
+        opacity: 0;
+      }
+      .menu-toggle.open div:last-child.rotate2 {
+        transform: rotate(-45deg) translate(5px, -5px);
+      }
+
+      /* Mobile Menu Bounce-Fade */
+      @keyframes menuBounceFade {
+        0% {
+          opacity: 0;
+          transform: translateY(-30px);
+        }
+        60% {
+          opacity: 1;
+          transform: translateY(10px);
+        }
+        80% {
+          transform: translateY(-5px);
+        }
+        100% {
+          transform: translateY(0);
+        }
+      }
+
+      /* Overlay when menu is open */
+      #navOverlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 1000;
+      }
+
+      /* Small screens: 450px */
+      @media (max-width: 450px) {
+        .menu-toggle {
+          display: flex;
+        }
+        .main-header {
+          position: relative;
+          flex-direction: row;
+          justify-content: space-between; /* company left, toggle right */
+          align-items: center;
+          padding: 12px 20px;
+        }
+
+        /* Mobile nav menu */
+        nav ul {
+          transition: max-height 0.4s ease, opacity 0.4s ease;
+          overflow: hidden;
+          position: absolute;
+          top: 60px; /* below header */
+          right: 0;
+          left: 0;
+          flex-direction: column;
+          background: rgba(0, 0, 0, 0.7);
+          border-radius: 6px;
+          max-height: 0;
+          opacity: 0;
+          z-index: 1100;
+        }
+
+        /* Apply to active mobile menu */
+        nav ul.active {
+          max-height: 500px;
+          opacity: 1;
+          animation: menuBounceFade 0.5s ease forwards;
+        }
+
+        /* Mobile Menu Items Slide-In */
+        nav ul li {
+          opacity: 0;
+          transform: translateY(-15px);
+          transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        nav ul.active li {
+          opacity: 1;
+          transform: translateY(0);
+        }
+
+        /* Stagger delay for each item */
+        nav ul.active li:nth-child(1) {
+          transition-delay: 0.05s;
+        }
+        nav ul.active li:nth-child(2) {
+          transition-delay: 0.1s;
+        }
+        nav ul.active li:nth-child(3) {
+          transition-delay: 0.15s;
+        }
+        nav ul.active li:nth-child(4) {
+          transition-delay: 0.2s;
+        }
+        nav ul.active li:nth-child(5) {
+          transition-delay: 0.25s;
+        } /* add more if needed */
+
+        nav ul li a {
+          font-size: 14px;
+          padding: 10px 15px;
+          text-align: center;
+          display: block;
+        }
+      }
+
+      /* Tiny screens: 320px */
+      @media (max-width: 320px) {
+        h1#company-name a {
+          font-size: 26px;
+        }
+        nav ul li a {
+          font-size: 13px;
+          padding: 8px 12px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <h1 id="company-name">
+        <a href="../../../DEX_FRONTEND/Dex-home.html">Dex&trade;</a>
+      </h1>
+
+      <div class="menu-toggle" id="menuToggle">
+        <div></div>
+        <div></div>
+        <div></div>
+      </div>
+
+      <nav>
+        <ul>
+          <li>
+            <a href="../../../Dex-home.html"><i class="fa fa-home"></i> Home</a>
+          </li>
+          <li>
+            <a href="../../DEX_HOMEPAGES/Dex-shop.html"
+              ><i class="fa fa-shopping-cart"></i> Shop</a
+            >
+          </li>
+          <li>
+            <a href="../../DEX_INFO/Dex-about.html"
+              ><i class="fa fa-info-circle"></i> About</a
+            >
+          </li>
+          <li>
+            <a href="../../DEX_CONTACT/Dex-contact.html"
+              ><i class="fa fa-phone"></i> Contact</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div id="navOverlay"></div>
+
+    <main>
+      <form id="customerLoginForm">
+        <h2>Sign In 🔑</h2>
+        <div class="input-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" id="email" placeholder=" " required />
+          <label for="email">Email 📧</label>
+        </div>
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input type="password" id="password" placeholder=" " required />
+          <label for="password">Password 🔒</label>
+          <i class="fa fa-eye peek" id="peek"></i>
+        </div>
+        <div class="checkbox">
+          <input type="checkbox" id="remember" />
+          <label for="remember">Remember me 📝</label>
+        </div>
+        <button type="submit">Sign In ✅</button>
+        <p>
+          <a href="RESET_PASSWORD/forgot_password.html?role=buyer"
+            >Forgot password? ❓</a
+          >
+        </p>
+        <p>
+          Already selling on Dex? 🛍️
+          <a href="../REGISTRY_PAGES/seller_sign_in.html">Log in here!</a>
+        </p>
+        <p>
+          Don't have an account? ✨
+          <a href="../REGISTRY_PAGES/Sign_up.html">Sign Up</a>
+        </p>
+      </form>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 Dex&trade;. All rights reserved. 🌱</p>
+      <p>
+        <a href="../../DEX_LEGALPAGES/privacy.html">Privacy Policy 🔒</a> |
+        <a href="../../DEX_LEGALPAGES/terms.html">Terms of Service 📄</a>
+      </p>
+    </footer>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // ======= Elements =======
+        const menuToggle = document.getElementById("menuToggle");
+        const navUl = document.querySelector("nav ul");
+        const navLinks = document.querySelectorAll("nav ul li a");
+        const overlay = document.getElementById("navOverlay");
+        const form = document.getElementById("customerLoginForm");
+        const passwordInput = document.getElementById("password");
+        const button = form.querySelector("button");
+        const peekIcon = document.getElementById("peek");
+
+        // ====== Menu Toggle ======
+        menuToggle.addEventListener("click", () => {
+          const isOpen = navUl.classList.toggle("active");
+          menuToggle.classList.toggle("open");
+          const toggleBars = menuToggle.querySelectorAll("div");
+          toggleBars[0].classList.toggle("rotate1");
+          toggleBars[1].classList.toggle("fade");
+          toggleBars[2].classList.toggle("rotate2");
+          overlay.style.display = isOpen ? "block" : "none";
+        });
+        navLinks.forEach((link) => link.addEventListener("click", closeMenu));
+        overlay.addEventListener("click", closeMenu);
+
+        function closeMenu() {
+          if (!navUl.classList.contains("active")) return;
+          navUl.classList.remove("active");
+          menuToggle.classList.remove("open");
+          const toggleBars = menuToggle.querySelectorAll("div");
+          toggleBars[0].classList.remove("rotate1");
+          toggleBars[1].classList.remove("fade");
+          toggleBars[2].classList.remove("rotate2");
+          overlay.style.display = "none";
+        }
+
+        // ====== Fade-in Form & Auto-Redirect ======
+        window.addEventListener("load", () => {
+          form.classList.add("visible");
+
+          const currentUser =
+            JSON.parse(localStorage.getItem("currentUser")) ||
+            JSON.parse(sessionStorage.getItem("currentUser"));
+
+          if (currentUser && currentUser.role === "buyer") {
+            // Redirect to buyer dashboard if already logged in
+            window.location.href = "../PROFILE_PAGES/Buyer_profile.html";
+          }
+        });
+
+        // ====== Password Toggle ======
+        peekIcon.addEventListener("click", () => {
+          passwordInput.type =
+            passwordInput.type === "password" ? "text" : "password";
+          peekIcon.classList.toggle("fa-eye");
+          peekIcon.classList.toggle("fa-eye-slash");
+        });
+
+        // ====== Backend Login ======
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+          const password = passwordInput.value.trim();
+          const remember = document.getElementById("remember").checked;
+
+          if (!email || !password) {
+            alert("⚠️ Please enter both email and password.");
+            return;
+          }
+
+          try {
+            button.disabled = true;
+            button.textContent = "Signing in...";
+
+            const API_BASE = window.location.hostname === 'localhost' 
+              ? 'http://localhost:5000' 
+              : 'https://api.yourdomain.com';
+            
+            const response = await fetch(
+              `${API_BASE}/api/buyers/login`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password }),
+              }
+            );
+
+            let data;
+            try {
+              data = await response.json();
+            } catch (jsonError) {
+              if (response.status === 401) {
+                form.classList.remove("shake");
+                void form.offsetWidth;
+                form.classList.add("shake");
+                passwordInput.value = "";
+                alert("🔒 Invalid email or password. Please check your credentials.");
+                return;
+              }
+              alert(`🚫 Server error: ${response.status} ${response.statusText}`);
+              return;
+            }
+
+            if (!response.ok) {
+              form.classList.remove("shake");
+              void form.offsetWidth;
+              form.classList.add("shake");
+              passwordInput.value = "";
+              
+              if (response.status === 401) {
+                alert("🔒 Invalid email or password. Please check your credentials.");
+              } else if (response.status === 403) {
+                alert("📧 Please verify your email first. Check your inbox for the verification link.");
+              } else {
+                alert(data.message || "Login failed. Please try again.");
+              }
+              return;
+            }
+
+            const { token, user } = data;
+            if (!token || !user) {
+              alert("⚠️ Invalid response from server.");
+              return;
+            }
+
+            const userData = {
+              id: user.id,
+              name: user.name,
+              fullName: user.fullName || user.name,
+              profilePic: user.profilePic || null,
+              index_num: user.index_num,
+              number: user.number,
+              address: user.address,
+              email: user.email,
+              role: user.role,
+              token,
+            };
+
+            if (remember)
+              localStorage.setItem("currentUser", JSON.stringify(userData));
+            else
+              sessionStorage.setItem("currentUser", JSON.stringify(userData));
+
+            alert(`✅ Welcome back, ${userData.name || "User"}!`);
+
+            // 🔹 REDIRECT to Buyer Dashboard instead of crashing
+            window.location.href = "../PROFILE_PAGES/Buyer_profile.html";
+          } catch (err) {
+            console.error("❌ Network or Server Error:", err);
+            alert("Server error. Please try again later.");
+          } finally {
+            button.disabled = false;
+            button.textContent = "Sign In ✅";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

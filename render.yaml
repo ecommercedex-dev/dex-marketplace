@@ -1,0 +1,32 @@
+services:
+  # Backend API
+  - type: web
+    name: dex-backend
+    env: node
+    plan: free
+    buildCommand: cd DEX_BACKEND && npm install
+    startCommand: cd DEX_BACKEND && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+
+  # Frontend Static Site
+  - type: static
+    name: dex-frontend
+    env: static
+    plan: free
+    buildCommand: echo "No build needed"
+    staticPublishPath: ./DEX_FRONTEND
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /Dex-home.html
+
+  # PostgreSQL Database
+  - type: pserv
+    name: dex-database
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.postgres

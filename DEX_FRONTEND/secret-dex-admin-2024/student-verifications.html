@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Verifications - Admin</title>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f5f5f5; }
+        .card { background: white; padding: 20px; margin: 10px 0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .pending { border-left: 4px solid orange; }
+        .approved { border-left: 4px solid green; }
+        .rejected { border-left: 4px solid red; }
+        button { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .approve { background: #27ae60; color: white; }
+        .reject { background: #e74c3c; color: white; }
+        img { max-width: 300px; max-height: 200px; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Student ID Verifications</h1>
+    <div id="verifications"></div>
+
+    <script>
+        const API = 'http://localhost:5000/api';
+        const token = localStorage.getItem('adminToken');
+
+        async function loadVerifications() {
+            try {
+                const response = await fetch(`${API}/admin/student-verifications`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                const verifications = await response.json();
+                
+                document.getElementById('verifications').innerHTML = verifications.map(v => `
+                    <div class="card ${v.status}">
+                        <h3>${v.buyer.name} (${v.buyer.email})</h3>
+                        <p><strong>Index:</strong> ${v.buyer.index_num || 'N/A'}</p>
+                        <p><strong>Submitted:</strong> ${new Date(v.submittedAt).toLocaleString()}</p>
+                        <p><strong>Status:</strong> ${v.status.toUpperCase()}</p>
+                        
+                        <div style="margin: 15px 0;">
+                            <strong>Document:</strong><br>
+                            ${v.documentPath.endsWith('.pdf') 
+                                ? `<a href="http://localhost:5000${v.documentPath}" target="_blank">View PDF</a>`
+                                : `<img src="http://localhost:5000${v.documentPath}" alt="Student ID">`
+                            }
+                        </div>
+                        
+                        ${v.status === 'pending' ? `
+                            <textarea id="notes_${v.id}" placeholder="Review notes (optional)" style="width:100%;height:60px;margin:10px 0;"></textarea>
+                            <button class="approve" onclick="reviewVerification(${v.id}, 'approved')">✅ Approve</button>
+                            <button class="reject" onclick="reviewVerification(${v.id}, 'rejected')">❌ Reject</button>
+                        ` : `
+                            <p><strong>Review Notes:</strong> ${v.reviewNotes || 'None'}</p>
+                            <p><strong>Reviewed:</strong> ${new Date(v.reviewedAt).toLocaleString()}</p>
+                        `}
+                    </div>
+                `).join('');
+            } catch (error) {
+                alert('Failed to load verifications');
+            }
+        }
+
+        async function reviewVerification(id, status) {
+            const notes = document.getElementById(`notes_${id}`).value;
+            
+            try {
+                await fetch(`${API}/admin/student-verifications/${id}/review`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status, notes })
+                });
+                
+                alert(`Verification ${status}!`);
+                loadVerifications();
+            } catch (error) {
+                alert('Review failed');
+            }
+        }
+
+        loadVerifications();
+    </script>
+</body>
+</html>

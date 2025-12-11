@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex™ Shop • STU Campus Marketplace</title>
+    <meta
+      name="description"
+      content="Dex™ Shop - Buy & sell safely within STU campus. Electronics, fashion, and more."
+    />
+    <link rel="icon" href="../DEX_FAVICON/favicon.png" type="image/x-icon" />
+
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Quicksand:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <link rel="stylesheet" href="assets/css/Dex-shop.css" />
+  
+    <script>
+      // Global API Configuration
+      window.API_BASE_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+        ? 'http://localhost:5000' 
+        : 'https://api.yourdomain.com';
+      
+      window.DEX_CONFIG = {
+        API_BASE_URL: window.API_BASE_URL,
+        WS_URL: window.API_BASE_URL.replace('http', 'ws'),
+        MAX_FILE_SIZE: 10 * 1024 * 1024,
+        ALLOWED_FILE_TYPES: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp']
+      };
+    </script>
+  </head>
+
+  <body>
+    <div class="ptr-indicator" id="ptr">Pull to refresh...</div>
+    <!-- Offline Indicator -->
+    <div class="offline-banner" id="offline-banner">
+      <i class="fas fa-wifi-slash"></i>
+      <span>You're offline - viewing cached products</span>
+    </div>
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="spinner"></div>
+      <div class="preload-gallery">
+        <img
+          src="../DEX_HOMEPAGES/sample_products/Phones/vojtech-bruzek-J82GxqnwKSs-unsplash.jpg"
+          alt="Phone"
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          src="../DEX_HOMEPAGES/sample_products/T-shirt/robert-richman-vcTKFYNZop4-unsplash.jpg"
+          alt="T-shirt"
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          src="../DEX_HOMEPAGES/sample_products/Headsets/robert-torres-oGK9QxOwMAU-unsplash.jpg"
+          alt="Headset"
+          loading="lazy"
+          decoding="async"
+        />
+        <img
+          src="../DEX_HOMEPAGES/sample_products/Laptops/olena-bohovyk-1S_c_O_glv4-unsplash.jpg"
+          alt="Laptop"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
+      <h1>Dex™</h1>
+    </div>
+
+    <!-- Header -->
+    <header>
+      <div class="header-bar">
+        <h1 id="company-name"><a href="../Dex-home.html">Dex™</a></h1>
+
+        <nav>
+          <a href="../Dex-home.html">Home</a>
+          <a href="#" class="active">Shop</a>
+          <a href="../DEX_CONTACT/Dex-contact.html">Contact</a>
+        </nav>
+
+        <div id="header-utils">
+          <!-- Mobile Menu Toggle -->
+          <button class="mobile-menu-toggle" id="menuToggle">
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <!-- Unified "Log in Role" Button + Dropdown (Works on ALL screen sizes) -->
+          <div class="login-role-container">
+            <button id="loginRoleTrigger">
+              <i class="fas fa-user-circle"></i>
+              <span>Log in</span>
+              <i class="fas fa-chevron-down chevron"></i>
+            </button>
+
+            <div id="loginRoleDropdown">
+              <a href="REGISTRY_PAGES/Sign_in.html" class="role-option buyer">
+                <i class="fas fa-shopping-bag"></i>
+                Sign in as Buyer
+              </a>
+              <a
+                href="REGISTRY_PAGES/Seller_sign_in.html"
+                class="role-option seller"
+              >
+                <i class="fas fa-store"></i>
+                Sell on Dex™
+                <i class="fas fa-crown premium-icon"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- Notification Bell (only shows when logged in - your existing logic will handle it) -->
+          <div id="notificationBtn" style="display: none">
+            <i class="fas fa-bell"></i>
+            <span id="notificationBadge" style="display: none">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="overlay"></div>
+    </header>
+
+    <!-- Notification Sidebar -->
+    <div id="notificationSidebar">
+      <div class="notif-header">
+        <h3>Notifications</h3>
+        <button id="clearAllBtn">Clear All</button>
+      </div>
+      <div id="notificationList"></div>
+      <div id="notifEmptyState" style="display: none">
+        <i class="fas fa-bell-slash"></i>
+        <p>No new notifications</p>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <section id="hero" class="section">
+      <div class="hero-slider">
+        <div
+          class="hero-slide active"
+          style="background-image: url('images/hero1.webp')"
+        ></div>
+        <div
+          class="hero-slide"
+          style="background-image: url('images/hero2.webp')"
+        ></div>
+        <div
+          class="hero-slide"
+          style="background-image: url('images/hero3.webp')"
+        ></div>
+      </div>
+
+      <div class="hero-content">
+        <h2>Buy & Sell Easily at STU</h2>
+        <p>Safe • Fast • Student-Focused Marketplace</p>
+        <button class="btn-primary" id="shopNowBtn">Shop Now</button>
+      </div>
+
+      <div class="categories-main">
+        <div class="category-card" onclick="location.href='/shop/electronics'">
+          <i class="fas fa-laptop"></i>
+          <div>Electronics</div>
+        </div>
+        <div class="category-card" onclick="location.href='/shop/fashion'">
+          <i class="fas fa-tshirt"></i>
+          <div>Fashion</div>
+        </div>
+        <div class="category-card" disabled title="Coming Soon">
+          <i class="fas fa-building"></i>
+          <div>Hostels <small>(Soon)</small></div>
+        </div>
+      </div>
+
+      <div class="scroll-chevron"><i class="fas fa-chevron-down"></i></div>
+      <div class="hero-dots"></div>
+    </section>
+
+    <!-- Shop -->
+    <section id="shop" class="section">
+      <div class="page-wrap">
+        <!-- Desktop & Mobile Sidebar — CLEAN & FULLY FUNCTIONAL -->
+        <aside class="sidebar desktop-only">
+          <!-- Recently Viewed -->
+          <div class="recently-viewed" id="recentlyViewed" style="display:none;">
+            <h4><i class="fas fa-history"></i> Recently Viewed</h4>
+            <div id="recentlyViewedList"></div>
+          </div>
+          <h3><i class="fas fa-filter"></i> Filters</h3>
+
+          <!-- Main Category -->
+          <div class="filter-group">
+            <h4>Category</h4>
+            <label
+              ><input type="radio" name="mainCat" value="all" checked /> All
+              Items</label
+            >
+            <label
+              ><input type="radio" name="mainCat" value="electronics" />
+              Electronics</label
+            >
+            <label
+              ><input type="radio" name="mainCat" value="fashion" />
+              Fashion</label
+            >
+          </div>
+
+          <!-- Subcategory (appears when category selected) -->
+          <div
+            class="filter-group"
+            id="subcategoryFilter"
+            style="display: none"
+          >
+            <h4>Subcategory</h4>
+            <div id="subcategoryOptions"></div>
+          </div>
+
+          <!-- Price Range -->
+          <div class="filter-group">
+            <h4>Price Range</h4>
+            <div class="price-range dual">
+              <div class="dual-slider-container">
+                <div class="slider-track"></div>
+                <div class="slider-range"></div>
+                <input
+                  type="range"
+                  class="range-input"
+                  id="priceMin"
+                  min="0"
+                  max="100000"
+                  value="0"
+                />
+                <input
+                  type="range"
+                  class="range-input"
+                  id="priceMax"
+                  min="0"
+                  max="100000"
+                  value="100000"
+                />
+              </div>
+              <div class="price-display dual">
+                <span id="priceRangeText">Any price</span>
+              </div>
+              <div class="price-inputs">
+                <input type="text" id="minPriceInput" placeholder="Min" />
+                <span>–</span>
+                <input type="text" id="maxPriceInput" placeholder="Max" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Condition -->
+          <!-- Condition -->
+          <div class="filter-group">
+            <h4>Condition</h4>
+            <label
+              ><input
+                type="checkbox"
+                class="condition-filter"
+                id="cond_new"
+                value="new"
+              />
+              New</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                class="condition-filter"
+                id="cond_used"
+                value="used"
+              />
+              Used</label
+            >
+          </div>
+
+          <!-- Gender (Fashion only) -->
+          <div class="filter-group" id="genderFilter" style="display: none">
+            <h4>Gender</h4>
+            <label
+              ><input
+                type="checkbox"
+                class="gender-filter"
+                id="gender_men"
+                value="men"
+              />
+              Men</label
+            >
+            <label
+              ><input
+                type="checkbox"
+                class="gender-filter"
+                id="gender_women"
+                value="women"
+              />
+              Women</label
+            >
+          </div>
+
+          <!-- Dynamic Specs -->
+          <div id="dynamicSpecsContainer"></div>
+
+          <!-- Buttons -->
+          <div class="filter-actions">
+            <button id="applyFiltersBtn" class="btn-primary">
+              Apply Filters
+            </button>
+            <button id="resetFiltersBtn">Reset All</button>
+          </div>
+        </aside>
+
+        <!-- Mobile Filter Button -->
+        <button id="mobileFilterBtn" class="mobile-filter-toggle">
+          <i class="fas fa-filter"></i> Filters
+        </button>
+
+        <!-- Main Content -->
+        <section class="main-content">
+          <!-- Active Filters -->
+          <div id="activeFilters" class="active-filters" style="display:none;"></div>
+
+          <div class="content-head">
+            <div class="search-container">
+              <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input
+                  type="text"
+                  class="search-input"
+                  id="searchInput"
+                  placeholder="Search phone, hoodie, charger..."
+                  autocomplete="off"
+                />
+                <button
+                  class="clear-search"
+                  id="clearSearch"
+                  style="display: none"
+                >
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              <div class="search-suggestions" id="suggestions"></div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:1rem;">
+              <div id="productCount" style="color:#aaa;font-size:0.9rem;"></div>
+              <div style="display:flex;align-items:center;gap:0.5rem;">
+                <label for="sortSelect" style="color:#aaa;font-size:0.9rem;">Sort by:</label>
+                <select id="sortSelect" style="padding:8px 12px;border-radius:8px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);cursor:pointer;">
+                  <option value="newest">Newest First</option>
+                  <option value="price-low">Price: Low to High</option>
+                  <option value="price-high">Price: High to Low</option>
+                  <option value="popular">Most Popular</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <!-- Stats Bar -->
+          <div class="stats-bar">
+            <div class="stat-item">
+              <i class="fas fa-box"></i>
+              <div>
+                <span class="stat-number" id="totalProducts">0</span>
+                <span class="stat-label">Products</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-store"></i>
+              <div>
+                <span class="stat-number" id="totalSellers">0</span>
+                <span class="stat-label">Active Sellers</span>
+              </div>
+            </div>
+            <div class="stat-item">
+              <i class="fas fa-star"></i>
+              <div>
+                <span class="stat-number">4.8</span>
+                <span class="stat-label">Rating</span>
+              </div>
+            </div>
+          </div>
+          <div
+            id="safetyTipsBanner"
+            style="
+              background: #fff;
+              color: #222;
+              padding: 22px 24px;
+              border-radius: 18px;
+              margin: 20px 0;
+              text-align: center;
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+              transition: all 0.7s ease;
+              position: relative;
+              overflow: hidden;
+              border: 1.4px solid #f0f0f0;
+            "
+          >
+            <!-- Floating alert ribbon for scam stories -->
+            <div
+              id="scamRibbon"
+              style="
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: #d32f2f;
+                color: #fff;
+                font-size: 0.7rem;
+                font-weight: 700;
+                padding: 4px 0;
+                letter-spacing: 0.5px;
+                opacity: 0;
+                transition: opacity 0.6s ease;
+              "
+            >
+              ⚠️ REAL CAMPUS SCAM STORY ⚠️
+            </div>
+
+            <div
+              id="tipIcon"
+              style="
+                font-size: 2rem;
+                margin-bottom: 10px;
+                opacity: 0.95;
+                transition: all 0.6s ease;
+              "
+            ></div>
+
+            <div
+              style="
+                font-weight: 700;
+                font-size: 1.15rem;
+                margin-bottom: 10px;
+                background: linear-gradient(90deg, #d32f2f, #f73378);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                letter-spacing: 0.3px;
+              "
+            >
+              Don’t Get Scammed on Campus
+            </div>
+
+            <p
+              id="tipText"
+              style="
+                margin: 0 0 14px 0;
+                font-weight: 600;
+                line-height: 1.55;
+                font-size: 1.02rem;
+                transition: opacity 0.8s ease;
+                min-height: 52px;
+              "
+            ></p>
+
+            <div
+              style="
+                font-size: 0.88rem;
+                color: #d32f2f;
+                font-weight: 700;
+                letter-spacing: 0.4px;
+              "
+            >
+              <i class="fas fa-skull-crossbones" style="margin-right: 6px"></i>
+              SCAM ALERT • Tip
+              <span id="tipCounter" style="font-weight: 800">1</span>
+              <span style="opacity: 0.7">of 30</span>
+              <span style="margin-left: 8px; font-size: 0.8rem; opacity: 0.8">
+                Updated Nov 2025 • UNILAG • OAU • UNN • UI • UNIBEN
+              </span>
+            </div>
+          </div>
+          <div class="product-grid" id="productGrid"></div>
+          <div class="empty" id="emptyState" hidden>
+            No products found<br />Try adjusting your search or filters.
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <!-- Quick Order Modal -->
+    <div id="orderModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:10000;align-items:center;justify-content:center;">
+      <div style="background:#fff;border-radius:16px;padding:2rem;max-width:400px;width:90%;position:relative;">
+        <button id="closeOrderModal" style="position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:1.5rem;cursor:pointer;color:#666;">&times;</button>
+        <h3 style="margin:0 0 1.5rem 0;color:#333;"><i class="fas fa-shopping-cart"></i> Place Order</h3>
+        <form id="quickOrderForm">
+          <input type="hidden" id="orderProductId">
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;margin-bottom:0.5rem;color:#666;font-weight:600;">Your Name</label>
+            <input type="text" id="orderName" required style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;margin-bottom:0.5rem;color:#666;font-weight:600;">Phone Number</label>
+            <input type="tel" id="orderPhone" required style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;">
+          </div>
+          <div style="margin-bottom:1rem;">
+            <label style="display:block;margin-bottom:0.5rem;color:#666;font-weight:600;">Delivery Address</label>
+            <textarea id="orderAddress" required rows="3" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;resize:vertical;"></textarea>
+          </div>
+          <div style="margin-bottom:1.5rem;">
+            <label style="display:block;margin-bottom:0.5rem;color:#666;font-weight:600;">Additional Notes (Optional)</label>
+            <textarea id="orderNotes" rows="2" style="width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:8px;font-size:1rem;resize:vertical;"></textarea>
+          </div>
+          <button type="submit" id="submitOrderBtn" style="width:100%;padding:1rem;background:linear-gradient(135deg,#2ecc71,#27ae60);color:#fff;border:none;border-radius:8px;font-size:1rem;font-weight:700;cursor:pointer;">
+            <i class="fas fa-check-circle"></i> Confirm Order
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Mobile Filter Sidebar (Hidden by default, slides in from right) -->
+    <div id="filterSidebar">
+      <button id="closeFilterSidebar"><i class="fas fa-times"></i></button>
+      <div class="sidebar">
+        <h3><i class="fas fa-filter"></i> Filters</h3>
+
+        <!-- Same exact filters as desktop -->
+        <div class="filter-group">
+          <h4>Category</h4>
+          <label
+            ><input type="radio" name="mainCat" value="all" checked /> All
+            Items</label
+          >
+          <label
+            ><input type="radio" name="mainCat" value="electronics" />
+            Electronics</label
+          >
+          <label
+            ><input type="radio" name="mainCat" value="fashion" />
+            Fashion</label
+          >
+        </div>
+
+        <div class="filter-group" id="subcategoryFilter" style="display: none">
+          <h4>Subcategory</h4>
+          <div id="subcategoryOptions"></div>
+        </div>
+
+        <div class="filter-group">
+          <h4>Price Range</h4>
+          <div class="price-range dual">
+            <div class="dual-slider-container">
+              <div class="slider-track"></div>
+              <div class="slider-range"></div>
+              <input
+                type="range"
+                class="range-input"
+                id="priceMinMobile"
+                min="0"
+                max="100000"
+                value="0"
+              />
+              <input
+                type="range"
+                class="range-input"
+                id="priceMaxMobile"
+                min="0"
+                max="100000"
+                value="100000"
+              />
+            </div>
+            <div class="price-display dual">
+              <span id="priceRangeTextMobile">Any price</span>
+            </div>
+            <div class="price-inputs">
+              <input type="text" id="minPriceInputMobile" placeholder="Min" />
+              <span>–</span>
+              <input type="text" id="maxPriceInputMobile" placeholder="Max" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Condition -->
+        <div class="filter-group">
+          <h4>Condition</h4>
+          <label
+            ><input
+              type="checkbox"
+              class="condition-filter"
+              id="cond_new_mobile"
+              value="new"
+            />
+            New</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="condition-filter"
+              id="cond_used_mobile"
+              value="used"
+            />
+            Used</label
+          >
+        </div>
+
+        <!-- Gender -->
+        <div class="filter-group" id="genderFilterMobile" style="display: none">
+          <h4>Gender</h4>
+          <label
+            ><input
+              type="checkbox"
+              class="gender-filter"
+              id="gender_men_mobile"
+              value="men"
+            />
+            Men</label
+          >
+          <label
+            ><input
+              type="checkbox"
+              class="gender-filter"
+              id="gender_women_mobile"
+              value="women"
+            />
+            Women</label
+          >
+        </div>
+
+        <div id="dynamicSpecsContainerMobile"></div>
+
+        <div class="filter-actions">
+          <button id="applyFiltersBtnMobile" class="btn-primary">
+            Apply Filters
+          </button>
+          <button id="resetFiltersBtnMobile">Reset All</button>
+        </div>
+      </div>
+    </div>
+
+    <footer
+      style="
+        padding: 60px 20px;
+        background: rgba(0, 0, 0, 0.9);
+        text-align: center;
+      "
+    >
+      <p style="font-size: 1.1rem; margin: 10px 0">
+        <i class="fas fa-heart" style="color: #e74c3c"></i>
+        Made by STU students, for STU students
+      </p>
+      <p style="color: #aaa; font-size: 0.95rem">
+        No fees • No commission • Meet on campus • Trade safely
+      </p>
+      <p style="margin-top: 20px; color: #666">
+        © 2025 Dex™ • Building trust, one deal at a time.
+      </p>
+    </footer>
+    <script type="module" src="assets/js/config.js"></script>
+    <script src="assets/js/purchase-verification.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+  </body>
+</html>

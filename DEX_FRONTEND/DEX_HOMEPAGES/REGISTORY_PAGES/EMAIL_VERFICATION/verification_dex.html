@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dex™ Email Verification</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../../../DEX_FAVICON/favicon.png"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(rgba(0, 50, 0, 0.6), rgba(0, 0, 0, 0.7)),
+          url("../../Images/pexels-ann-h-45017-2646531.webp") center/cover
+            no-repeat;
+        color: #fff;
+      }
+      form {
+        background: rgba(0, 0, 0, 0.45);
+        padding: 30px;
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        width: 100%;
+        max-width: 400px;
+        backdrop-filter: blur(4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+        text-align: center;
+      }
+      h2 {
+        color: #69d369;
+        font-size: 28px;
+      }
+      input {
+        width: 100%;
+        padding: 12px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+        background: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        font-size: 14px;
+        text-align: center;
+      }
+      button {
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        background: #008000;
+        color: #fff;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      button:hover {
+        background: #70bb70;
+        transform: scale(1.02);
+      }
+      #resendBtn {
+        background: #444;
+        font-size: 14px;
+      }
+      .message {
+        font-size: 14px;
+        min-height: 20px;
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <form id="verificationForm">
+      <h2>Dex™ Email Verification ✉️</h2>
+      <p id="instructionText">
+        Please enter the 6-character code sent to your email 📩
+      </p>
+      <input
+        type="text"
+        id="verificationCode"
+        maxlength="6"
+        placeholder="Enter code here"
+        required
+      />
+      <button type="submit">✅ Verify</button>
+      <button type="button" id="resendBtn">🔁 Resend Code</button>
+      <div class="message" id="message"></div>
+    </form>
+
+    <script>
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get("token");
+      const role = urlParams.get("role");
+      const email = urlParams.get("email");
+      const form = document.getElementById("verificationForm");
+      const codeInput = document.getElementById("verificationCode");
+      const messageDiv = document.getElementById("message");
+      const resendBtn = document.getElementById("resendBtn");
+      const instructionText = document.getElementById("instructionText");
+
+      // ================= GUARD =================
+      if (!token || !role) {
+        messageDiv.innerHTML = `
+          ⚠️ <strong>Invalid or missing verification link.</strong><br><br>
+          If you're trying to verify your account:<br>
+          • Check your email for the verification link<br>
+          • Make sure you clicked the full link<br><br>
+          <a href="../seller_sign_in.html" style="color: #4CAF50; text-decoration: underline;">← Go to Login</a> |
+          <a href="../seller_register.html" style="color: #4CAF50; text-decoration: underline;">Register →</a>
+        `;
+        messageDiv.style.color = "red";
+        form
+          .querySelectorAll("input, button")
+          .forEach((el) => (el.disabled = true));
+      }
+
+      // ================= VERIFY EMAIL (shared) =================
+      async function verifyCode(autoMode = false) {
+        const code = autoMode ? null : codeInput.value.trim();
+
+        const endpoint =
+          role === "seller"
+            ? "http://localhost:5000/api/sellers/verify-email"
+            : "http://localhost:5000/api/buyers/verify-email";
+
+        try {
+          const body = autoMode ? { token } : { token, code };
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+          const data = await res.json();
+          messageDiv.textContent =
+            data.message || "❌ Verification failed. Please try again!";
+          messageDiv.style.color = res.ok ? "#4CAF50" : "red";
+
+          if (res.ok) {
+            // ✅ Notify backend
+            try {
+              await fetch("http://localhost:5000/api/verification/notify", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, role }),
+              });
+            } catch (notifyErr) {
+              console.warn("⚠️ Could not notify backend:", notifyErr);
+            }
+
+            // ✅ Save verification flag
+            localStorage.setItem(
+              "verificationStatus",
+              JSON.stringify({
+                verified: true,
+                email,
+                role,
+                time: Date.now(),
+              })
+            );
+
+            // ✅ Success UI
+            messageDiv.innerHTML = `
+          🎉 <strong>Awesome!</strong><br>
+          Your <b>${role}</b> account has been verified successfully! ✅<br>
+          Redirecting you to Dex... 🚀
+        `;
+            messageDiv.style.color = "#4CAF50";
+
+            // ✅ Redirect user to appropriate next step
+            setTimeout(() => {
+              if (role === "seller") {
+                // Redirect to seller login with success message
+                window.location.href = "../../REGISTRY_PAGES/seller_sign_in.html?verified=true";
+              } else if (role === "buyer") {
+                window.location.href = `../Sign_in.html?verified=true`;
+              } else {
+                window.location.href = `../Sign_in.html?verified=true`;
+              }
+            }, 3000);
+          }
+        } catch (err) {
+          console.error(err);
+          messageDiv.textContent = "💥 Server error. Please try again later.";
+          messageDiv.style.color = "red";
+        }
+      }
+
+      // ================= MANUAL VERIFY (buyers) =================
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        verifyCode(false);
+      });
+
+      // ================= AUTO VERIFY (sellers only) =================
+      window.addEventListener("DOMContentLoaded", async () => {
+        if (role === "seller" && token) {
+          instructionText.textContent =
+            "⏳ Verifying your seller account automatically... Please wait... 💫";
+          codeInput.style.display = "none";
+          form.querySelector("button[type='submit']").style.display = "none";
+          resendBtn.style.display = "none";
+
+          try {
+            // 🧠 Try auto verification using token only
+            const res = await fetch(
+              "http://localhost:5000/api/sellers/verify-email",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ token }), // ✅ token-only verification
+              }
+            );
+
+            const data = await res.json();
+
+            if (res.ok) {
+              // ✅ Success message
+              messageDiv.innerHTML = `
+            🎉 Verified! ${data.message || "Your account is now active!"} 🥳<br>
+            Redirecting to Dex... 🚀
+          `;
+              messageDiv.style.color = "#4CAF50";
+
+              localStorage.setItem(
+                "verificationStatus",
+                JSON.stringify({
+                  verified: true,
+                  email,
+                  role,
+                  time: Date.now(),
+                })
+              );
+
+              setTimeout(() => {
+                // Redirect to seller login after successful verification
+                window.location.href = "../../REGISTRY_PAGES/seller_sign_in.html?verified=true";
+              }, 2500);
+            } else {
+              // ❌ Token expired or invalid, fallback to manual
+              messageDiv.textContent =
+                data.message ||
+                "⚠️ Verification failed. Please enter the code from your email.";
+              messageDiv.style.color = "red";
+              instructionText.textContent =
+                "Enter the 6-character code sent to your email 📩";
+              codeInput.style.display = "";
+              form.querySelector("button[type='submit']").style.display = "";
+              resendBtn.style.display = "";
+            }
+          } catch (err) {
+            console.error("Auto verify error:", err);
+            messageDiv.textContent =
+              "💥 Server error during auto verification. Please enter your code manually.";
+            messageDiv.style.color = "red";
+            codeInput.style.display = "";
+            form.querySelector("button[type='submit']").style.display = "";
+            resendBtn.style.display = "";
+          }
+        }
+
+        // 🌈 Buyer-friendly UI enhancements
+        if (role === "buyer") {
+          instructionText.textContent =
+            "🔐 Enter the 6-digit verification code sent to your email 📧";
+          codeInput.placeholder = "Enter verification code ✉️";
+          resendBtn.textContent = "🔁 Resend Code";
+          messageDiv.textContent =
+            "🕒 Awaiting your verification code... Check your inbox! 💌";
+          messageDiv.style.color = "#555";
+        }
+      });
+
+      // ================= RESEND CODE =================
+      resendBtn.addEventListener("click", async () => {
+        if (!role) return;
+
+        const endpoint =
+          role === "seller"
+            ? "http://localhost:5000/api/sellers/resend-verification"
+            : "http://localhost:5000/api/buyers/resend-verification";
+
+        const body = role === "seller" ? { email } : { token };
+
+        if (role === "seller" && !email) {
+          messageDiv.textContent = "⚠️ Missing email in verification link.";
+          messageDiv.style.color = "red";
+          return;
+        }
+
+        resendBtn.disabled = true;
+        resendBtn.textContent = "⏳ Resending...";
+
+        try {
+          const res = await fetch(endpoint, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+          });
+
+          const data = await res.json();
+          messageDiv.textContent =
+            data.message || "✅ Verification code resent successfully! 📩";
+          messageDiv.style.color = res.ok ? "#4CAF50" : "red";
+        } catch (err) {
+          console.error(err);
+          messageDiv.textContent = "💥 Server error. Could not resend code.";
+          messageDiv.style.color = "red";
+        } finally {
+          setTimeout(() => {
+            resendBtn.disabled = false;
+            resendBtn.textContent = "🔁 Resend Code";
+          }, 5000);
+        }
+      });
+    </script>
+  </body>
+</html>

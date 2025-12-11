@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="../../DEX_FAVICON/favicon.png" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;700&family=Fredoka+One&display=swap"
+      rel="stylesheet"
+    />
+    <title>Dex™ Sign Up</title>
+
+    <style>
+      /* 🌍 GLOBAL */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Quicksand", sans-serif;
+        min-height: 100vh;
+        color: #fff;
+        display: flex;
+        flex-direction: column;
+        background: linear-gradient(rgba(0, 40, 0, 0.8), rgba(0, 0, 0, 0.9)),
+          url("../Images/pexels-ann-h-45017-2646531.webp") center/cover
+            no-repeat;
+        animation: fadeInBody 1s ease forwards;
+      }
+
+      @keyframes fadeInBody {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* 🌿 HEADER */
+      .main-header {
+        background: rgba(0, 128, 0, 0.25);
+        backdrop-filter: blur(8px);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px 32px;
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        border-bottom: 1px solid rgba(112, 187, 112, 0.3);
+        transition: background 0.3s ease, padding 0.3s ease;
+      }
+
+      h1#company-name a {
+        font-family: "Fredoka One", cursive;
+        font-size: 32px;
+        color: #fff;
+        text-decoration: none;
+        transition: all 0.3s ease;
+      }
+
+      h1#company-name a:hover {
+        text-shadow: 0 0 12px #70bb70;
+        letter-spacing: 1px;
+      }
+
+      nav ul {
+        list-style: none;
+        display: flex;
+        gap: 22px;
+      }
+
+      nav a {
+        text-decoration: none;
+        font-size: 15px;
+        font-weight: 500;
+        color: #fff;
+        padding: 8px 14px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      nav a:hover,
+      nav a.active {
+        background-color: #70bb70;
+        box-shadow: 0 0 10px rgba(112, 187, 112, 0.4);
+      }
+
+      .menu-toggle {
+        display: none;
+        font-size: 28px;
+        cursor: pointer;
+        color: #fff;
+        transition: transform 0.3s ease;
+      }
+
+      .menu-toggle:hover {
+        transform: rotate(90deg);
+        color: #70bb70;
+      }
+
+      /* 📱 MOBILE MENU */
+      @media (max-width: 480px) {
+        .menu-toggle {
+          display: block;
+        }
+
+        nav {
+          position: fixed;
+          top: 70px;
+          right: -100%;
+          background: rgba(0, 0, 0, 0.95);
+          width: 50%;
+          height: calc(100% - 70px);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: right 0.5s ease;
+          backdrop-filter: blur(8px);
+          border-left: 1px solid rgba(112, 187, 112, 0.3);
+        }
+
+        nav.active {
+          right: 0;
+        }
+
+        nav ul {
+          flex-direction: column;
+          align-items: center;
+          gap: 25px;
+        }
+      }
+
+      /* 📜 FORM SECTION */
+      main {
+        flex: 1;
+        margin-top: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      form {
+        background: rgba(0, 0, 0, 0.45);
+        padding: 45px 35px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 460px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+        animation: fadeInForm 0.8s ease forwards;
+        backdrop-filter: blur(8px);
+      }
+
+      @keyframes fadeInForm {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      form h2 {
+        text-align: center;
+        font-weight: 700;
+        color: #70bb70;
+        margin-bottom: 10px;
+      }
+
+      .input-group {
+        position: relative;
+      }
+
+      .input-group i:not(.peek) {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: #bbb;
+        pointer-events: none;
+      }
+
+      .peek {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #bbb;
+        font-size: 18px;
+        transition: transform 0.3s ease, color 0.3s ease;
+      }
+
+      .peek:hover {
+        color: #70bb70;
+        transform: scale(1.2);
+      }
+
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 16px 45px 16px 40px;
+        border-radius: 10px;
+        border: 1px solid transparent;
+        outline: none;
+        background: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        font-size: 14px;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus,
+      .input-group select:focus {
+        border-color: #70bb70;
+        background: rgba(0, 0, 0, 0.45);
+        box-shadow: 0 0 10px rgba(112, 187, 112, 0.4);
+      }
+
+      label {
+        position: absolute;
+        left: 40px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #bbb;
+        font-size: 14px;
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+
+      .input-group input:focus + label,
+      .input-group input:not(:placeholder-shown) + label,
+      .input-group select:focus + label,
+      .input-group select:not([value=""]) + label {
+        top: -6px;
+        left: 35px;
+        font-size: 12px;
+        color: #70bb70;
+        background: rgba(0, 0, 0, 0.85);
+        padding: 0 6px;
+        border-radius: 4px;
+      }
+
+      /* 🔋 PASSWORD STRENGTH */
+      #strengthBar {
+        height: 6px;
+        width: 100%;
+        border-radius: 6px;
+        background: #333;
+        overflow: hidden;
+        margin-top: -6px;
+        margin-bottom: 10px;
+      }
+
+      #strengthBar div {
+        height: 100%;
+        width: 0;
+        background: #ccc;
+        transition: width 0.4s ease, background 0.4s ease;
+      }
+
+      /* 🟩 BUTTON */
+      form button {
+        padding: 14px;
+        border: none;
+        border-radius: 12px;
+        font-size: 16px;
+        background: linear-gradient(135deg, #007a00, #00c853);
+        color: #fff;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.35s ease;
+      }
+
+      form button:hover {
+        background: linear-gradient(135deg, #4ae54a, #70bb70);
+        transform: scale(1.06);
+        box-shadow: 0 0 18px rgba(112, 187, 112, 0.6);
+      }
+
+      form a {
+        text-decoration: none;
+        color: #4ae54a;
+        font-weight: 500;
+      }
+
+      form a:hover {
+        text-decoration: underline;
+        color: #70bb70;
+      }
+
+      /* 🌈 SUCCESS OVERLAY */
+      #overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 20, 0, 0.9);
+        display: none;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 2000;
+      }
+
+      #overlay.active {
+        display: flex;
+        animation: fadeIn 0.4s ease forwards;
+      }
+
+      .overlay-content {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 40px 50px;
+        border-radius: 16px;
+        text-align: center;
+        color: #fff;
+        box-shadow: 0 0 25px rgba(0, 255, 100, 0.3);
+        animation: popIn 0.5s ease forwards;
+      }
+
+      .overlay-content h2 {
+        font-size: 22px;
+        margin-bottom: 10px;
+        color: #70bb70;
+      }
+
+      .overlay-content p {
+        margin-bottom: 20px;
+        font-size: 15px;
+      }
+
+      .continue-btn {
+        background: linear-gradient(135deg, #00b300, #70bb70);
+        color: #fff;
+        border: none;
+        padding: 12px 28px;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .continue-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(112, 187, 112, 0.6);
+      }
+
+      @keyframes popIn {
+        from {
+          transform: scale(0.8);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      /* 🦶 FOOTER */
+      footer {
+        background: rgba(0, 128, 0, 0.2);
+        backdrop-filter: blur(6px);
+        text-align: center;
+        padding: 18px 0;
+        font-size: 14px;
+        border-top: 1px solid rgba(112, 187, 112, 0.3);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      /* ✨ ICON ANIMATIONS */
+      @keyframes bounceIcon {
+        0%,
+        100% {
+          transform: translateY(-50%) scale(1);
+        }
+        50% {
+          transform: translateY(-60%) scale(1.15);
+        }
+      }
+
+      @keyframes bounceMenu {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.15);
+        }
+      }
+
+      /* 🪩 Animate all input icons */
+      .input-group i:not(.peek) {
+        animation: bounceIcon 2.2s ease-in-out infinite;
+      }
+
+      /* 👁️ Password peek icon bounce */
+      .peek {
+        animation: bounceIcon 2.5s ease-in-out infinite;
+      }
+
+      /* 🧭 Navbar menu icon bounce */
+      .menu-toggle {
+        animation: bounceMenu 2.3s ease-in-out infinite;
+      }
+
+      /* 🌿 Header nav hover bounce */
+      nav a:hover i {
+        animation: bounceIcon 0.6s ease-in-out;
+      }
+
+      .input-group:nth-child(1) i {
+        animation-delay: 0s;
+      }
+      .input-group:nth-child(2) i {
+        animation-delay: 0.2s;
+      }
+      .input-group:nth-child(3) i {
+        animation-delay: 0.4s;
+      }
+      .input-group:nth-child(4) i {
+        animation-delay: 0.6s;
+      }
+      .input-group:nth-child(5) i {
+        animation-delay: 0.8s;
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="main-header">
+      <h1 id="company-name"><a href="../../Dex-home.html">Dex™</a></h1>
+      <i class="fa fa-bars menu-toggle" id="menuToggle"></i>
+      <nav id="navMenu">
+        <ul id="navList">
+          <li><a href="../../Dex-home.html">Home</a></li>
+          <li><a href="../../DEX_HOMEPAGES/Dex-shop.html">Shop</a></li>
+          <li><a href="../../DEX_INFO/Dex-about.html">About</a></li>
+          <li><a href="../../DEX_CONTACT/Dex-contact.html">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <form id="signupForm">
+        <h2>🛡️ Join Dex - Safe Campus Marketplace</h2>
+        <p style="text-align: center; color: #aaa; font-size: 0.9rem; margin-bottom: 1rem;">Create your secure buyer account</p>
+
+        <div class="input-group">
+          <i class="fa fa-user"></i>
+          <input type="text" name="fullName" placeholder=" " required />
+          <label>Full Name</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-envelope"></i>
+          <input type="email" name="email" placeholder=" " required />
+          <label>Email</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-id-badge"></i>
+          <input type="text" name="index_num" placeholder=" " required />
+          <label>Index Number</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-map-marker-alt"></i>
+          <input
+            id="address"
+            name="address"
+            type="text"
+            placeholder=" "
+            required
+          />
+          <label>Address</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fa fa-venus-mars"></i>
+          <select name="gender" required>
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+          </select>
+          <label>Gender</label>
+        </div>
+
+        <div class="input-group">
+          <i class="fab fa-whatsapp" style="color: #25d366;"></i>
+          <input type="tel" name="phone" placeholder=" " pattern="[0-9+\s()\-]{10,15}" title="Enter a valid phone number (10-15 digits)" required />
+          <label>WhatsApp Number</label>
+        </div>
+        <p style="font-size: 0.8rem; color: #aaa; margin-top: -15px; margin-bottom: 15px; text-align: center;">
+          📱 <strong style="color: #25d366;">Use your WhatsApp number</strong> - we'll verify it via WhatsApp for security
+        </p>
+
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder=" "
+            required
+          />
+          <label>Password</label>
+          <i class="fa fa-eye peek" id="peekPassword"></i>
+        </div>
+
+        <div id="strengthBar"><div></div></div>
+
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <input
+            type="password"
+            id="confirmPassword"
+            name="confirmPassword"
+            placeholder=" "
+            required
+          />
+          <label>Confirm Password</label>
+          <i class="fa fa-eye peek" id="peekConfirm"></i>
+        </div>
+
+        <!-- Safety Agreement -->
+        <div style="background: rgba(110, 187, 112, 0.1); padding: 1rem; border-radius: 8px; border-left: 4px solid #70bb70; margin: 1rem 0;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <input type="checkbox" id="safetyAgreement" required style="margin-top: 0.2rem; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;" />
+            <label for="safetyAgreement" style="cursor: pointer; font-size: 0.85rem; color: #ddd; position: static; transform: none;">I agree to follow <strong style="color: #70bb70;">Dex Safety Guidelines</strong>: meet in public campus locations, verify items before payment, and report suspicious activity.</label>
+          </div>
+        </div>
+
+        <!-- Terms Agreement -->
+        <div style="margin: 1rem 0;">
+          <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+            <input type="checkbox" id="termsAgreement" required style="margin-top: 0.2rem; width: 16px; height: 16px; cursor: pointer; flex-shrink: 0;" />
+            <label for="termsAgreement" style="cursor: pointer; font-size: 0.85rem; color: #ddd; position: static; transform: none;">I agree to the <a href="#" onclick="alert('Terms page would open here')" style="color: #70bb70; text-decoration: underline;">Terms of Service</a> and <a href="#" onclick="alert('Privacy page would open here')" style="color: #70bb70; text-decoration: underline;">Privacy Policy</a></label>
+          </div>
+        </div>
+
+        <!-- Hidden Admin Form -->
+        <div id="adminForm" style="display: none; background: rgba(255, 0, 0, 0.1); border: 2px solid #ff4444; border-radius: 12px; padding: 20px; margin: 20px 0;">
+          <h3 style="color: #ff4444; text-align: center; margin-bottom: 15px;">👑 ADMIN REGISTRATION</h3>
+          <div class="input-group">
+            <i class="fa fa-crown" style="color: #ff4444;"></i>
+            <input type="text" name="adminSecret" placeholder=" " />
+            <label>Admin Secret Key</label>
+          </div>
+          <p style="font-size: 0.8rem; color: #ff9999; text-align: center; margin: 10px 0;">⚠️ Admin access will be granted upon successful registration</p>
+        </div>
+
+        <button type="submit" id="submitBtn">🛡️ Create Safe Account</button>
+
+        <!-- Secret Admin Code Input -->
+        <div style="text-align: center; margin: 15px 0;">
+          <input type="text" id="secretCode" placeholder="Enter secret code..." style="background: transparent; border: none; color: transparent; text-align: center; font-size: 0.8rem; width: 150px;" maxlength="10" />
+        </div>
+
+        <p style="text-align: center; color: #ddd; font-size: 0.95rem">
+          Already a seller?
+          <a href="Sign_in.html">Log in</a>.
+        </p>
+        
+        <!-- Admin Access Link -->
+        <div style="text-align: center; margin-top: 20px; padding: 10px; border-top: 1px solid rgba(112, 187, 112, 0.2);">
+          <a href="../../secret-dex-admin-2024/login.html" 
+             style="color: #666; font-size: 0.8rem; text-decoration: none; opacity: 0.7; transition: all 0.3s ease;"
+             onmouseover="this.style.color='#ff4444'; this.style.opacity='1';"
+             onmouseout="this.style.color='#666'; this.style.opacity='0.7';">
+            👑 Admin Access
+          </a>
+        </div>
+      </form>
+    </main>
+
+    <!-- 🌈 Verification Success Overlay -->
+    <div id="overlay">
+      <div class="overlay-content"></div>
+    </div>
+
+    <footer>
+      <p>&copy; 2025 Dex™. All rights reserved.</p>
+    </footer>
+
+    <script>
+      // 🌐 MENU TOGGLE
+      const menuToggle = document.getElementById("menuToggle");
+      const navMenu = document.getElementById("navMenu");
+
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        navMenu.classList.toggle("active");
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!navMenu.contains(e.target) && !menuToggle.contains(e.target)) {
+          navMenu.classList.remove("active");
+        }
+      });
+
+      document.querySelectorAll("#navList a").forEach((link) => {
+        link.addEventListener("click", () =>
+          navMenu.classList.remove("active")
+        );
+      });
+
+      // 👁️ Password toggle
+      const passwordField = document.getElementById("password");
+      const confirmField = document.getElementById("confirmPassword");
+      const peekPassword = document.getElementById("peekPassword");
+      const peekConfirm = document.getElementById("peekConfirm");
+      const strengthBar = document.querySelector("#strengthBar div");
+
+      function togglePeek(icon, field) {
+        const hidden = field.type === "password";
+        field.type = hidden ? "text" : "password";
+        icon.classList.toggle("fa-eye", !hidden);
+        icon.classList.toggle("fa-eye-slash", hidden);
+      }
+
+      peekPassword.addEventListener("click", () =>
+        togglePeek(peekPassword, passwordField)
+      );
+      peekConfirm.addEventListener("click", () =>
+        togglePeek(peekConfirm, confirmField)
+      );
+
+      // 💪 Password strength
+      passwordField.addEventListener("input", () => {
+        const val = passwordField.value;
+        let strength = 0;
+        if (val.length >= 6) strength++;
+        if (/[A-Z]/.test(val)) strength++;
+        if (/[0-9]/.test(val)) strength++;
+        if (/[\W]/.test(val)) strength++;
+        const widths = ["0", "25%", "50%", "75%", "100%"];
+        const colors = ["#ccc", "#ff3d00", "#ff9100", "#ffd600", "#00c853"];
+        strengthBar.style.width = widths[strength];
+        strengthBar.style.background = colors[strength];
+      });
+
+      // 🧠 Prefill form if returning from verification
+      const urlParams = new URLSearchParams(window.location.search);
+      const justVerified = urlParams.get("verified") === "true";
+      const verifiedEmail = urlParams.get("email");
+      const verifiedRole = urlParams.get("role");
+
+      if (justVerified && verifiedEmail && verifiedRole === "buyer") {
+        const savedData =
+          JSON.parse(localStorage.getItem("buyerSignupData")) || {};
+        const signupForm = document.getElementById("signupForm");
+
+        // Only refill form if we have saved signup data
+        if (signupForm && savedData.email === verifiedEmail) {
+          signupForm.fullName.value = savedData.name || "";
+          signupForm.email.value = savedData.email || "";
+          signupForm.phone.value = savedData.number || "";
+          signupForm.index_num.value = savedData.index_num || "";
+          signupForm.address.value = savedData.address || "";
+          signupForm.gender.value = savedData.gender || "";
+        }
+      }
+
+      // 🌈 Verification Success Overlay (Buyer)
+      window.addEventListener("load", () => {
+        const verifiedInfo = JSON.parse(
+          localStorage.getItem("verificationStatus")
+        );
+        if (
+          verifiedInfo &&
+          verifiedInfo.verified &&
+          verifiedInfo.role === "buyer"
+        ) {
+          const overlay = document.getElementById("overlay");
+          overlay.classList.add("active");
+          overlay.innerHTML = `
+        <div class="overlay-content">
+          <svg width="84" height="84" viewBox="0 0 52 52" aria-hidden="true">
+            <circle cx="26" cy="26" r="25" fill="none" stroke="#00c853" stroke-width="2"></circle>
+            <path d="M14 27l7 7 17-17" fill="none" stroke="#00c853" stroke-width="3"/>
+          </svg>
+          <h2>💚 Welcome, ${verifiedInfo.email.split("@")[0]}!</h2>
+          <p>Your buyer account is now verified ✅</p>
+          <button id="continueBtn" class="continue-btn">🌟 Continue</button>
+        </div>
+      `;
+          document
+            .getElementById("continueBtn")
+            .addEventListener("click", () => {
+              overlay.classList.remove("active");
+              localStorage.removeItem("verificationStatus");
+              localStorage.removeItem("buyerSignupData");
+              localStorage.removeItem("buyerToken");
+              window.location.href = "../PROFILE_PAGES/Buyer_profile.html";
+            });
+        }
+      });
+
+      // 🧹 Clean up verification flag safely
+      window.addEventListener("pageshow", () => {
+        localStorage.removeItem("verificationStatus");
+
+        const signupForm = document.getElementById("signupForm");
+        const hasSignupData = localStorage.getItem("buyerSignupData");
+        const fromVerification =
+          new URLSearchParams(window.location.search).get("verified") ===
+          "true";
+
+        // Only clear if it’s a brand new user (not from verification)
+        if (!hasSignupData && !fromVerification && signupForm) {
+          // Don't reset form to preserve checkbox states
+        }
+      });
+
+      // Secret Admin Code Detection
+      let isAdminMode = false;
+      const secretCode = document.getElementById('secretCode');
+      const adminForm = document.getElementById('adminForm');
+      const submitBtn = document.getElementById('submitBtn');
+      
+      secretCode.addEventListener('input', (e) => {
+        const code = e.target.value.toLowerCase();
+        if (code === 'dexadmin24') {
+          // Reveal admin form
+          adminForm.style.display = 'block';
+          submitBtn.textContent = '👑 Create Admin Account';
+          submitBtn.style.background = 'linear-gradient(135deg, #ff4444, #cc0000)';
+          isAdminMode = true;
+          
+          // Show success message
+          e.target.style.color = '#00ff00';
+          e.target.style.border = '1px solid #00ff00';
+          e.target.value = '✓ ADMIN MODE';
+          e.target.disabled = true;
+          
+          // Confetti effect
+          import('https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js')
+            .then(module => {
+              const confetti = module.default;
+              confetti({
+                particleCount: 50,
+                spread: 60,
+                origin: { y: 0.8 },
+                colors: ['#ff4444', '#ffff00', '#ffffff']
+              });
+            })
+            .catch(err => console.log('Confetti error:', err));
+        }
+      });
+
+      // Test checkbox functionality
+      document.getElementById('safetyAgreement').addEventListener('change', function() {
+        console.log('Safety checkbox:', this.checked);
+      });
+      
+      document.getElementById('termsAgreement').addEventListener('change', function() {
+        console.log('Terms checkbox:', this.checked);
+      });
+
+      // 📝 SIGN UP LOGIC
+      document
+        .getElementById("signupForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault();
+
+          // Safety and terms validation
+          const safetyChecked = document.getElementById('safetyAgreement').checked;
+          const termsChecked = document.getElementById('termsAgreement').checked;
+          
+          console.log('Safety:', safetyChecked, 'Terms:', termsChecked);
+          
+          if (!safetyChecked) {
+            alert('🛡️ Please agree to follow Dex Safety Guidelines to continue.');
+            return;
+          }
+
+          if (!termsChecked) {
+            alert('📜 Please agree to the Terms of Service and Privacy Policy.');
+            return;
+          }
+
+          // Password strength validation
+          const password = passwordField.value;
+          if (password.length < 8) {
+            alert('🔒 Password must be at least 8 characters long for security.');
+            return;
+          }
+          if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(password)) {
+            alert('🔒 Password must contain at least one uppercase letter, one lowercase letter, and one number.');
+            return;
+          }
+
+          if (passwordField.value !== confirmField.value) {
+            alert("⚠️ Passwords don’t match! Please check again.");
+            return;
+          }
+
+          const form = e.target;
+          const formData = {
+            name: form.fullName.value.trim(),
+            index_num: form.index_num.value.trim(),
+            address: form.address.value.trim(),
+            email: form.email.value.trim(),
+            password: passwordField.value.trim(),
+            gender: form.gender.value,
+            number: form.phone.value.trim(),
+            role: "buyer",
+            safetyAgreement: document.getElementById('safetyAgreement').checked,
+          };
+          
+          // Add admin secret if in admin mode
+          if (isAdminMode) {
+            const adminSecret = form.adminSecret?.value?.trim();
+            if (!adminSecret) {
+              alert('👑 Please enter the Admin Secret Key');
+              return;
+            }
+            formData.adminSecret = adminSecret;
+          }
+
+          try {
+            const res = await fetch(
+              "http://localhost:5000/api/buyers/register",
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+              }
+            );
+
+            let data;
+            try {
+              data = await res.json();
+            } catch (jsonError) {
+              // Handle non-JSON responses (like 429 rate limit)
+              if (res.status === 429) {
+                alert('⏰ Too many registration attempts. Please wait 15 minutes before trying again.');
+                return;
+              }
+              alert(`🚫 Server error: ${res.status} ${res.statusText}`);
+              return;
+            }
+
+            if (!res.ok) {
+              alert(`🚫 Error: ${data.message || "Something went wrong!"}`);
+              return;
+            }
+
+            // Debug: Log the response
+            console.log('Registration response:', data);
+            
+            // Check if admin account was created
+            if (data.adminAccess || data.message?.includes('Admin')) {
+              // Admin account created successfully
+              alert(`👑 ${data.message || 'Admin account created!'}\n\n🔗 Redirecting to admin login...`);
+              
+              // Store admin credentials
+              localStorage.setItem('adminSecretKey', 'DEX_ADMIN_2024_SECURE_KEY');
+              
+              // Redirect to admin login immediately
+              window.location.href = `../../secret-dex-admin-2024/login.html`;
+              return;
+            }
+
+            // ✅ Store signup info, role, email, and token locally
+            localStorage.setItem(
+              "buyerSignupData",
+              JSON.stringify({
+                ...formData,
+                token: data.token,
+                email: data.email,
+                role: data.role || "buyer",
+              })
+            );
+
+            // ✅ Inform user
+            alert(
+              "✅ Account created successfully! 📧 Please check your email to verify your account."
+            );
+
+            // 🎉 Confetti effect
+            try {
+              const confetti = (await import("https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js")).default;
+              confetti({
+                particleCount: 120,
+                spread: 70,
+                origin: { y: 0.6 },
+                colors: ["#00ff99", "#70bb70", "#ffffff"],
+              });
+            } catch (err) {
+              console.log("Confetti unavailable:", err);
+            }
+
+            // 🚀 Redirect to verification page
+            setTimeout(() => {
+              const role = data.role || "buyer";
+              const token = data.token;
+              const email = data.email || formData.email;
+
+              if (!token || !email) {
+                console.error("Missing token or email from backend response.");
+                return alert(
+                  "⚠️ Could not verify account link. Please try again."
+                );
+              }
+
+              const url = `EMAIL_VERIFICATION/verification_dex.html?role=${encodeURIComponent(
+                role
+              )}&token=${encodeURIComponent(token)}&email=${encodeURIComponent(
+                email
+              )}`;
+
+              window.location.href = url;
+            }, 1200);
+          } catch (err) {
+            console.error(err);
+            alert(
+              "❌ Cannot connect to backend. Please ensure the server is running 🖥️"
+            );
+          }
+        });
+    </script>
+  </body>
+</html>
